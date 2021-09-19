@@ -41,5 +41,11 @@ class Main {
 //class DiscountApplicability {
 //  boolean applicableFor(Flight flight);
 //}
+//discounts-registry
+// Tenant configuration
+//Tenant in stream id
+//FeaturesToggles.isEnabled(tenan
+
+record TenantId(String raw){}
 
 
