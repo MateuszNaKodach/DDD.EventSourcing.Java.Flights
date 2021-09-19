@@ -7,6 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import static java.util.Collections.emptyList;
+
 class InMemoryEventBus implements EventBus {
 
   private final ConcurrentHashMap<Class<?>, List<Consumer<?>>> handlers = new ConcurrentHashMap<>();
@@ -14,7 +16,7 @@ class InMemoryEventBus implements EventBus {
   @Override
   public <T> void publish(T event) {
     Class<?> eventType = event.getClass();
-    var eventHandlers = handlers.getOrDefault(eventType, List.of());
+    var eventHandlers = handlers.getOrDefault(eventType, emptyList());
     //noinspection unchecked
     eventHandlers.stream()
         .map(handler -> (Consumer<T>) handler)

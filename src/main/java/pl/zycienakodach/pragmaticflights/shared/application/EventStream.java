@@ -4,9 +4,9 @@ import pl.zycienakodach.pragmaticflights.shared.domain.DomainEvent;
 
 import java.util.List;
 
-record EventStream(List<DomainEvent> events) {
+public record EventStream(List<DomainEvent> events) {
 
-  int version() {
+  public int version() {
     return events().size();
   }
 
