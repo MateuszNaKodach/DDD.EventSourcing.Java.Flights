@@ -10,11 +10,11 @@ class InMemoryCommandBusSpec extends Specification {
         given:
         def commandBus = new InMemoryCommandBus()
         def commandHandlerMock = Mock(Consumer<SampleCommand>)
-        commandBus.register(SampleCommand.class, commandHandlerMock)
+        commandBus.registerHandler(SampleCommand.class, commandHandlerMock)
         def command = new SampleCommand("Sample", 123)
 
         when:
-        commandBus.handle(command)
+        commandBus.execute(command)
 
         then:
         1 * commandHandlerMock.accept(command)
@@ -26,7 +26,7 @@ class InMemoryCommandBusSpec extends Specification {
         def command = new SampleCommand("Sample", 123)
 
         when:
-        commandBus.handle(command)
+        commandBus.execute(command)
 
         then:
         def thrownException = thrown(RuntimeException)
@@ -37,11 +37,11 @@ class InMemoryCommandBusSpec extends Specification {
         given:
         def commandBus = new InMemoryCommandBus()
         def commandHandlerStub1 = Stub(Consumer<SampleCommand>)
-        commandBus.register(SampleCommand.class, commandHandlerStub1)
+        commandBus.registerHandler(SampleCommand.class, commandHandlerStub1)
 
         when:
         def commandHandlerStub2 = Stub(Consumer<SampleCommand>)
-        commandBus.register(SampleCommand.class, commandHandlerStub2)
+        commandBus.registerHandler(SampleCommand.class, commandHandlerStub2)
 
         then:
         def thrownException = thrown(RuntimeException)
