@@ -8,38 +8,38 @@ class Main {
 
 }
 
-record IATAAirlinesCode(String raw){
-}
-
-record IATAAirportCode(String raw){
-}
-
-class Tenant {
-
-}
-
-class FlightId {
-
-}
-
-record Flight(FlightId id) {
-}
-
-
-class Price {
-
-}
-
-class Pricing {
-  static calculatePrice()
-}
-
-class DiscountsRepository {
-
-}
-
-class DiscountApplicability {
-  boolean applicableFor(Flight flight);
-}
+//record IATAAirlinesCode(String raw){
+//}
+//
+//record IATAAirportCode(String raw){
+//}
+//
+//class Tenant {
+//
+//}
+//
+//class FlightId {
+//
+//}
+//
+//record Flight(FlightId id) {
+//}
+//
+//
+//class Price {
+//
+//}
+//
+//class Pricing {
+//  static calculatePrice()
+//}
+//
+//class DiscountsRepository {
+//
+//}
+//
+//class DiscountApplicability {
+//  boolean applicableFor(Flight flight);
+//}
 
 
