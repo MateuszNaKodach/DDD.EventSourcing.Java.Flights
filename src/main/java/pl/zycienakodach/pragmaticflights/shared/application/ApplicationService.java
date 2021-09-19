@@ -8,7 +8,7 @@ import pl.zycienakodach.pragmaticflights.shared.domain.SuccessDomainEvent;
 import java.util.List;
 import java.util.function.Function;
 
-record ApplicationService(EventStore eventStore) {
+public record ApplicationService(EventStore eventStore) {
 
   <EventType extends DomainEvent> CommandResult execute(EventStreamName streamName, Function<List<EventType>, Either<List<FailureDomainEvent>, List<SuccessDomainEvent>>> domainLogic) {
     var eventStream = eventStore.read(streamName);
