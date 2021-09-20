@@ -5,7 +5,7 @@ import pl.zycienakodach.pragmaticflights.shared.application.CommandBus;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
-final class InMemoryCommandBus implements CommandBus {
+public final class InMemoryCommandBus implements CommandBus {
 
   private final ConcurrentHashMap<Class<?>, Consumer<?>> handlers = new ConcurrentHashMap<>();
 

@@ -9,16 +9,12 @@ import java.util.function.Consumer;
 
 public class ModuleConfiguration {
 
-  private final EventStore eventStore;
   private final CommandBus commandBus;
   private final EventSource eventSource;
-  private final ApplicationService applicationService; //tenant here? / wrapper like tenantFeature? / inject context for commands / eventHandlers - how?
 
-  ModuleConfiguration(EventStore eventStore, CommandBus commandBus, EventSource eventSource, ApplicationService applicationService) {
-    this.eventStore = eventStore;
+  public ModuleConfiguration(CommandBus commandBus, EventSource eventSource) {
     this.commandBus = commandBus;
     this.eventSource = eventSource;
-    this.applicationService = applicationService;
   }
 
   public <T> ModuleConfiguration subscribe(Class<T> eventType, Consumer<T> handler){

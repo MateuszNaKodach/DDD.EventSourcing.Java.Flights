@@ -16,12 +16,12 @@ import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 
-class InMemoryEventStore implements EventStore, EventSource {
+public class InMemoryEventStore implements EventStore, EventSource {
 
   private final EventBus eventBus;
   private final ConcurrentMap<EventStreamName, List<DomainEvent>> streams = new ConcurrentHashMap<>();
 
-  InMemoryEventStore(EventBus eventBus) {
+  public InMemoryEventStore(EventBus eventBus) {
     this.eventBus = eventBus;
   }
 
@@ -57,7 +57,7 @@ class InMemoryEventStore implements EventStore, EventSource {
       default:
         throw new IllegalStateException("Unexpected value: " + expectedStreamVersion);
     };
-    if(!isExpectedVersion){
+    if (!isExpectedVersion) {
       throw new IllegalStateException("Expected event stream version is " + expectedStreamVersion + " but current is " + currentStreamVersion);
     }
   }

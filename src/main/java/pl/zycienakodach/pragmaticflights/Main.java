@@ -1,9 +1,22 @@
 package pl.zycienakodach.pragmaticflights;
 
+import pl.zycienakodach.pragmaticflights.pricing.PricingModule;
+import pl.zycienakodach.pragmaticflights.shared.ModuleConfiguration;
+import pl.zycienakodach.pragmaticflights.shared.application.ApplicationService;
+import pl.zycienakodach.pragmaticflights.shared.infrastructure.InMemoryCommandBus;
+import pl.zycienakodach.pragmaticflights.shared.infrastructure.InMemoryEventBus;
+import pl.zycienakodach.pragmaticflights.shared.infrastructure.InMemoryEventStore;
+
 class Main {
 
   public static void main(String[] args) {
-    System.out.println("Main");
+    var eventStore = new InMemoryEventStore(new InMemoryEventBus());
+
+    var commandBus = new InMemoryCommandBus();
+    var moduleConfiguration = new ModuleConfiguration(commandBus, eventStore);
+
+    var applicationService = new ApplicationService(eventStore);
+    var pricingModule = new PricingModule(applicationService).configure(moduleConfiguration);
   }
 
 }
