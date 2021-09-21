@@ -4,7 +4,7 @@ import pl.zycienakodach.pragmaticflights.shared.domain.DomainEvent;
 
 import java.util.List;
 
-public interface EventStore {
+public interface EventStore extends EventSource {
 
   EventStream read(EventStreamName eventStreamName);
 

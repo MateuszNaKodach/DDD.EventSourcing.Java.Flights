@@ -1,16 +1,21 @@
 package pl.zycienakodach.pragmaticflights.shared.application;
 
-import io.vavr.control.Either;
 import pl.zycienakodach.pragmaticflights.shared.domain.DomainEvent;
-import pl.zycienakodach.pragmaticflights.shared.domain.FailureDomainEvent;
-import pl.zycienakodach.pragmaticflights.shared.domain.SuccessDomainEvent;
 
 import java.util.List;
-import java.util.function.Function;
 
-public record ApplicationService(EventStore eventStore) {
+public class ApplicationService {
 
-  <EventType extends DomainEvent> CommandResult execute(EventStreamName streamName, Function<List<EventType>, Either<List<FailureDomainEvent>, List<SuccessDomainEvent>>> domainLogic) {
+  private final EventStore eventStore;
+
+  public ApplicationService(EventStore eventStore) {
+    this.eventStore = eventStore;
+  }
+
+  public <EventType extends DomainEvent> CommandResult execute(
+      EventStreamName streamName,
+      DomainLogic<EventType> domainLogic
+  ) {
     var eventStream = eventStore.read(streamName);
 
     //noinspection unchecked
@@ -18,8 +23,14 @@ public record ApplicationService(EventStore eventStore) {
     var eventsToStore = domainLogic.apply(previousDomainEvents);
 
     var domainLogicResult = eventsToStore
-        .peek(events -> eventStore.write(streamName, events.stream().map(e -> (DomainEvent) e).toList(), new ExpectedStreamVersion.Exactly(eventStream.version())))
-        .peekLeft(events -> eventStore.write(streamName, events.stream().map(e -> (DomainEvent) e).toList(), new ExpectedStreamVersion.Exactly(eventStream.version())));
+        .peek(events -> {
+          final List<DomainEvent> newEvents = events.stream().map(e -> (DomainEvent) e).toList();
+          eventStore.write(streamName, newEvents, new ExpectedStreamVersion.Exactly(eventStream.version()));
+        })
+        .peekLeft(events -> {
+          final List<DomainEvent> newEvents = events.stream().map(e -> (DomainEvent) e).toList();
+          eventStore.write(streamName, newEvents, new ExpectedStreamVersion.Exactly(eventStream.version()));
+        });
 
     return domainLogicResult.isRight()
         ? new CommandResult.Accepted()

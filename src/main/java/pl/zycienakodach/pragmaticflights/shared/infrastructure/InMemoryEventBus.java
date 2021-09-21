@@ -1,6 +1,7 @@
 package pl.zycienakodach.pragmaticflights.shared.infrastructure;
 
 import pl.zycienakodach.pragmaticflights.shared.application.EventBus;
+import pl.zycienakodach.pragmaticflights.shared.application.EventHandler;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,7 +12,7 @@ import static java.util.Collections.emptyList;
 
 public class InMemoryEventBus implements EventBus {
 
-  private final ConcurrentHashMap<Class<?>, List<Consumer<?>>> handlers = new ConcurrentHashMap<>();
+  private final ConcurrentHashMap<Class<?>, List<EventHandler<?>>> handlers = new ConcurrentHashMap<>();
 
   @Override
   public <T> void publish(T event) {
@@ -24,7 +25,7 @@ public class InMemoryEventBus implements EventBus {
   }
 
   @Override
-  public <T> void subscribe(Class<T> eventType, Consumer<T> handler) {
+  public <T> void subscribe(Class<T> eventType, EventHandler<T> handler) {
     handlers.compute(
         eventType,
         (__, handlers) -> handlers == null

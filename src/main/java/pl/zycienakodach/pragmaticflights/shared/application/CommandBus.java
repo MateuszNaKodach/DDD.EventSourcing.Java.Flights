@@ -1,10 +1,10 @@
 package pl.zycienakodach.pragmaticflights.shared.application;
 
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 public interface CommandBus {
 
-  <T> void registerHandler(Class<T> commandType, Consumer<T> handler);
+  <T> void registerHandler(Class<T> commandType, CommandHandler<T> handler);
 
-  <T> void execute(T command);
+  <T> CommandResult execute(T command);
 }

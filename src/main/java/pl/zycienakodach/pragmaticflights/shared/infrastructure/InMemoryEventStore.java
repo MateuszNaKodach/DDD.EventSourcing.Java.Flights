@@ -1,6 +1,7 @@
 package pl.zycienakodach.pragmaticflights.shared.infrastructure;
 
 import pl.zycienakodach.pragmaticflights.shared.application.EventBus;
+import pl.zycienakodach.pragmaticflights.shared.application.EventHandler;
 import pl.zycienakodach.pragmaticflights.shared.application.EventSource;
 import pl.zycienakodach.pragmaticflights.shared.application.EventStore;
 import pl.zycienakodach.pragmaticflights.shared.application.EventStream;
@@ -11,23 +12,22 @@ import pl.zycienakodach.pragmaticflights.shared.domain.DomainEvent;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 
-public class InMemoryEventStore implements EventStore, EventSource {
+public class InMemoryEventStore implements EventStore {
 
-  private final EventBus eventBus;
   private final ConcurrentMap<EventStreamName, List<DomainEvent>> streams = new ConcurrentHashMap<>();
+  private final EventBus eventBus;
 
   public InMemoryEventStore(EventBus eventBus) {
     this.eventBus = eventBus;
   }
 
   @Override
-  public <T> void subscribe(Class<T> eventType, Consumer<T> handler) {
-    this.eventBus.subscribe(eventType, handler);
+  public <T> void subscribe(Class<T> eventType, EventHandler<T> handler) {
+    eventBus.subscribe(eventType, handler);
   }
 
   @Override
@@ -43,7 +43,7 @@ public class InMemoryEventStore implements EventStore, EventSource {
       eventStreamWriteOptimisticLocking(expectedStreamVersion, currentStreamVersion);
       return streamEvents == null ? List.copyOf(events) : Stream.concat(streamEvents.stream(), events.stream()).toList();
     });
-    eventBus.publishAll(events);
+    this.eventBus.publishAll(events);
   }
 
   private void eventStreamWriteOptimisticLocking(ExpectedStreamVersion expectedStreamVersion, int currentStreamVersion) {
