@@ -8,16 +8,15 @@ import pl.zycienakodach.pragmaticflights.shared.application.EventStreamName;
 
 import java.util.List;
 
-public class PricingModule implements ApplicationModule {
+import static pl.zycienakodach.pragmaticflights.shared.application.EventStreamName.category;
+import static pl.zycienakodach.pragmaticflights.shared.application.EventStreamName.streamId;
 
-  //tenant here? / wrapper like tenantFeature? / inject context for commands / eventHandlers - how? / execution context
-  public PricingModule() {
-  }
+public class PricingModule implements ApplicationModule {
 
   public PricingModule configure(Application app){
     app.onCommand(
         DefineFlightPrice.class,
-        c -> new EventStreamName("FlightPrice", c.flightId()),
+        (c,m) -> new EventStreamName(category(m.tenantId().raw(), "FlightPrice"), streamId(c.dayOfWeek().name(), c.flightId())),
         (__) -> Either.right(List.of())
     );
     return this;

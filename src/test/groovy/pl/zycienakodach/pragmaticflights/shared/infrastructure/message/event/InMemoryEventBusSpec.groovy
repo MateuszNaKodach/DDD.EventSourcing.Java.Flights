@@ -1,8 +1,6 @@
-package pl.zycienakodach.pragmaticflights.shared.infrastructure
+package pl.zycienakodach.pragmaticflights.shared.infrastructure.message.event
 
 import pl.zycienakodach.pragmaticflights.shared.application.message.CorrelationId
-import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandId
-import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandMetadata
 import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventId
 import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventMetadata
 import pl.zycienakodach.pragmaticflights.shared.application.tenant.TenantId

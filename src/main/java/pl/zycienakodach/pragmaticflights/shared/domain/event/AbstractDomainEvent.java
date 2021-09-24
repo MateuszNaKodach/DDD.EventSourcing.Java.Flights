@@ -1,4 +1,4 @@
-package pl.zycienakodach.pragmaticflights.shared.domain;
+package pl.zycienakodach.pragmaticflights.shared.domain.event;
 
 abstract class AbstractDomainEvent<DataType> {
 

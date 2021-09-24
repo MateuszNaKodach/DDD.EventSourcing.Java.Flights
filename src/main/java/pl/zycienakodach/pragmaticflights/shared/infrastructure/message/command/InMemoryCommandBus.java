@@ -1,4 +1,4 @@
-package pl.zycienakodach.pragmaticflights.shared.infrastructure;
+package pl.zycienakodach.pragmaticflights.shared.infrastructure.message.command;
 
 import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandBus;
 import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandHandler;
@@ -26,8 +26,12 @@ public final class InMemoryCommandBus implements CommandBus {
     if (handler == null) {
       throw new RuntimeException("Missing handler for " + commandType.getSimpleName());
     }
-    //noinspection unchecked
-    return ((CommandHandler<T>) handler).apply(command, metadata);
+    try {
+      //noinspection unchecked
+      return ((CommandHandler<T>) handler).apply(command, metadata);
+    } catch (RuntimeException e) {
+      return new CommandResult.Rejected(e.getMessage());
+    }
   }
 
 

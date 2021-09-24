@@ -4,9 +4,9 @@ import pl.zycienakodach.pragmaticflights.shared.Application;
 import pl.zycienakodach.pragmaticflights.shared.application.IdGenerator;
 import pl.zycienakodach.pragmaticflights.shared.application.time.TimeProvider;
 import pl.zycienakodach.pragmaticflights.shared.infrastructure.EventStoreApplicationService;
-import pl.zycienakodach.pragmaticflights.shared.infrastructure.InMemoryCommandBus;
-import pl.zycienakodach.pragmaticflights.shared.infrastructure.InMemoryEventBus;
-import pl.zycienakodach.pragmaticflights.shared.infrastructure.InMemoryEventStore;
+import pl.zycienakodach.pragmaticflights.shared.infrastructure.message.command.InMemoryCommandBus;
+import pl.zycienakodach.pragmaticflights.shared.infrastructure.message.event.InMemoryEventBus;
+import pl.zycienakodach.pragmaticflights.shared.infrastructure.eventstore.InMemoryEventStore;
 
 import java.time.Clock;
 import java.util.UUID;

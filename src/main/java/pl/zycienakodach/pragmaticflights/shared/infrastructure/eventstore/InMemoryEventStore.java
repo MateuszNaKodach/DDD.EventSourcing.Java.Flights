@@ -1,4 +1,4 @@
-package pl.zycienakodach.pragmaticflights.shared.infrastructure;
+package pl.zycienakodach.pragmaticflights.shared.infrastructure.eventstore;
 
 import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventBus;
 import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventEnvelope;

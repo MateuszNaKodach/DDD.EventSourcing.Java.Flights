@@ -6,14 +6,14 @@ import pl.zycienakodach.pragmaticflights.shared.application.message.command.Comm
 import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandHandler;
 import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandId;
 import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandMetadata;
-import pl.zycienakodach.pragmaticflights.shared.application.tenant.TenantId;
+import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventFilter;
 import pl.zycienakodach.pragmaticflights.shared.domain.DomainLogic;
 import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventHandler;
 import pl.zycienakodach.pragmaticflights.shared.application.eventstore.EventStore;
 import pl.zycienakodach.pragmaticflights.shared.application.EventStreamName;
-import pl.zycienakodach.pragmaticflights.shared.domain.DomainEvent;
+import pl.zycienakodach.pragmaticflights.shared.domain.event.DomainEvent;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 public class Application {
 
@@ -34,8 +34,17 @@ public class Application {
     return this;
   }
 
-  public <C, E extends DomainEvent> Application onCommand(Class<C> commandType, Function<C, EventStreamName> streamName, DomainLogic<E> domainLogic){
-    this.commandBus.registerHandler(commandType, (c,m) -> this.applicationService.execute(streamName.apply(c), domainLogic, m));
+  public <E> Application onEvent(Class<E> eventType, EventHandler<E> handler, EventFilter<E> filter){
+    this.eventStore.subscribe(eventType, (e,m) -> {
+      if(filter.test(e,m)){
+        handler.accept(e,m);
+      }
+    });
+    return this;
+  }
+
+  public <C, E extends DomainEvent> Application onCommand(Class<C> commandType, BiFunction<C, CommandMetadata, EventStreamName> streamName, DomainLogic<E> domainLogic){
+    this.commandBus.registerHandler(commandType, (c,m) -> this.applicationService.execute(streamName.apply(c,m), domainLogic, m));
     return this;
   }
 

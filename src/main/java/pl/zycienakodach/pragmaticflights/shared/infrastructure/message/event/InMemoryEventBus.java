@@ -1,4 +1,4 @@
-package pl.zycienakodach.pragmaticflights.shared.infrastructure;
+package pl.zycienakodach.pragmaticflights.shared.infrastructure.message.event;
 
 import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventBus;
 import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventEnvelope;
@@ -16,7 +16,7 @@ public class InMemoryEventBus implements EventBus {
 
   @Override
   public void publish(EventEnvelope eventEnvelope) {
-    Class<?> eventType = eventEnvelope.getClass();
+    Class<?> eventType = eventEnvelope.event().getClass();
     var eventHandlers = handlers.getOrDefault(eventType, emptyList());
     //noinspection unchecked
     eventHandlers.stream()
