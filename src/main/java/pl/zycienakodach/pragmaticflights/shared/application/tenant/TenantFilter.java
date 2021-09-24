@@ -1,4 +1,4 @@
-package pl.zycienakodach.pragmaticflights.shared.application;
+package pl.zycienakodach.pragmaticflights.shared.application.tenant;
 
 import java.util.function.Supplier;
 

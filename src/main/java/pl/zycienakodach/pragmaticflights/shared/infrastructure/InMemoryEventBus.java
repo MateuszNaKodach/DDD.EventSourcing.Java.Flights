@@ -1,7 +1,7 @@
 package pl.zycienakodach.pragmaticflights.shared.infrastructure;
 
-import pl.zycienakodach.pragmaticflights.shared.application.EventBus;
-import pl.zycienakodach.pragmaticflights.shared.application.EventHandler;
+import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventBus;
+import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventHandler;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;

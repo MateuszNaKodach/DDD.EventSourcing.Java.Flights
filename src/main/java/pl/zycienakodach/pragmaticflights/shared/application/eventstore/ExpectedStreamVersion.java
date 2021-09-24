@@ -1,4 +1,4 @@
-package pl.zycienakodach.pragmaticflights.shared.application;
+package pl.zycienakodach.pragmaticflights.shared.application.eventstore;
 
 sealed public class ExpectedStreamVersion permits ExpectedStreamVersion.Any, ExpectedStreamVersion.NotExists, ExpectedStreamVersion.Exactly {
   public static final class Any extends ExpectedStreamVersion {
@@ -12,7 +12,7 @@ sealed public class ExpectedStreamVersion permits ExpectedStreamVersion.Any, Exp
   public static final class Exactly extends ExpectedStreamVersion {
     private final int raw;
 
-    Exactly(int raw) {
+    public Exactly(int raw) {
       this.raw = raw;
     }
 

@@ -1,7 +1,7 @@
 package pl.zycienakodach.pragmaticflights;
 
 import pl.zycienakodach.pragmaticflights.shared.Application;
-import pl.zycienakodach.pragmaticflights.shared.application.ApplicationService;
+import pl.zycienakodach.pragmaticflights.shared.infrastructure.EventStoreApplicationService;
 import pl.zycienakodach.pragmaticflights.shared.infrastructure.InMemoryCommandBus;
 import pl.zycienakodach.pragmaticflights.shared.infrastructure.InMemoryEventBus;
 import pl.zycienakodach.pragmaticflights.shared.infrastructure.InMemoryEventStore;
@@ -17,7 +17,7 @@ public class ApplicationTestFixtures {
     var commandBus = new InMemoryCommandBus();
     var eventStore = new InMemoryEventStore(eventBus);
 
-    var applicationService = new ApplicationService(eventStore);
+    var applicationService = new EventStoreApplicationService(eventStore);
     return new Application(commandBus, eventStore, applicationService);
   }
 

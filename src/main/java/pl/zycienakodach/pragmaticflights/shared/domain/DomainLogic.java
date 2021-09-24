@@ -1,4 +1,4 @@
-package pl.zycienakodach.pragmaticflights.shared.application;
+package pl.zycienakodach.pragmaticflights.shared.domain;
 
 import io.vavr.control.Either;
 import pl.zycienakodach.pragmaticflights.shared.domain.FailureDomainEvent;

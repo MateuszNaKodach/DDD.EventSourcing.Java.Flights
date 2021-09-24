@@ -1,23 +1,35 @@
-package pl.zycienakodach.pragmaticflights.shared.domain;
+package pl.zycienakodach.pragmaticflights.shared.application.message;
 
-import pl.zycienakodach.pragmaticflights.shared.application.TenantId;
+import pl.zycienakodach.pragmaticflights.shared.application.tenant.TenantId;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-class EventMetadata implements Map<String, String> {
+public abstract class MessageMetadata implements Map<String, String> {
 
   private static final String TENANT_ID_METADATA_KEY = "TenantId";
+  private static final String CORRELATION_ID_METADATA_KEY = "CorrelationId";
+  private static final String CAUSATION_ID_METADATA_KEY = "CausationId";
   private final HashMap<String, String> hashMap = new HashMap<>();
 
-  public EventMetadata(TenantId tenantId) {
+  protected MessageMetadata(TenantId tenantId, CorrelationId correlationId, CausationId causationId) {
     this.hashMap.put(TENANT_ID_METADATA_KEY, tenantId.raw());
+    this.hashMap.put(CORRELATION_ID_METADATA_KEY, correlationId.raw());
+    this.hashMap.put(CAUSATION_ID_METADATA_KEY, causationId.raw());
   }
 
-  public TenantId getTenantId(){
+  public TenantId tenantId(){
     return new TenantId(this.hashMap.get(TENANT_ID_METADATA_KEY));
+  }
+
+  public CorrelationId correlationId(){
+    return new CorrelationId(this.hashMap.get(CORRELATION_ID_METADATA_KEY));
+  }
+
+  public CausationId causationId(){
+    return new CausationId(this.hashMap.get(CAUSATION_ID_METADATA_KEY));
   }
 
   public int hashCode() {

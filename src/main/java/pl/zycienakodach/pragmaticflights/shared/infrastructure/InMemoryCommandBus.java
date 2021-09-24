@@ -1,8 +1,8 @@
 package pl.zycienakodach.pragmaticflights.shared.infrastructure;
 
-import pl.zycienakodach.pragmaticflights.shared.application.CommandBus;
-import pl.zycienakodach.pragmaticflights.shared.application.CommandHandler;
-import pl.zycienakodach.pragmaticflights.shared.application.CommandResult;
+import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandBus;
+import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandHandler;
+import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandResult;
 
 import java.util.concurrent.ConcurrentHashMap;
 

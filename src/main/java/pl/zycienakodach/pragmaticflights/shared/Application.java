@@ -1,11 +1,11 @@
 package pl.zycienakodach.pragmaticflights.shared;
 
 import pl.zycienakodach.pragmaticflights.shared.application.ApplicationService;
-import pl.zycienakodach.pragmaticflights.shared.application.CommandBus;
-import pl.zycienakodach.pragmaticflights.shared.application.CommandHandler;
-import pl.zycienakodach.pragmaticflights.shared.application.DomainLogic;
-import pl.zycienakodach.pragmaticflights.shared.application.EventHandler;
-import pl.zycienakodach.pragmaticflights.shared.application.EventStore;
+import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandBus;
+import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandHandler;
+import pl.zycienakodach.pragmaticflights.shared.domain.DomainLogic;
+import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventHandler;
+import pl.zycienakodach.pragmaticflights.shared.application.eventstore.EventStore;
 import pl.zycienakodach.pragmaticflights.shared.application.EventStreamName;
 import pl.zycienakodach.pragmaticflights.shared.domain.DomainEvent;
 

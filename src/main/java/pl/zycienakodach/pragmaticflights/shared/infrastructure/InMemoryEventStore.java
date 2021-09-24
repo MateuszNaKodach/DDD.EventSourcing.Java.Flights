@@ -1,12 +1,11 @@
 package pl.zycienakodach.pragmaticflights.shared.infrastructure;
 
-import pl.zycienakodach.pragmaticflights.shared.application.EventBus;
-import pl.zycienakodach.pragmaticflights.shared.application.EventHandler;
-import pl.zycienakodach.pragmaticflights.shared.application.EventSource;
-import pl.zycienakodach.pragmaticflights.shared.application.EventStore;
+import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventBus;
+import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventHandler;
+import pl.zycienakodach.pragmaticflights.shared.application.eventstore.EventStore;
 import pl.zycienakodach.pragmaticflights.shared.application.EventStream;
 import pl.zycienakodach.pragmaticflights.shared.application.EventStreamName;
-import pl.zycienakodach.pragmaticflights.shared.application.ExpectedStreamVersion;
+import pl.zycienakodach.pragmaticflights.shared.application.eventstore.ExpectedStreamVersion;
 import pl.zycienakodach.pragmaticflights.shared.domain.DomainEvent;
 
 import java.util.List;
