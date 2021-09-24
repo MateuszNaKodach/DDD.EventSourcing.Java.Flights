@@ -7,17 +7,13 @@ import pl.zycienakodach.pragmaticflights.shared.infrastructure.InMemoryCommandBu
 import pl.zycienakodach.pragmaticflights.shared.infrastructure.InMemoryEventBus;
 import pl.zycienakodach.pragmaticflights.shared.infrastructure.InMemoryEventStore;
 
+import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication;
+
 class Main {
 
   public static void main(String[] args) {
-    var eventBus = new InMemoryEventBus();
-
-    var commandBus = new InMemoryCommandBus();
-    var app = new Application(commandBus, eventBus);
-
-    var eventStore = new InMemoryEventStore();
-    var applicationService = new ApplicationService(eventStore, eventBus);
-    var pricingModule = new PricingModule(applicationService).configure(app);
+    Application app = inMemoryApplication();
+    var pricingModule = new PricingModule().configure(app);
   }
 
 }
