@@ -2,10 +2,6 @@ package pl.zycienakodach.pragmaticflights;
 
 import pl.zycienakodach.pragmaticflights.pricing.PricingModule;
 import pl.zycienakodach.pragmaticflights.shared.Application;
-import pl.zycienakodach.pragmaticflights.shared.application.ApplicationService;
-import pl.zycienakodach.pragmaticflights.shared.infrastructure.InMemoryCommandBus;
-import pl.zycienakodach.pragmaticflights.shared.infrastructure.InMemoryEventBus;
-import pl.zycienakodach.pragmaticflights.shared.infrastructure.InMemoryEventStore;
 
 import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication;
 

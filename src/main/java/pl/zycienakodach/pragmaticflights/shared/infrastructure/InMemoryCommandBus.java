@@ -2,6 +2,7 @@ package pl.zycienakodach.pragmaticflights.shared.infrastructure;
 
 import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandBus;
 import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandHandler;
+import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandMetadata;
 import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandResult;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,14 +20,14 @@ public final class InMemoryCommandBus implements CommandBus {
   }
 
   @Override
-  public <T> CommandResult execute(T command) {
+  public <T> CommandResult execute(T command, CommandMetadata metadata) {
     Class<?> commandType = command.getClass();
     var handler = handlers.get(commandType);
     if (handler == null) {
       throw new RuntimeException("Missing handler for " + commandType.getSimpleName());
     }
     //noinspection unchecked
-    return ((CommandHandler<T>) handler).apply(command);
+    return ((CommandHandler<T>) handler).apply(command, metadata);
   }
 
 

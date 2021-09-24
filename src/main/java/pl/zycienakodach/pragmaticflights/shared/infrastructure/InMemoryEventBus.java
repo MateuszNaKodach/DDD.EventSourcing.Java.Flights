@@ -1,11 +1,11 @@
 package pl.zycienakodach.pragmaticflights.shared.infrastructure;
 
 import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventBus;
+import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventEnvelope;
 import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventHandler;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
@@ -15,13 +15,13 @@ public class InMemoryEventBus implements EventBus {
   private final ConcurrentHashMap<Class<?>, List<EventHandler<?>>> handlers = new ConcurrentHashMap<>();
 
   @Override
-  public <T> void publish(T event) {
-    Class<?> eventType = event.getClass();
+  public void publish(EventEnvelope eventEnvelope) {
+    Class<?> eventType = eventEnvelope.getClass();
     var eventHandlers = handlers.getOrDefault(eventType, emptyList());
     //noinspection unchecked
     eventHandlers.stream()
-        .map(handler -> (Consumer<T>) handler)
-        .forEach(handler -> handler.accept(event));
+        .map(handler -> (EventHandler<Object>) handler)
+        .forEach(handler -> handler.accept(eventEnvelope.event(), eventEnvelope.metadata()));
   }
 
   @Override

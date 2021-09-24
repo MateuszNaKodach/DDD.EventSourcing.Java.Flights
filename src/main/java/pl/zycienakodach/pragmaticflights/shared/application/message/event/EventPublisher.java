@@ -4,10 +4,14 @@ import java.util.List;
 
 public interface EventPublisher {
 
-  default <T> void publishAll(List<T> events) {
-    events.forEach(this::publish);
+  default void publish(Object event, EventMetadata metadata){
+    publish(new EventEnvelope(event, metadata));
   }
 
-  <T> void publish(T event);
+  default void publishAll(List<EventEnvelope> eventEnvelopes) {
+    eventEnvelopes.forEach(this::publish);
+  }
+
+  void publish(EventEnvelope eventEnvelope);
 
 }

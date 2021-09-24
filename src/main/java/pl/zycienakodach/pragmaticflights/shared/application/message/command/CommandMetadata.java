@@ -7,11 +7,24 @@ import pl.zycienakodach.pragmaticflights.shared.application.message.MessageMetad
 
 public class CommandMetadata extends MessageMetadata {
 
-  public CommandMetadata(TenantId tenantId, CorrelationId correlationId) {
+  private final CommandId commandId;
+
+  public CommandMetadata(CommandId commandId, TenantId tenantId, CorrelationId correlationId) {
     super(tenantId, correlationId, new CausationId(correlationId.raw()));
+    this.commandId = commandId;
   }
 
-  public CommandMetadata(TenantId tenantId, CorrelationId correlationId, CausationId causationId) {
+  public CommandMetadata(CommandId commandId, TenantId tenantId, CorrelationId correlationId, CausationId causationId) {
     super(tenantId, correlationId, causationId);
+    this.commandId = commandId;
+  }
+
+  public CommandMetadata(CommandId commandId, TenantId tenantId) {
+    super(tenantId, new CorrelationId(commandId.raw()), new CausationId(commandId.raw()));
+    this.commandId = commandId;
+  }
+
+  public CommandId commandId() {
+    return commandId;
   }
 }

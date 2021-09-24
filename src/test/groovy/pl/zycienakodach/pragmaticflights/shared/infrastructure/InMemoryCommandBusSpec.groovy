@@ -1,32 +1,37 @@
 package pl.zycienakodach.pragmaticflights.shared.infrastructure
 
+import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandId
+import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandMetadata
+import pl.zycienakodach.pragmaticflights.shared.application.tenant.TenantId
 import spock.lang.Specification
 
-import java.util.function.Consumer
+import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandHandler
 
 class InMemoryCommandBusSpec extends Specification {
 
     def "execute registered handler"() {
         given:
         def commandBus = new InMemoryCommandBus()
-        def commandHandlerMock = Mock(Consumer<SampleCommand>)
+        def commandHandlerMock = Mock(CommandHandler<SampleCommand>)
         commandBus.registerHandler(SampleCommand.class, commandHandlerMock)
         def command = new SampleCommand("Sample", 123)
+        def metadata = aCommandMetadata()
 
         when:
-        commandBus.execute(command)
+        commandBus.execute(command, metadata)
 
         then:
-        1 * commandHandlerMock.accept(command)
+        1 * commandHandlerMock.apply(command, metadata)
     }
 
     def "no handler"() {
         given:
         def commandBus = new InMemoryCommandBus()
         def command = new SampleCommand("Sample", 123)
+        def metadata = aCommandMetadata()
 
         when:
-        commandBus.execute(command)
+        commandBus.execute(command, metadata)
 
         then:
         def thrownException = thrown(RuntimeException)
@@ -36,15 +41,23 @@ class InMemoryCommandBusSpec extends Specification {
     def "only one handler for one command type"() {
         given:
         def commandBus = new InMemoryCommandBus()
-        def commandHandlerStub1 = Stub(Consumer<SampleCommand>)
+        def commandHandlerStub1 = Stub(CommandHandler<SampleCommand>)
         commandBus.registerHandler(SampleCommand.class, commandHandlerStub1)
 
         when:
-        def commandHandlerStub2 = Stub(Consumer<SampleCommand>)
+        def commandHandlerStub2 = Stub(CommandHandler<SampleCommand>)
         commandBus.registerHandler(SampleCommand.class, commandHandlerStub2)
 
         then:
         def thrownException = thrown(RuntimeException)
         thrownException.message == 'Multiple handlers not allowed for SampleCommand'
+    }
+
+    private static CommandMetadata aCommandMetadata() {
+        def generateId = () -> UUID.randomUUID().toString();
+        return new CommandMetadata(
+                new CommandId(generateId()),
+                new TenantId(generateId())
+        )
     }
 }
