@@ -1,15 +1,14 @@
 package pl.zycienakodach.pragmaticflights;
 
 import pl.zycienakodach.pragmaticflights.pricing.PricingModule;
-import pl.zycienakodach.pragmaticflights.shared.Application;
 
 import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication;
 
 class Main {
 
   public static void main(String[] args) {
-    Application app = inMemoryApplication();
-    var pricingModule = new PricingModule().configure(app);
+    inMemoryApplication()
+        .withModule(new PricingModule());
   }
 
 }
