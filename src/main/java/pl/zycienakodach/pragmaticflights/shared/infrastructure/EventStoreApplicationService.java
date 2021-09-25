@@ -31,7 +31,7 @@ public class EventStoreApplicationService implements ApplicationService {
   }
 
   @Override
-  public <EventType extends DomainEvent> CommandResult execute(
+  public <EventType> CommandResult execute(
       EventStreamName streamName,
       DomainLogic<EventType> domainLogic,
       CommandMetadata metadata
@@ -48,7 +48,7 @@ public class EventStoreApplicationService implements ApplicationService {
     }
   }
 
-  private <EventType extends DomainEvent> CommandResult executeDomainLogic(
+  private <EventType> CommandResult executeDomainLogic(
       EventStreamName streamName,
       DomainLogic<EventType> domainLogic,
       CommandMetadata metadata,
@@ -58,22 +58,12 @@ public class EventStoreApplicationService implements ApplicationService {
     var eventsToStore = domainLogic.apply(previousDomainEvents);
 
     var domainLogicResult = eventsToStore
-        .peek(events -> {
-          final List<EventEnvelope> newEvents = events.stream()
-              .map(e -> new EventEnvelope(e, new EventMetadata(new EventId(idGenerator.get()), timeProvider.get(), metadata.tenantId(), metadata.correlationId(), new CausationId(metadata.commandId().raw()))))
-              .toList();
-          eventStore.write(streamName, newEvents, new ExpectedStreamVersion.Exactly(eventStream.version()));
-        })
-        .peekLeft(events -> {
-          final List<EventEnvelope> newEvents = events.stream()
-              .map(e -> new EventEnvelope(e, new EventMetadata(new EventId(idGenerator.get()), timeProvider.get(), metadata.tenantId(), metadata.correlationId(), new CausationId(metadata.commandId().raw()))))
-              .toList();
-          eventStore.write(streamName, newEvents, new ExpectedStreamVersion.Exactly(eventStream.version()));
-        });
+        .stream()
+        .map(e -> new EventEnvelope(e, new EventMetadata(new EventId(idGenerator.get()), timeProvider.get(), metadata.tenantId(), metadata.correlationId(), new CausationId(metadata.commandId().raw()))))
+        .toList();
+    eventStore.write(streamName, domainLogicResult, new ExpectedStreamVersion.Exactly(eventStream.version()));
 
-    return domainLogicResult.isRight()
-        ? new CommandResult.Accepted()
-        : new CommandResult.Rejected();
+    return new CommandResult.Accepted();
   }
 
 }

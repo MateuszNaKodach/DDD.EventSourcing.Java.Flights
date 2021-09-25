@@ -6,6 +6,7 @@ import pl.zycienakodach.pragmaticflights.shared.application.message.command.Comm
 import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandHandler;
 import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandId;
 import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandMetadata;
+import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandResult;
 import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventFilter;
 import pl.zycienakodach.pragmaticflights.shared.domain.DomainLogic;
 import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventHandler;
@@ -14,6 +15,7 @@ import pl.zycienakodach.pragmaticflights.shared.application.EventStreamName;
 import pl.zycienakodach.pragmaticflights.shared.domain.event.DomainEvent;
 
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class Application {
 
@@ -43,8 +45,8 @@ public class Application {
     return this;
   }
 
-  public <C, E extends DomainEvent> Application onCommand(Class<C> commandType, BiFunction<C, CommandMetadata, EventStreamName> streamName, DomainLogic<E> domainLogic){
-    this.commandBus.registerHandler(commandType, (c,m) -> this.applicationService.execute(streamName.apply(c,m), domainLogic, m));
+  public <C, E> Application onCommand(Class<C> commandType, BiFunction<C, CommandMetadata, EventStreamName> streamName, Function<C, DomainLogic<E>> domainLogic){
+    this.commandBus.registerHandler(commandType, (c,m) -> this.applicationService.execute(streamName.apply(c,m), domainLogic.apply(c), m));
     return this;
   }
 
@@ -57,6 +59,11 @@ public class Application {
     var commandId = new CommandId(idGenerator.get());
     this.commandBus.execute(command, new CommandMetadata(commandId, context.tenantId()));
     return this;
+  }
+
+  public <T> CommandResult execute(T command, CommandMetadata metadata){
+    var commandId = new CommandId(idGenerator.get());
+    return this.commandBus.execute(command, metadata);
   }
 
   public Application withModule(ApplicationModule module){

@@ -2,6 +2,7 @@ package pl.zycienakodach.pragmaticflights;
 
 import pl.zycienakodach.pragmaticflights.shared.Application;
 import pl.zycienakodach.pragmaticflights.shared.application.IdGenerator;
+import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventBus;
 import pl.zycienakodach.pragmaticflights.shared.application.time.TimeProvider;
 import pl.zycienakodach.pragmaticflights.shared.infrastructure.EventStoreApplicationService;
 import pl.zycienakodach.pragmaticflights.shared.infrastructure.message.command.InMemoryCommandBus;
@@ -18,7 +19,10 @@ public class ApplicationTestFixtures {
 
   public static Application inMemoryApplication() {
     var eventBus = new InMemoryEventBus();
+    return inMemoryApplication(eventBus);
+  }
 
+  public static Application inMemoryApplication(EventBus eventBus) {
     var commandBus = new InMemoryCommandBus();
     var eventStore = new InMemoryEventStore(eventBus);
     IdGenerator idGenerator = () -> UUID.randomUUID().toString();

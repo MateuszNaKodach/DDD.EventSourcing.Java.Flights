@@ -1,5 +1,7 @@
 package pl.zycienakodach.pragmaticflights;
 
+import pl.zycienakodach.pragmaticflights.flightsschedule.FlightsScheduleModule;
+import pl.zycienakodach.pragmaticflights.ordering.OrderingModule;
 import pl.zycienakodach.pragmaticflights.pricing.PricingModule;
 
 import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication;
@@ -8,27 +10,13 @@ class Main {
 
   public static void main(String[] args) {
     inMemoryApplication()
-        .withModule(new PricingModule());
+        .withModule(new PricingModule())
+        .withModule(new OrderingModule());
+        //.withModule(new FlightsScheduleModule());
   }
 
 }
 
-//record IATAAirlinesCode(String raw){
-//}
-//
-//record IATAAirportCode(String raw){
-//}
-//
-//class Tenant {
-//
-//}
-//
-//class FlightId {
-//
-//}
-//
-//record Flight(FlightId id) {
-//}
 //
 //
 //class Price {
