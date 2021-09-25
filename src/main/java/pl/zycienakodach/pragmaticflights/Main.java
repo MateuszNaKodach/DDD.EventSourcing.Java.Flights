@@ -1,8 +1,8 @@
 package pl.zycienakodach.pragmaticflights;
 
-import pl.zycienakodach.pragmaticflights.flightsschedule.FlightsScheduleModule;
-import pl.zycienakodach.pragmaticflights.ordering.OrderingModule;
-import pl.zycienakodach.pragmaticflights.pricing.PricingModule;
+import pl.zycienakodach.pragmaticflights.modules.flightsschedule.FlightsScheduleModule;
+import pl.zycienakodach.pragmaticflights.modules.ordering.OrderingModule;
+import pl.zycienakodach.pragmaticflights.modules.pricing.PricingModule;
 
 import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication;
 

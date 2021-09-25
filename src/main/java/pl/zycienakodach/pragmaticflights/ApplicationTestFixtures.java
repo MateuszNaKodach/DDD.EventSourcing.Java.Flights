@@ -1,13 +1,13 @@
 package pl.zycienakodach.pragmaticflights;
 
-import pl.zycienakodach.pragmaticflights.shared.Application;
-import pl.zycienakodach.pragmaticflights.shared.application.IdGenerator;
-import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventBus;
-import pl.zycienakodach.pragmaticflights.shared.application.time.TimeProvider;
-import pl.zycienakodach.pragmaticflights.shared.infrastructure.EventStoreApplicationService;
-import pl.zycienakodach.pragmaticflights.shared.infrastructure.message.command.InMemoryCommandBus;
-import pl.zycienakodach.pragmaticflights.shared.infrastructure.message.event.InMemoryEventBus;
-import pl.zycienakodach.pragmaticflights.shared.infrastructure.eventstore.InMemoryEventStore;
+import pl.zycienakodach.pragmaticflights.sdk.Application;
+import pl.zycienakodach.pragmaticflights.sdk.application.IdGenerator;
+import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventBus;
+import pl.zycienakodach.pragmaticflights.sdk.application.time.TimeProvider;
+import pl.zycienakodach.pragmaticflights.sdk.infrastructure.EventStoreApplicationService;
+import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.InMemoryCommandBus;
+import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.InMemoryEventBus;
+import pl.zycienakodach.pragmaticflights.sdk.infrastructure.eventstore.InMemoryEventStore;
 
 import java.time.Clock;
 import java.util.UUID;
