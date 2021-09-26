@@ -1,4 +1,6 @@
-package pl.zycienakodach.pragmaticflights.modules.flightsschedule.api;
+package pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.commands;
+
+import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.events.FlightScheduleEvent;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;

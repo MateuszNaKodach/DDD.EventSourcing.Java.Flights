@@ -1,6 +1,6 @@
 package pl.zycienakodach.pragmaticflights.modules.flightsschedule;
 
-import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.ScheduleFlight;
+import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.commands.ScheduleFlight;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
 import pl.zycienakodach.pragmaticflights.sdk.ApplicationModule;
 import pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName;

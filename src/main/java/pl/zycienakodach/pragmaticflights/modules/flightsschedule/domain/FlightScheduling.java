@@ -1,7 +1,7 @@
 package pl.zycienakodach.pragmaticflights.modules.flightsschedule.domain;
 
-import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.FlightScheduleEvent;
-import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.FlightScheduled;
+import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.events.FlightScheduleEvent;
+import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.events.FlightScheduled;
 import pl.zycienakodach.pragmaticflights.sdk.domain.DomainLogic;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightId;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportCode;

@@ -1,6 +1,6 @@
 package pl.zycienakodach.pragmaticflights.modules.pricing;
 
-import pl.zycienakodach.pragmaticflights.modules.pricing.api.DefineRegularPrice;
+import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.DefineRegularPrice;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
 import pl.zycienakodach.pragmaticflights.sdk.ApplicationModule;
 import pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName;

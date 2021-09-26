@@ -1,7 +1,7 @@
 package pl.zycienakodach.pragmaticflights.modules.flightsschedule
 
-import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.FlightScheduled
-import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.ScheduleFlight
+import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.events.FlightScheduled
+import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.commands.ScheduleFlight
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandResult
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.InMemoryEventBus
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.RecordingEventBus

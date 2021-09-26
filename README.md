@@ -28,4 +28,7 @@ For production ready application some improvements:
 - inbox / outbox for modules
 I assumed that it's part or move complex infrastrucutre / IO which was mocked by InMemory implementations.
 
+Płatność za zamówienie? 
+Jedynie składanie zamówienia.
+
 ## Discounting

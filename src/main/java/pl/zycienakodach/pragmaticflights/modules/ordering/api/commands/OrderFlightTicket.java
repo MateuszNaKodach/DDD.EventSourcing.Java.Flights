@@ -1,4 +1,4 @@
-package pl.zycienakodach.pragmaticflights.modules.ordering.api;
+package pl.zycienakodach.pragmaticflights.modules.ordering.api.commands;
 
 import java.time.LocalDate;
 

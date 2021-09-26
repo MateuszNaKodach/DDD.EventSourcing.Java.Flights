@@ -1,7 +1,7 @@
 package pl.zycienakodach.pragmaticflights.modules.pricing
 
-import pl.zycienakodach.pragmaticflights.modules.pricing.api.DefineRegularPrice
-import pl.zycienakodach.pragmaticflights.modules.pricing.api.RegularPriceDefined
+import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.DefineRegularPrice
+import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.RegularPriceDefined
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.InMemoryEventBus
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.RecordingEventBus
 import spock.lang.Specification

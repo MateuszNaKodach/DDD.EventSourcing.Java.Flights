@@ -1,4 +1,4 @@
-package pl.zycienakodach.pragmaticflights.modules.pricing.api;
+package pl.zycienakodach.pragmaticflights.modules.pricing.api.commands;
 
 import java.time.DayOfWeek;
 
