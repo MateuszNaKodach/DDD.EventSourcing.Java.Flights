@@ -1,6 +1,7 @@
 package pl.zycienakodach.pragmaticflights.modules.pricing
 
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.DefineRegularPrice
+import pl.zycienakodach.pragmaticflights.modules.pricing.api.RegularPriceDefined
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.InMemoryEventBus
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.RecordingEventBus
 import spock.lang.Specification
@@ -12,7 +13,7 @@ import static pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.comma
 
 class PricingSpec extends Specification {
 
-    def "Name"() {
+    def "define regular price for flight"() {
         given:
         def eventBus = new RecordingEventBus(new InMemoryEventBus())
         def app = inMemoryApplication(eventBus).withModule(new PricingModule())
@@ -22,7 +23,7 @@ class PricingSpec extends Specification {
         def command = new DefineRegularPrice(
                 flightId,
                 DayOfWeek.MONDAY,
-                1400
+                300
         )
         def metadata = aCommandMetadata()
 
@@ -30,6 +31,6 @@ class PricingSpec extends Specification {
         app.execute(command, metadata)
 
         then:
-        1 * eventBus.publish(_)
+        eventBus.lastPublishedEvent() === new RegularPriceDefined(flightId, DayOfWeek.MONDAY, 300)
     }
 }

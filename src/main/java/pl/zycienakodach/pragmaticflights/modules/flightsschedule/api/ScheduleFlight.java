@@ -10,5 +10,5 @@ public record ScheduleFlight(
     String destination,
     LocalTime departureTime,
     Set<DayOfWeek> departureDays
-) implements FlightScheduleDomainEvent {
+) implements FlightScheduleEvent {
 }

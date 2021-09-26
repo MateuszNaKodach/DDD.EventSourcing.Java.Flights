@@ -1,5 +1,6 @@
 package pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event;
 
+import pl.zycienakodach.pragmaticflights.sdk.application.message.CausationId;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventBus;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventEnvelope;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventHandler;
@@ -32,6 +33,13 @@ public class RecordingEventBus implements EventBus {
       return null;
     }
     return publishedEvents.get(publishedEvents.size() - 1).event();
+  }
+
+  public List<Object> eventsCausedBy(CausationId causationId){
+    return this.publishedEvents.stream()
+        .filter(envelope -> envelope.metadata().causationId().equals(causationId))
+        .map(EventEnvelope::event)
+        .toList();
   }
 
 }
