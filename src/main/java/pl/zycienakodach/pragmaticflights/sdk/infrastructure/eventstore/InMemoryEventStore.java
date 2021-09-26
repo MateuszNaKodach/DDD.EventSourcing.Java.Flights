@@ -47,19 +47,20 @@ public class InMemoryEventStore implements EventStore {
   }
 
   private void eventStreamWriteOptimisticLocking(ExpectedStreamVersion expectedStreamVersion, int currentStreamVersion) {
-    var isExpectedVersion = switch (expectedStreamVersion) {
-      case ExpectedStreamVersion.NotExists ignored:
-        yield currentStreamVersion == 0;
-      case ExpectedStreamVersion.Exactly v:
-        yield currentStreamVersion == v.raw();
-      case ExpectedStreamVersion.Any ignored:
-        yield true;
-      default:
-        throw new IllegalStateException("Unexpected value: " + expectedStreamVersion);
-    };
+    var isExpectedVersion = isExpectedVersion(expectedStreamVersion, currentStreamVersion);
     if (!isExpectedVersion) {
       throw new IllegalStateException("Expected event stream version is " + expectedStreamVersion + " but current is " + currentStreamVersion);
     }
+  }
+
+  private boolean isExpectedVersion(ExpectedStreamVersion expectedStreamVersion, int currentStreamVersion) {
+    if(expectedStreamVersion instanceof ExpectedStreamVersion.NotExists){
+      return currentStreamVersion == 0;
+    }
+    if(expectedStreamVersion instanceof ExpectedStreamVersion.Exactly){
+      return currentStreamVersion == ((ExpectedStreamVersion.Exactly) expectedStreamVersion).raw();
+    }
+    return expectedStreamVersion instanceof ExpectedStreamVersion.Any;
   }
 
   ;

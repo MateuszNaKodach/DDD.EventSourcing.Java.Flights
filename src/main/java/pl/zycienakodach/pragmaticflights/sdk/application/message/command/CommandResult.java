@@ -25,11 +25,10 @@ sealed public class CommandResult permits CommandResult.Accepted, CommandResult.
   }
 
   public Optional<String> failureReason() {
-    return switch (this) {
-      case Rejected r -> Optional.of(r.reason);
-      case Accepted __ -> Optional.empty();
-      default -> throw new IllegalStateException("Unexpected value: " + this);
-    };
+    if(this instanceof Rejected){
+      return Optional.of(((Rejected) this).reason);
+    }
+    return Optional.empty();
   }
 
 }
