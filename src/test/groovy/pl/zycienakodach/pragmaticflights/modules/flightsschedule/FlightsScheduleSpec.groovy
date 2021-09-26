@@ -1,21 +1,21 @@
 package pl.zycienakodach.pragmaticflights.modules.flightsschedule
 
-import pl.zycienakodach.pragmaticflights.flightsschedule.api.FlightScheduled
-import pl.zycienakodach.pragmaticflights.flightsschedule.api.ScheduleFlight
-import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandResult
-import pl.zycienakodach.pragmaticflights.shared.infrastructure.message.event.InMemoryEventBus
-import pl.zycienakodach.pragmaticflights.shared.infrastructure.message.event.RecordingEventBus
-import pl.zycienakodach.pragmaticflights.sharedkernel.domain.flightid.FlightIdFactory
-import pl.zycienakodach.pragmaticflights.sharedkernel.domain.iata.IATAAirlinesCodeFactory
-import pl.zycienakodach.pragmaticflights.sharedkernel.domain.iata.IATAAirportCodeFactory
+import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.FlightScheduled
+import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.ScheduleFlight
+import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandResult
+import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.InMemoryEventBus
+import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.RecordingEventBus
+import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightIdFactory
+import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirlinesCodeFactory
+import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportCodeFactory
 import spock.lang.Specification
 
 import java.time.DayOfWeek
 import java.time.LocalTime
 
 import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication
-import static pl.zycienakodach.pragmaticflights.shared.infrastructure.message.command.CommandTestFixtures.aCommandMetadata
-import static pl.zycienakodach.pragmaticflights.sharedkernel.domain.FlightIdTestFixtures.rawFlightId
+import static pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.CommandTestFixtures.aCommandMetadata
+import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.FlightIdTestFixtures.rawFlightId
 
 class FlightsScheduleSpec extends Specification {
 

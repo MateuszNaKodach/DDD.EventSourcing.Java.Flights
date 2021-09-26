@@ -1,12 +1,12 @@
 package pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event
 
-import pl.zycienakodach.pragmaticflights.shared.application.message.CorrelationId
-import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventId
-import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventMetadata
-import pl.zycienakodach.pragmaticflights.shared.application.tenant.TenantId
+import pl.zycienakodach.pragmaticflights.sdk.application.message.CorrelationId
+import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventId
+import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventMetadata
+import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId
 import spock.lang.Specification
 
-import pl.zycienakodach.pragmaticflights.shared.application.message.event.EventHandler
+import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventHandler
 
 import java.time.Instant;
 

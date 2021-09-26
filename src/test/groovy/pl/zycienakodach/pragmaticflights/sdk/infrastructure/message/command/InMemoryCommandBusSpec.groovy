@@ -1,11 +1,11 @@
 package pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command
 
-import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandId
-import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandMetadata
-import pl.zycienakodach.pragmaticflights.shared.application.tenant.TenantId
+import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandId
+import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandMetadata
+import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId
 import spock.lang.Specification
 
-import pl.zycienakodach.pragmaticflights.shared.application.message.command.CommandHandler
+import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandHandler
 
 class InMemoryCommandBusSpec extends Specification {
 
