@@ -1,4 +1,4 @@
-package pl.zycienakodach.pragmaticflights.modules.discounts.domain;
+package pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flightdepartureoncustomerbirthday;
 
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.customerid.CustomerId;
 

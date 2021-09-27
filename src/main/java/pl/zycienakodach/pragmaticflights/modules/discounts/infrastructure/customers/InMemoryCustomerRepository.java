@@ -1,6 +1,6 @@
 package pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.customers;
 
-import pl.zycienakodach.pragmaticflights.modules.discounts.domain.CustomersBirthdays;
+import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flightdepartureoncustomerbirthday.CustomersBirthdays;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.customerid.CustomerId;
 
 import java.time.LocalDate;
