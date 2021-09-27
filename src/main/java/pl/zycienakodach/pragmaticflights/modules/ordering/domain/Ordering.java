@@ -4,10 +4,13 @@ import pl.zycienakodach.pragmaticflights.modules.ordering.api.events.FlightsOrde
 import pl.zycienakodach.pragmaticflights.modules.ordering.api.events.OrderingEvents;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.customerid.CustomerId;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderId;
+import pl.zycienakodach.pragmaticflights.readmodels.flightoffers.FlightOffer;
 import pl.zycienakodach.pragmaticflights.sdk.domain.DomainLogic;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -29,13 +32,19 @@ public class Ordering {
       if (!departureOnSelectedDay) {
         throw new RuntimeException("Cannot order flight ticket for day when the flight does not departures!");
       }
-      // todo: check if the flight not already departured
+      var departureDateTime = LocalDateTime.of(departureDate, offer.departureTime());
+      if (departureDateTime.toInstant(ZoneOffset.UTC).isAfter(currentTime)) {
+        throw new IllegalStateException("The flight has already departure!");
+      }
       return List.of(
           new FlightsOrderSubmitted(
               orderId.raw(),
               customerId.raw(),
               offer.flightId().raw(),
-              departureDate
+              offer.departureTime(),
+              departureDate,
+              offer.origin().raw(),
+              offer.destination().raw()
           )
       );
     };

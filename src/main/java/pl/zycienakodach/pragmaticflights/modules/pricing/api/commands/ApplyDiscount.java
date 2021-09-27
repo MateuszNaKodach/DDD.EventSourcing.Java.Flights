@@ -1,4 +1,5 @@
 package pl.zycienakodach.pragmaticflights.modules.pricing.api.commands;
 
-class ApplyDiscount {
+public record ApplyDiscount(String orderId,
+                            double discountInEuro) {
 }

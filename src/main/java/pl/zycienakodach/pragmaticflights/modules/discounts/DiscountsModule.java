@@ -4,8 +4,11 @@ import pl.zycienakodach.pragmaticflights.modules.discounts.api.command.Calculate
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.Discount;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.RegularPrice;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.DiscountCalculator;
+import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.Orders;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flightdepartureoncustomerbirthday.CustomersBirthdays;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flightdepartureoncustomerbirthday.FlightDepartureOnCustomerBirthdayDiscount;
+import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flighttoafricaonthursday.AirportsContinents;
+import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flighttoafricaonthursday.FlightToAfricaOnThursdayDiscount;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.money.EuroMoney;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderId;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
@@ -20,9 +23,13 @@ import static pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName.
 
 public class DiscountsModule implements ApplicationModule {
 
+  private final Orders orders;
+  private final AirportsContinents airportsContinents;
   private final CustomersBirthdays customersBirthdays;
 
-  DiscountsModule(CustomersBirthdays customersBirthdays) {
+  DiscountsModule(Orders orders, AirportsContinents airportsContinents, CustomersBirthdays customersBirthdays) {
+    this.orders = orders;
+    this.airportsContinents = airportsContinents;
     this.customersBirthdays = customersBirthdays;
   }
 
@@ -31,7 +38,8 @@ public class DiscountsModule implements ApplicationModule {
     var discountCalculator = new DiscountCalculator(
         new EuroMoney(20),
         List.of(
-            new FlightDepartureOnCustomerBirthdayDiscount()
+            new FlightDepartureOnCustomerBirthdayDiscount(orders, customersBirthdays),
+            new FlightToAfricaOnThursdayDiscount(orders, airportsContinents)
         )
     );
     app.onCommand(

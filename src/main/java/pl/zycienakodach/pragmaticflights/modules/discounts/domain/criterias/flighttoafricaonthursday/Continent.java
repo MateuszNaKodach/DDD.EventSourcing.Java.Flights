@@ -1,6 +1,6 @@
 package pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flighttoafricaonthursday;
 
-enum Continent {
+public enum Continent {
   EUROPE,
   ASIA,
   NORTH_AMERICA,

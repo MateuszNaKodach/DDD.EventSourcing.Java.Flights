@@ -1,20 +1,22 @@
-package pl.zycienakodach.pragmaticflights.modules.ordering.infrastructure.offers;
+package pl.zycienakodach.pragmaticflights.readmodels.flightoffers;
 
 import pl.zycienakodach.pragmaticflights.modules.ordering.api.events.FlightOfferedForSell;
-import pl.zycienakodach.pragmaticflights.modules.ordering.domain.FlightOffer;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightId;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportCode;
+import pl.zycienakodach.pragmaticflights.readmodels.flightoffers.api.FlightOffersRepository;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
+import pl.zycienakodach.pragmaticflights.sdk.ApplicationModule;
 
-class FlightsOffersProjector {
+class FlightsOffersReadModel implements ApplicationModule {
 
   private final FlightOffersRepository flightOffersRepository;
 
-  FlightsOffersProjector(FlightOffersRepository flightOffersRepository) {
+  FlightsOffersReadModel(FlightOffersRepository flightOffersRepository) {
     this.flightOffersRepository = flightOffersRepository;
   }
 
-  void project(Application app) {
+  @Override
+  public ApplicationModule configure(Application app) {
     app.when(FlightOfferedForSell.class, (e, m) -> {
       flightOffersRepository.add(
           new FlightOffer(
@@ -26,6 +28,6 @@ class FlightsOffersProjector {
           )
       );
     });
+    return this;
   }
-
 }

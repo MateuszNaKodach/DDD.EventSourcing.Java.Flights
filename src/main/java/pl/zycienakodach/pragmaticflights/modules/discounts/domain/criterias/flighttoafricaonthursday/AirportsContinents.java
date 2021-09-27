@@ -2,7 +2,7 @@ package pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.fli
 
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportCode;
 
-interface AirportsContinents {
+public interface AirportsContinents {
 
   Continent continentOf(IATAAirportCode airportCode);
 

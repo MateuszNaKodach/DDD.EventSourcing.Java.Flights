@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public record CalculateOrderTotalPrice(
     String orderId,
-    String buyerId,
+    String customerId,
     String flightId,
     LocalDate flightDate
 ) {

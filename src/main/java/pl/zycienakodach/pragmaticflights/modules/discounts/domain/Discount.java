@@ -10,6 +10,10 @@ import java.util.stream.Stream;
 
 public record Discount(Set<OrderDiscountCriteria> appliedCriteria, EuroMoney euro) {
 
+  public static Discount just(OrderDiscountCriteria criteria, EuroMoney euro) {
+    return new Discount(Set.of(criteria), euro);
+  }
+
   public static Discount none() {
     return new Discount(Collections.emptySet(), EuroMoney.zero());
   }

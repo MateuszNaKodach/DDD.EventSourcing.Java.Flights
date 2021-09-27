@@ -1,9 +1,9 @@
-package pl.zycienakodach.pragmaticflights.modules.ordering.infrastructure.offers;
+package pl.zycienakodach.pragmaticflights.readmodels.flightoffers.infrastructure;
 
-import pl.zycienakodach.pragmaticflights.modules.ordering.domain.FlightOffer;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightId;
+import pl.zycienakodach.pragmaticflights.readmodels.flightoffers.FlightOffer;
+import pl.zycienakodach.pragmaticflights.readmodels.flightoffers.api.FlightOffersRepository;
 
-import java.time.LocalDate;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
