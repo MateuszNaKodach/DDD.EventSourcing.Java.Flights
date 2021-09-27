@@ -8,7 +8,7 @@ import pl.zycienakodach.pragmaticflights.sdk.application.message.CausationId;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandId;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandMetadata;
 
-class SellingScheduledFlights implements ApplicationModule {
+public class SellingScheduledFlightsProcess implements ApplicationModule {
 
   @Override
   public ApplicationModule configure(Application app) {

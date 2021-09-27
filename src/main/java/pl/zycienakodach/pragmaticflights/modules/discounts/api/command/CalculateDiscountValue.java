@@ -1,4 +1,4 @@
 package pl.zycienakodach.pragmaticflights.modules.discounts.api.command;
 
-record CalculateDiscountValue(String orderId, double regularPriceInEuro) {
+public record CalculateDiscountValue(String orderId, double regularPriceInEuro) {
 }

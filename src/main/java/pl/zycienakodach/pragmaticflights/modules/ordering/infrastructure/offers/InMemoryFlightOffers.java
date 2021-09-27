@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-class InMemoryFlightOffers implements FlightOffersRepository {
+public class InMemoryFlightOffers implements FlightOffersRepository {
 
   private final ConcurrentHashMap<FlightId, FlightOffer> entities = new ConcurrentHashMap<>();
 
@@ -17,12 +17,10 @@ class InMemoryFlightOffers implements FlightOffersRepository {
   }
 
   @Override
-  public Optional<FlightOffer> findBy(FlightId flightId, LocalDate departureDay) {
+  public Optional<FlightOffer> findBy(FlightId flightId) {
     if (!entities.containsKey(flightId)) {
       return Optional.empty();
     }
-    var found = entities.get(flightId);
-    var departureOnSelectedDay = found.departureDays().stream().anyMatch(d -> d.equals(departureDay.getDayOfWeek()));
-    return departureOnSelectedDay ? Optional.of(found) : Optional.empty();
+    return Optional.of(entities.get(flightId));
   }
 }

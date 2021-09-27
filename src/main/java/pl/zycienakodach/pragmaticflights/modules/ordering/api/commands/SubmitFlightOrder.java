@@ -2,7 +2,7 @@ package pl.zycienakodach.pragmaticflights.modules.ordering.api.commands;
 
 import java.time.LocalDate;
 
-public record SubmitFlightsOrder(
+public record SubmitFlightOrder(
     String orderId,
     String customerId,
     String flightId,

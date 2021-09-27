@@ -13,6 +13,7 @@ import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventHand
 import pl.zycienakodach.pragmaticflights.sdk.application.eventstore.EventStore;
 import pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName;
 
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -67,6 +68,11 @@ public class Application {
 
   public Application withModule(ApplicationModule module) {
     module.configure(this);
+    return this;
+  }
+
+  public Application withModules(List<ApplicationModule> module) {
+    module.forEach(m -> m.configure(this));
     return this;
   }
 

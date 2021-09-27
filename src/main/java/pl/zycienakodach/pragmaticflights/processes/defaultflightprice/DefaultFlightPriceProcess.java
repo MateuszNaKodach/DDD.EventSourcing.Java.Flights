@@ -8,11 +8,11 @@ import pl.zycienakodach.pragmaticflights.sdk.application.message.CausationId;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandId;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandMetadata;
 
-class DefaultFlightPrice implements ApplicationModule {
+public class DefaultFlightPriceProcess implements ApplicationModule {
 
   private final double defaultPriceInEuro;
 
-  DefaultFlightPrice(double defaultPriceInEuro) {
+  public DefaultFlightPriceProcess(double defaultPriceInEuro) {
     this.defaultPriceInEuro = defaultPriceInEuro;
   }
 

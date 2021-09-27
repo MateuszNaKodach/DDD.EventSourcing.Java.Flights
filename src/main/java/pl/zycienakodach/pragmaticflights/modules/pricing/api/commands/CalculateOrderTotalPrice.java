@@ -2,7 +2,7 @@ package pl.zycienakodach.pragmaticflights.modules.pricing.api.commands;
 
 import java.time.LocalDate;
 
-public record CalculateOrderTotalValue(
+public record CalculateOrderTotalPrice(
     String orderId,
     String buyerId,
     String flightId,

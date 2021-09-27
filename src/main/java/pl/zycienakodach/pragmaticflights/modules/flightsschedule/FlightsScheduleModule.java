@@ -16,10 +16,11 @@ public class FlightsScheduleModule implements ApplicationModule {
   private final FlightIdFactory flightIdFactory;
   private final IATAAirportCodeFactory iataAirportCodeFactory;
 
-  FlightsScheduleModule(FlightIdFactory flightIdFactory, IATAAirportCodeFactory iataAirportCodeFactory) {
+  public FlightsScheduleModule(FlightIdFactory flightIdFactory, IATAAirportCodeFactory iataAirportCodeFactory) {
     this.flightIdFactory = flightIdFactory;
     this.iataAirportCodeFactory = iataAirportCodeFactory;
   }
+
   @Override
   public ApplicationModule configure(Application app) {
     app.onCommand(
