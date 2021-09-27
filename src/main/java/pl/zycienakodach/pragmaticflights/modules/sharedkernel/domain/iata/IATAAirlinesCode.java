@@ -9,6 +9,10 @@ public final class IATAAirlinesCode {
     this.raw = raw;
   }
 
+  public static IATAAirlinesCode fromRaw(String raw){
+    return new IATAAirlinesCode(raw);
+  }
+
   public String raw() {
     return raw;
   }

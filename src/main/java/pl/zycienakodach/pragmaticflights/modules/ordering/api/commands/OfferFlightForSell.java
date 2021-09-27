@@ -4,7 +4,7 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.Set;
 
-record AddFlight(
+public record OfferFlightForSell(
     String flightId,
     String origin,
     String destination,

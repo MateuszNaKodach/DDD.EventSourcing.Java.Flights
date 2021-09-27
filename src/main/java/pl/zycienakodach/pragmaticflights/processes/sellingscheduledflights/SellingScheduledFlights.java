@@ -1,29 +1,25 @@
-package pl.zycienakodach.pragmaticflights.processes.defaultflightprice;
+package pl.zycienakodach.pragmaticflights.processes.sellingscheduledflights;
 
-import pl.zycienakodach.pragmaticflights.modules.ordering.api.events.FlightOfferedForSell;
-import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.DefineRegularPrice;
+import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.events.FlightScheduled;
+import pl.zycienakodach.pragmaticflights.modules.ordering.api.commands.OfferFlightForSell;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
 import pl.zycienakodach.pragmaticflights.sdk.ApplicationModule;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.CausationId;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandId;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandMetadata;
 
-class DefaultFlightPrice implements ApplicationModule {
-
-  private final double defaultPriceInEuro;
-
-  DefaultFlightPrice(double defaultPriceInEuro) {
-    this.defaultPriceInEuro = defaultPriceInEuro;
-  }
+class SellingScheduledFlights implements ApplicationModule {
 
   @Override
   public ApplicationModule configure(Application app) {
-    app.when(FlightOfferedForSell.class, (e, m) -> {
-      e.departureDays().forEach(day -> app.execute(
-          new DefineRegularPrice(
+    app.when(FlightScheduled.class, (e,m) -> {
+      app.execute(
+          new OfferFlightForSell(
               e.flightId(),
-              day,
-              defaultPriceInEuro
+              e.origin(),
+              e.destination(),
+              e.departureTime(),
+              e.departureDays()
           ),
           new CommandMetadata(
               new CommandId(app.generateId()),
@@ -31,7 +27,7 @@ class DefaultFlightPrice implements ApplicationModule {
               m.correlationId(),
               new CausationId(m.eventId().raw())
           )
-      ));
+      );
     });
     return this;
   }

@@ -10,6 +10,7 @@ import java.util.List;
 import static pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName.category;
 import static pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName.streamId;
 
+//Discounting osobno? Najwyzej nie nalicza sie znizki, ale dalej mozna kupic bilet.
 public class PricingModule implements ApplicationModule {
 
   public PricingModule configure(Application app){

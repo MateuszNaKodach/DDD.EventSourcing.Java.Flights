@@ -31,4 +31,15 @@ I assumed that it's part or move complex infrastrucutre / IO which was mocked by
 Płatność za zamówienie? 
 Jedynie składanie zamówienia.
 
+On top of ordering we can build busket feature.
+
+Modules - business logic modules, totally independent from others.
+Processes - orchestrate business logic and delegate job to different business modules.
+Read Models - views
+
+Domain model is pure functional
+
+Many simplifications, no retries etc. Processing events out of order and duplication, payment integration.
+Communications are by events, so may be extract as microservice with different transport layer. 
+
 ## Discounting
