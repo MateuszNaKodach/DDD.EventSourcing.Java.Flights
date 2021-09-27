@@ -11,11 +11,11 @@ import pl.zycienakodach.pragmaticflights.sdk.domain.DomainLogic;
 
 import java.time.DayOfWeek;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
 
 public class Ordering {
 
@@ -44,7 +44,8 @@ public class Ordering {
   public static DomainLogic<OrderingEvents> submitFlightsOrder(
       OrderId orderId,
       CustomerId customerId,
-      Set<OrderItem> items,
+      FlightOffer offer,
+      LocalDate departureDate,
       Instant currentTime
   ) {
     return (List<OrderingEvents> pastEvents) -> {
@@ -52,17 +53,17 @@ public class Ordering {
       if (state.alreadyOrdered) {
         throw new RuntimeException("Order already submitted");
       }
+      var departureOnSelectedDay = offer.departureDays().stream().anyMatch(d -> d.equals(departureDate.getDayOfWeek()));
+      if (!departureOnSelectedDay) {
+        throw new RuntimeException("Cannot order flight ticket for day when the flight does not departures!");
+      }
       // todo: check if the flight not already departured
       return List.of(
           new FlightsOrderSubmitted(
               orderId.raw(),
               customerId.raw(),
-              items.stream().map(
-                  it -> new FlightsOrderSubmitted.Flight(
-                      it.offer().flightId().raw(),
-                      it.departureDate()
-                  )
-              ).collect(Collectors.toUnmodifiableSet())
+              offer.flightId().raw(),
+              departureDate
           )
       );
     };

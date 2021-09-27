@@ -8,8 +8,6 @@ import pl.zycienakodach.pragmaticflights.sdk.application.message.CausationId;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandId;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandMetadata;
 
-import java.util.stream.Collectors;
-
 class CalculatingOrderPrice implements ApplicationModule {
 
   @Override
@@ -19,9 +17,9 @@ class CalculatingOrderPrice implements ApplicationModule {
             new CalculateOrderTotalValue(
                 e.orderId(),
                 e.customerId(),
-                e.flights().stream()
-                    .map(it -> new CalculateOrderTotalValue.Flight(it.flightId(), it.flightDate()))
-                    .collect(Collectors.toUnmodifiableSet())),
+                e.flightId(),
+                e.flightDate()
+            ),
             new CommandMetadata(
                 new CommandId(app.generateId()),
                 m.tenantId(),
