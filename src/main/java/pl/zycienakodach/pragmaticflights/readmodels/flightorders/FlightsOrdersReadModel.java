@@ -5,11 +5,11 @@ import pl.zycienakodach.pragmaticflights.readmodels.flightorders.api.FlightOrder
 import pl.zycienakodach.pragmaticflights.sdk.Application;
 import pl.zycienakodach.pragmaticflights.sdk.ApplicationModule;
 
-class FlightsOrdersReadModel implements ApplicationModule {
+public class FlightsOrdersReadModel implements ApplicationModule {
 
   private final FlightOrdersRepository flightOrdersRepository;
 
-  FlightsOrdersReadModel(FlightOrdersRepository flightOrdersRepository) {
+  public FlightsOrdersReadModel(FlightOrdersRepository flightOrdersRepository) {
     this.flightOrdersRepository = flightOrdersRepository;
   }
 

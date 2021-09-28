@@ -2,6 +2,7 @@ package pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command
 
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandId
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandMetadata
+import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandResult
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId
 import spock.lang.Specification
 
@@ -31,11 +32,11 @@ class InMemoryCommandBusSpec extends Specification {
         def metadata = aCommandMetadata()
 
         when:
-        commandBus.execute(command, metadata)
+        var result = commandBus.execute(command, metadata)
 
         then:
-        def thrownException = thrown(RuntimeException)
-        thrownException.message == 'Missing handler for SampleCommand'
+        result instanceof CommandResult.Rejected
+        result.failureReason().get() == 'Missing handler for SampleCommand'
     }
 
     def "only one handler for one command type"() {

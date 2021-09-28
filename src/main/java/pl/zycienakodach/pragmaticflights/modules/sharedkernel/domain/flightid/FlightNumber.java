@@ -1,14 +1,12 @@
 package pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid;
 
-import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public record FlightNumber(int d1, int d2, int d3, int d4, int d5) {
 
   public static FlightNumber fromRaw(String raw){
-    var numberParts = Arrays.stream(raw.split(" "))
-        .mapToInt(Integer::parseInt).toArray();
+    var numberParts = raw.toCharArray();
 
     return new FlightNumber(
         numberParts[0],

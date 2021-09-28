@@ -55,6 +55,6 @@ public class DiscountsModule implements ApplicationModule {
           );
         }
     );
-    return null;
+    return this;
   }
 }

@@ -62,7 +62,7 @@ public class Application {
   }
 
   public <T> CommandResult execute(T command, CommandMetadata metadata) {
-    var commandId = new CommandId(idGenerator.get());
+    //var commandId = new CommandId(idGenerator.get());
     return this.commandBus.execute(command, metadata);
   }
 

@@ -24,7 +24,7 @@ public final class InMemoryCommandBus implements CommandBus {
     Class<?> commandType = command.getClass();
     var handler = handlers.get(commandType);
     if (handler == null) {
-      throw new RuntimeException("Missing handler for " + commandType.getSimpleName());
+      return new CommandResult.Rejected("Missing handler for " + commandType.getSimpleName());
     }
     try {
       //noinspection unchecked

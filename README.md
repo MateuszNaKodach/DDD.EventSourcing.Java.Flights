@@ -41,5 +41,5 @@ Domain model is pure functional
 
 Many simplifications, no retries etc. Processing events out of order and duplication, payment integration.
 Communications are by events, so may be extract as microservice with different transport layer. 
-
+Tracking processes progress
 ## Discounting

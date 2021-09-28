@@ -17,7 +17,9 @@ import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAi
 import pl.zycienakodach.pragmaticflights.processes.calculatingorderprice.CalculatingOrderTotalPriceProcess;
 import pl.zycienakodach.pragmaticflights.processes.defaultflightprice.DefaultFlightPriceProcess;
 import pl.zycienakodach.pragmaticflights.processes.sellingscheduledflights.SellingScheduledFlightsProcess;
+import pl.zycienakodach.pragmaticflights.readmodels.flightoffers.FlightsOffersReadModel;
 import pl.zycienakodach.pragmaticflights.readmodels.flightoffers.infrastructure.InMemoryFlightOffers;
+import pl.zycienakodach.pragmaticflights.readmodels.flightorders.FlightsOrdersReadModel;
 import pl.zycienakodach.pragmaticflights.readmodels.flightorders.infrastructure.InMemoryFlightOrders;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
 import pl.zycienakodach.pragmaticflights.sdk.application.IdGenerator;
@@ -78,7 +80,9 @@ public class ApplicationTestFixtures {
             new DiscountsModule(new FlightOrdersReadModelAdapter(flightOrdersRepository), airportsContinents, customerRepository),
             new DefaultFlightPriceProcess(30),
             new SellingScheduledFlightsProcess(),
-            new CalculatingOrderTotalPriceProcess()
+            new CalculatingOrderTotalPriceProcess(),
+            new FlightsOffersReadModel(flightOffersRepository),
+            new FlightsOrdersReadModel(flightOrdersRepository)
         ));
   }
 

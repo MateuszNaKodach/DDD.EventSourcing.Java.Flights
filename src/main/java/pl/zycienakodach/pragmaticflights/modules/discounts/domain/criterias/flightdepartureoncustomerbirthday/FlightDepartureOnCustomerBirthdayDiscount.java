@@ -20,9 +20,11 @@ public class FlightDepartureOnCustomerBirthdayDiscount implements OrderDiscountC
   @Override
   public Discount calculateDiscount(OrderId orderId, RegularPrice regularPrice) {
     var order = orders.findByOrderId(orderId).orElseThrow();
-    var customerBirthDate = customersBirthdays.forCustomer(order.customerId()).orElseThrow();
-    return customerBirthDate.equals(order.flightDate())
-        ? Discount.just(this, EuroMoney.of(50))
-        : Discount.none();
+
+    var customerBirthDate = customersBirthdays.forCustomer(order.customerId());
+    return customerBirthDate
+        .filter(birthDate -> birthDate.isEqual(order.flightDate()))
+        .map((__) -> Discount.just(this, EuroMoney.of(5)))
+        .orElse(Discount.none());
   }
 }

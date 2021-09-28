@@ -7,11 +7,11 @@ import pl.zycienakodach.pragmaticflights.readmodels.flightoffers.api.FlightOffer
 import pl.zycienakodach.pragmaticflights.sdk.Application;
 import pl.zycienakodach.pragmaticflights.sdk.ApplicationModule;
 
-class FlightsOffersReadModel implements ApplicationModule {
+public class FlightsOffersReadModel implements ApplicationModule {
 
   private final FlightOffersRepository flightOffersRepository;
 
-  FlightsOffersReadModel(FlightOffersRepository flightOffersRepository) {
+  public FlightsOffersReadModel(FlightOffersRepository flightOffersRepository) {
     this.flightOffersRepository = flightOffersRepository;
   }
 
