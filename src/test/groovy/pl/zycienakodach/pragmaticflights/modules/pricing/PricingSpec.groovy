@@ -16,7 +16,7 @@ class PricingSpec extends Specification {
     def "define regular price for flight"() {
         given:
         def eventBus = new RecordingEventBus(new InMemoryEventBus())
-        def app = inMemoryApplication(eventBus).withModule(new PricingModule())
+        def app = inMemoryApplication(eventBus).withModule(new PricingModule(regularPrices))
 
         and:
         def flightId = "KLM 12345 BCA";
@@ -31,6 +31,6 @@ class PricingSpec extends Specification {
         app.execute(command, metadata)
 
         then:
-        eventBus.lastPublishedEvent() === new RegularPriceDefined(flightId, DayOfWeek.MONDAY, 300)
+        eventBus.lastPublishedEvent() == new RegularPriceDefined(flightId, DayOfWeek.MONDAY, 300)
     }
 }

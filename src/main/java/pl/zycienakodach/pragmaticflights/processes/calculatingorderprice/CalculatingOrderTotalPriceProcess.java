@@ -18,7 +18,6 @@ public class CalculatingOrderTotalPriceProcess implements ApplicationModule {
         app.execute(
             new CalculateOrderTotalPrice(
                 e.orderId(),
-                e.customerId(),
                 e.flightId(),
                 e.flightDate()
             ),
