@@ -67,10 +67,10 @@ public class DiscountsModule implements ApplicationModule {
               calculatedDiscount
           );
 
-//          var tenantGroup = tenantGroups.tenantGroupOf(m.tenantId());
-//          if (tenantGroup.equals(new TenantGroupId("A"))) {
-//            appliedDiscountsRegistry.save(orderId, calculatedDiscount.appliedCriteria());
-//          }
+          var tenantGroup = tenantGroups.tenantGroupOf(m.tenantId());
+          if (tenantGroup.equals(new TenantGroupId("A"))) {
+            appliedDiscountsRegistry.save(orderId, calculatedDiscount.appliedCriteria());
+          }
 
           return result;
         }

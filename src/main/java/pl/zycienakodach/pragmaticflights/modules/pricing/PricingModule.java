@@ -1,6 +1,6 @@
 package pl.zycienakodach.pragmaticflights.modules.pricing;
 
-import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.ApplyDiscount;
+import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.ApplyOrderPriceDiscount;
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.CalculateOrderTotalPrice;
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.DefineRegularPrice;
 import pl.zycienakodach.pragmaticflights.modules.pricing.application.RegularPrices;
@@ -48,7 +48,7 @@ public class PricingModule implements ApplicationModule {
         }
     );
     app.onCommand(
-        ApplyDiscount.class,
+        ApplyOrderPriceDiscount.class,
         (c, m) -> new EventStreamName(category(m.tenantId().raw(), "OrderTotalPrice"), streamId(c.orderId())),
         (c) -> completeCalculatingOrderTotalPrice(
             new OrderId(c.orderId()),

@@ -11,6 +11,8 @@ import pl.zycienakodach.pragmaticflights.modules.flightsschedule.FlightsSchedule
 import pl.zycienakodach.pragmaticflights.modules.ordering.OrderingModule;
 import pl.zycienakodach.pragmaticflights.modules.ordering.infrastructure.FlightOffersReadModelAdapter;
 import pl.zycienakodach.pragmaticflights.modules.pricing.PricingModule;
+import pl.zycienakodach.pragmaticflights.modules.pricing.application.RegularPrices;
+import pl.zycienakodach.pragmaticflights.modules.pricing.infrastructure.RegularPricesAdapter;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightIdFactory;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirlinesCodeFactory;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportCodeFactory;
@@ -21,6 +23,8 @@ import pl.zycienakodach.pragmaticflights.readmodels.flightoffers.FlightsOffersRe
 import pl.zycienakodach.pragmaticflights.readmodels.flightoffers.infrastructure.InMemoryFlightOffers;
 import pl.zycienakodach.pragmaticflights.readmodels.flightorders.FlightsOrdersReadModel;
 import pl.zycienakodach.pragmaticflights.readmodels.flightorders.infrastructure.InMemoryFlightOrders;
+import pl.zycienakodach.pragmaticflights.readmodels.regularprices.FlightRegularPricesReadModel;
+import pl.zycienakodach.pragmaticflights.readmodels.regularprices.infrastructure.InMemoryFlightRegularPriceRepository;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
 import pl.zycienakodach.pragmaticflights.sdk.application.IdGenerator;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventBus;
@@ -84,17 +88,19 @@ public class ApplicationTestFixtures {
         )
     );
     var appliedDiscountsRegistry = new InMemoryAppliedDiscountsRegistry();
+    var flightRegularPricesRepository = new InMemoryFlightRegularPriceRepository();
     return app
         .withModules(List.of(
             new FlightsScheduleModule(new FlightIdFactory(new IATAAirlinesCodeFactory((__) -> true)), new IATAAirportCodeFactory((__) -> true)),
             new OrderingModule(new FlightOffersReadModelAdapter(flightOffersRepository), timeProvider),
-            new PricingModule(regularPrices),
+            new PricingModule(new RegularPricesAdapter(flightRegularPricesRepository)),
             new DiscountsModule(tenantsGroups, appliedDiscountsRegistry, new FlightOrdersReadModelAdapter(flightOrdersRepository), airportsContinents, customerRepository),
             new DefaultFlightPriceProcess(30),
             new SellingScheduledFlightsProcess(),
             new CalculatingOrderTotalPriceProcess(),
             new FlightsOffersReadModel(flightOffersRepository),
-            new FlightsOrdersReadModel(flightOrdersRepository)
+            new FlightsOrdersReadModel(flightOrdersRepository),
+            new FlightRegularPricesReadModel(flightRegularPricesRepository)
         ));
   }
 

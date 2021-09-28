@@ -77,8 +77,8 @@ class DiscountSpec extends Specification {
         then: 'Tenant in group A | discount should be 10 EURO'
         eventBus.lastEventCausedBy(euro30CommandMetadata.commandId()) == new DiscountValueCalculated(orderId.raw(), 10)
 
-//        and: 'Tenant in group A | applied discounts should be saved'
-//        1 * appliedDiscountsRegistry.save(orderId, _)
+        and: 'Tenant in group A | applied discounts should be saved'
+        1 * appliedDiscountsRegistry.save(orderId, _)
 
         when: 'calculate discount for given order with regular price 21 EURO'
         def euro21CommandMetadata = aCommandMetadata()

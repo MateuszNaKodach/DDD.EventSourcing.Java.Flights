@@ -15,7 +15,7 @@ public class FlightsOrdersReadModel implements ApplicationModule {
 
   @Override
   public ApplicationModule configure(Application app) {
-    app.when(FlightsOrderSubmitted.class, (e, m) -> {
+    app.when(FlightsOrderSubmitted.class, (e, __) -> {
       flightOrdersRepository.add(
           new FlightOrder(
               e.orderId(),
