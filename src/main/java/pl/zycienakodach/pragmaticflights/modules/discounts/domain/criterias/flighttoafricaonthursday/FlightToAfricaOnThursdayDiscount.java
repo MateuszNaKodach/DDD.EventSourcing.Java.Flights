@@ -2,6 +2,7 @@ package pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.fli
 
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.Discount;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.RegularPrice;
+import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.DiscountCriteriaName;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.OrderDiscountCriteria;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.Orders;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.money.EuroMoney;
@@ -31,7 +32,7 @@ public class FlightToAfricaOnThursdayDiscount implements OrderDiscountCriteria {
     var flightOnThursday = order.flightDate().getDayOfWeek().equals(DayOfWeek.THURSDAY);
 
     return destinationContinentIsAfrica && flightOnThursday
-        ? Discount.just(this, EuroMoney.of(5))
+        ? Discount.just(new DiscountCriteriaName(this.getClass().getSimpleName()), EuroMoney.of(5))
         : Discount.none();
   }
 

@@ -6,5 +6,5 @@ import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.Ord
 
 public interface OrderDiscountCriteria {
 
-  public Discount calculateDiscount(OrderId orderId, RegularPrice regularPrice);
+  Discount calculateDiscount(OrderId orderId, RegularPrice regularPrice);
 }

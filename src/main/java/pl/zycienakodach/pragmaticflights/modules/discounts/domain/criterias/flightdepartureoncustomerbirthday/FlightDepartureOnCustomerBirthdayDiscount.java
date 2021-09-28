@@ -2,6 +2,7 @@ package pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.fli
 
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.Discount;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.RegularPrice;
+import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.DiscountCriteriaName;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.OrderDiscountCriteria;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.Orders;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.money.EuroMoney;
@@ -24,7 +25,7 @@ public class FlightDepartureOnCustomerBirthdayDiscount implements OrderDiscountC
     var customerBirthDate = customersBirthdays.forCustomer(order.customerId());
     return customerBirthDate
         .filter(birthDate -> birthDate.isEqual(order.flightDate()))
-        .map((__) -> Discount.just(this, EuroMoney.of(5)))
+        .map((__) -> Discount.just(new DiscountCriteriaName(this.getClass().getSimpleName()), EuroMoney.of(5)))
         .orElse(Discount.none());
   }
 }
