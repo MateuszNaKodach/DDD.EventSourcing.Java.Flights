@@ -9,8 +9,6 @@ import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flig
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flighttoafricaonthursday.Continent
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.customerid.CustomerId
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightId
-import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportCode
-import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderId
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.InMemoryEventBus
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.RecordingEventBus
@@ -54,15 +52,24 @@ class DiscountSpec extends Specification {
         and: 'customer has birthday on flight date'
         def customersBirthdays = customerHaveBirthdayOn(customerId, flightDate)
 
-        when: 'calculate discount for given order with regular price 30 EURO'
+        and: 'discounting is ready'
         def eventBus = new RecordingEventBus(new InMemoryEventBus())
         def app = inMemoryApplication(eventBus)
                 .withModule(new DiscountsModule(flightsOrders, airportsContinents, customersBirthdays))
 
-        app.execute(new CalculateDiscountValue(orderId.raw(), 30), aCommandMetadata())
+        when: 'calculate discount for given order with regular price 30 EURO'
+        def euro30CommandMetadata = aCommandMetadata()
+        app.execute(new CalculateDiscountValue(orderId.raw(), 30), euro30CommandMetadata)
 
-        then:
-        eventBus.lastPublishedEvent() == new DiscountValueCalculated(orderId.raw(), 10)
+        then: 'discount should be 10 EURO'
+        eventBus.lastEventCausedBy(euro30CommandMetadata.commandId()) == new DiscountValueCalculated(orderId.raw(), 10)
+
+        when: 'calculate discount for given order with regular price 21 EURO'
+        def euro21CommandMetadata = aCommandMetadata()
+        app.execute(new CalculateDiscountValue(orderId.raw(), 21), euro21CommandMetadata)
+
+        then: 'discount should be 0 EURO'
+        eventBus.lastEventCausedBy(euro21CommandMetadata.commandId()) == new DiscountValueCalculated(orderId.raw(), 0)
     }
 
     private AirportsContinents airportIsOnContinent(destination, continent) {
