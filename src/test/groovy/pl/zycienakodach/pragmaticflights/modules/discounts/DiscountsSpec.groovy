@@ -3,6 +3,7 @@ package pl.zycienakodach.pragmaticflights.modules.discounts
 import pl.zycienakodach.pragmaticflights.modules.discounts.api.command.CalculateDiscountValue
 import pl.zycienakodach.pragmaticflights.modules.discounts.api.event.DiscountValueCalculated
 import pl.zycienakodach.pragmaticflights.modules.discounts.application.AppliedDiscountsRegistry
+import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.DiscountCriteriaName
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.FlightOrder
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.Orders
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flightdepartureoncustomerbirthday.CustomersBirthdays
@@ -30,7 +31,7 @@ import static pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.comma
 class DiscountsSpec extends Specification {
 
     @Unroll
-    def "apply two discounts for regular price of #regularPrice EURO"(double regularPrice, String tenantGroup, double expectedDiscount, boolean shouldSaveAppliedDiscountCriteria) {
+    def "when apply at most two discounts for regular price of #regularPrice EURO, then discount should be #expectedDiscount EURO"(double regularPrice, String tenantGroup, double expectedDiscount, boolean shouldSaveAppliedDiscountCriteria) {
         given: 'customer ordered flight'
         def customerId = new CustomerId("customerId")
 
@@ -80,8 +81,9 @@ class DiscountsSpec extends Specification {
         and: 'applied discounts'
         if (shouldSaveAppliedDiscountCriteria) {
             1 * appliedDiscountsRegistry.save(orderId, _)
+            // List.of(new DiscountCriteriaName('FlightDepartureOnCustomerBirthdayDiscount'), new DiscountCriteriaName('FlightToAfricaOnThursdayDiscount'))
         } else {
-            0 * appliedDiscountsRegistry.save(orderId, _)
+            0 * appliedDiscountsRegistry.save(_, _)
         }
 
         where:
@@ -92,8 +94,6 @@ class DiscountsSpec extends Specification {
         30           | "B"         | 10               | false
         21           | "B"         | 0                | false
     }
-
-    //Set.of(new DiscountCriteriaName('FlightToAfricaOnThursdayDiscount'), new DiscountCriteriaName('FlightDepartureOnCustomerBirthdayDiscount'))
 
     private AirportsContinents airportIsOnContinent(destination, continent) {
         Stub(AirportsContinents) {

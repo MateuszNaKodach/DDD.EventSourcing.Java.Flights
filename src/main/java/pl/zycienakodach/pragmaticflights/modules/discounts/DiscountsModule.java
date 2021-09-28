@@ -17,8 +17,11 @@ import pl.zycienakodach.pragmaticflights.sdk.ApplicationModule;
 import pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName;
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantGroupId;
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantGroups;
+import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static pl.zycienakodach.pragmaticflights.modules.discounts.domain.Discounting.calculateDiscount;
 import static pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName.category;
@@ -67,14 +70,22 @@ public class DiscountsModule implements ApplicationModule {
               calculatedDiscount
           );
 
-          var tenantGroup = tenantGroups.tenantGroupOf(m.tenantId());
-          if (tenantGroup.equals(new TenantGroupId("A"))) {
-            appliedDiscountsRegistry.save(orderId, calculatedDiscount.appliedCriteria());
-          }
+          runForTenantGroup(
+              m.tenantId(),
+              TenantGroupId.of("A"),
+              () -> appliedDiscountsRegistry.save(orderId, calculatedDiscount.appliedCriteria())
+          );
 
           return result;
         }
     );
     return this;
+  }
+
+  private void runForTenantGroup(TenantId tenantId, TenantGroupId tenantGroupId, Runnable function) {
+    var tenantGroup = tenantGroups.tenantGroupOf(tenantId);
+    if (tenantGroup.equals(tenantGroupId)) {
+      function.run();
+    }
   }
 }

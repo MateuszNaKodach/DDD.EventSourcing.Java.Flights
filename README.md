@@ -41,5 +41,8 @@ Domain model is pure functional
 
 Many simplifications, no retries etc. Processing events out of order and duplication, payment integration.
 Communications are by events, so may be extract as microservice with different transport layer. 
-Tracking processes progress
+Tracking processes progress.
+
+Everything was based on Events, so fastests for me was to incorporate EventSourcing.
+But of course I can use State-Based persistence.
 ## Discounting

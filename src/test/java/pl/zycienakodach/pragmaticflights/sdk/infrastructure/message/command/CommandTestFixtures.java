@@ -13,7 +13,7 @@ public class CommandTestFixtures {
     IdGenerator generateId = () -> UUID.randomUUID().toString();
     return new CommandMetadata(
         new CommandId(generateId.get()),
-        new TenantId(generateId.get())
+        new TenantId("TestTenant")
     );
   }
 
