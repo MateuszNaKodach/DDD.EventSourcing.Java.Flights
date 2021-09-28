@@ -17,6 +17,7 @@ import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.InMemoryEventBus
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.RecordingEventBus
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import java.time.LocalDate
 import java.time.LocalTime
@@ -26,9 +27,10 @@ import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.londonCityAirportLondonEnglandEurope
 import static pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.CommandTestFixtures.aCommandMetadata
 
-class DiscountSpec extends Specification {
+class DiscountsSpec extends Specification {
 
-    def "apply two discounts for regular price of 30 EURO"() {
+    @Unroll
+    def "apply two discounts for regular price of #regularPrice EURO"(double regularPrice, String tenantGroup, double expectedDiscount, boolean shouldSaveAppliedDiscountCriteria) {
         given: 'customer ordered flight'
         def customerId = new CustomerId("customerId")
 
@@ -60,33 +62,38 @@ class DiscountSpec extends Specification {
 
         and: 'discounting is ready'
         def eventBus = new RecordingEventBus(new InMemoryEventBus())
-        def tenantInGroupA = new TenantId("tenant1")
-        def tenantInGroupB = new TenantId("tenant2")
-        def tenantGroups = Stub(TenantGroups){
-            tenantGroupOf(tenantInGroupA) >> new TenantGroupId("A")
-            tenantGroupOf(tenantInGroupB) >> new TenantGroupId("B")
+        def tenant = new TenantId("tenant1")
+        def tenantGroups = Stub(TenantGroups) {
+            tenantGroupOf(tenant) >> new TenantGroupId(tenantGroup)
         }
         def appliedDiscountsRegistry = Mock(AppliedDiscountsRegistry)
         def app = inMemoryApplication(eventBus)
                 .withModule(new DiscountsModule(tenantGroups, appliedDiscountsRegistry, flightsOrders, airportsContinents, customersBirthdays))
 
-        when: 'Tenant in group A | calculate discount for given order with regular price 30 EURO'
-        def euro30CommandMetadata = aCommandMetadata(tenantInGroupA)
-        app.execute(new CalculateDiscountValue(orderId.raw(), 30), euro30CommandMetadata)
+        when: 'calculate discount for given order'
+        def commandMetadata = aCommandMetadata(tenant)
+        app.execute(new CalculateDiscountValue(orderId.raw(), regularPrice), commandMetadata)
 
-        then: 'Tenant in group A | discount should be 10 EURO'
-        eventBus.lastEventCausedBy(euro30CommandMetadata.commandId()) == new DiscountValueCalculated(orderId.raw(), 10)
+        then: 'discount should be #expectedDiscount EURO'
+        eventBus.lastEventCausedBy(commandMetadata.commandId()) == new DiscountValueCalculated(orderId.raw(), expectedDiscount)
 
-        and: 'Tenant in group A | applied discounts should be saved'
-        1 * appliedDiscountsRegistry.save(orderId, _)
+        and: 'applied discounts'
+        if (shouldSaveAppliedDiscountCriteria) {
+            1 * appliedDiscountsRegistry.save(orderId, _)
+        } else {
+            0 * appliedDiscountsRegistry.save(orderId, _)
+        }
 
-        when: 'calculate discount for given order with regular price 21 EURO'
-        def euro21CommandMetadata = aCommandMetadata()
-        app.execute(new CalculateDiscountValue(orderId.raw(), 21), euro21CommandMetadata)
-
-        then: 'discount should be 0 EURO'
-        eventBus.lastEventCausedBy(euro21CommandMetadata.commandId()) == new DiscountValueCalculated(orderId.raw(), 0)
+        where:
+        regularPrice | tenantGroup | expectedDiscount | shouldSaveAppliedDiscountCriteria
+        30           | "A"         | 10               | true
+        21           | "A"         | 0                | true
+        25           | "A"         | 5                | true
+        30           | "B"         | 10               | false
+        21           | "B"         | 0                | false
     }
+
+    //Set.of(new DiscountCriteriaName('FlightToAfricaOnThursdayDiscount'), new DiscountCriteriaName('FlightDepartureOnCustomerBirthdayDiscount'))
 
     private AirportsContinents airportIsOnContinent(destination, continent) {
         Stub(AirportsContinents) {
