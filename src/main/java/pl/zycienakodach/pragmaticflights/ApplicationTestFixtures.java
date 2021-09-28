@@ -1,7 +1,11 @@
 package pl.zycienakodach.pragmaticflights;
 
 import pl.zycienakodach.pragmaticflights.modules.discounts.DiscountsModule;
+import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flighttoafricaonthursday.Continent;
 import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.airportscontinents.InMemoryAirportsContinents;
+import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.customers.CustomerEntity;
+import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.customers.InMemoryCustomerRepository;
+import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders.FlightOrdersReadModelAdapter;
 import pl.zycienakodach.pragmaticflights.modules.flightsschedule.FlightsScheduleModule;
 import pl.zycienakodach.pragmaticflights.modules.ordering.OrderingModule;
 import pl.zycienakodach.pragmaticflights.modules.ordering.infrastructure.FlightOffersReadModelAdapter;
@@ -26,8 +30,10 @@ import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.InMemo
 
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class ApplicationTestFixtures {
@@ -45,17 +51,31 @@ public class ApplicationTestFixtures {
 
     var flightOffersRepository = new InMemoryFlightOffers();
     var flightOrdersRepository = new InMemoryFlightOrders();
-//    var airportsContinents = new InMemoryAirportsContinents(
-//        Map.ofEntries(
-//            Map.entry(IATAAirportCode.fromRaw())
-//        )
-//    );
+    var customerRepository = new InMemoryCustomerRepository(
+        Set.of(
+            new CustomerEntity("customer1", LocalDate.of(1996, 8, 23)),
+            new CustomerEntity("customer2", LocalDate.of(2012, 12, 25))
+        )
+    );
+    var airportsContinents = new InMemoryAirportsContinents(
+        Map.ofEntries(
+            Map.entry("BKC", Continent.NORTH_AMERICA),
+            Map.entry("FMA", Continent.SOUTH_AMERICA),
+            Map.entry("BVE", Continent.EUROPE),
+            Map.entry("HEK", Continent.ASIA),
+            Map.entry("NBO", Continent.AFRICA),
+            Map.entry("PNA", Continent.EUROPE),
+            Map.entry("LCY", Continent.EUROPE),
+            Map.entry("BVI", Continent.AUSTRALIA),
+            Map.entry("BCA", Continent.NORTH_AMERICA)
+        )
+    );
     return app
         .withModules(List.of(
             new FlightsScheduleModule(new FlightIdFactory(new IATAAirlinesCodeFactory((__) -> true)), new IATAAirportCodeFactory((__) -> true)),
             new OrderingModule(new FlightOffersReadModelAdapter(flightOffersRepository), timeProvider),
             new PricingModule(),
-            //new DiscountsModule(flightOrdersRepository, airportsContinents),
+            new DiscountsModule(new FlightOrdersReadModelAdapter(flightOrdersRepository), airportsContinents, customerRepository),
             new DefaultFlightPriceProcess(30),
             new SellingScheduledFlightsProcess(),
             new CalculatingOrderTotalPriceProcess()

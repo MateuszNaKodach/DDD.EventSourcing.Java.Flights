@@ -2,8 +2,10 @@ package pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.fli
 
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportCode;
 
+import java.util.Optional;
+
 public interface AirportsContinents {
 
-  Continent continentOf(IATAAirportCode airportCode);
+  Optional<Continent> continentOf(IATAAirportCode airportCode);
 
 }

@@ -10,11 +10,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-class InMemoryCustomerRepository implements CustomersBirthdays {
+public class InMemoryCustomerRepository implements CustomersBirthdays {
 
   private final ConcurrentHashMap<String, CustomerEntity> entities = new ConcurrentHashMap<>();
 
-  InMemoryCustomerRepository(Set<CustomerEntity> customers) {
+  public InMemoryCustomerRepository(Set<CustomerEntity> customers) {
     var map = customers.stream().collect(Collectors.toMap(CustomerEntity::customerId, Function.identity()));
     entities.putAll(map);
   }

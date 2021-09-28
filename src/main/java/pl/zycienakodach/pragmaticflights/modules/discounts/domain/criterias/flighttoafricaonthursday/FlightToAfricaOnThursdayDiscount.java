@@ -23,7 +23,11 @@ public class FlightToAfricaOnThursdayDiscount implements OrderDiscountCriteria {
   public Discount calculateDiscount(OrderId orderId, RegularPrice regularPrice) {
     var order = orders.findByOrderId(orderId).orElseThrow();
 
-    var destinationContinentIsAfrica = airportsContinents.continentOf(order.flight().destination()) == Continent.AFRICA;
+    var destinationContinent = airportsContinents.continentOf(order.flight().destination());
+    if (destinationContinent.isEmpty()) {
+      return Discount.none();
+    }
+    var destinationContinentIsAfrica = destinationContinent.get() == Continent.AFRICA;
     var flightOnThursday = order.flightDate().getDayOfWeek().equals(DayOfWeek.THURSDAY);
 
     return destinationContinentIsAfrica && flightOnThursday

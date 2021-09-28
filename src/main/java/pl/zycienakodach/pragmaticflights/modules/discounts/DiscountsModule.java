@@ -27,7 +27,7 @@ public class DiscountsModule implements ApplicationModule {
   private final AirportsContinents airportsContinents;
   private final CustomersBirthdays customersBirthdays;
 
-  DiscountsModule(Orders orders, AirportsContinents airportsContinents, CustomersBirthdays customersBirthdays) {
+  public DiscountsModule(Orders orders, AirportsContinents airportsContinents, CustomersBirthdays customersBirthdays) {
     this.orders = orders;
     this.airportsContinents = airportsContinents;
     this.customersBirthdays = customersBirthdays;

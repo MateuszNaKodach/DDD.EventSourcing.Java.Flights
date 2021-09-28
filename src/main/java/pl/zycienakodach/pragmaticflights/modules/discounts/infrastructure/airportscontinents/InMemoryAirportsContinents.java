@@ -4,19 +4,19 @@ import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flig
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flighttoafricaonthursday.Continent;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportCode;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class InMemoryAirportsContinents implements AirportsContinents {
 
-  private final ConcurrentHashMap<IATAAirportCode, Continent> airportContinent;
+  private final Map<String, Continent> airportContinent;
 
-
-  InMemoryAirportsContinents(ConcurrentHashMap<IATAAirportCode, Continent> airportContinent) {
+  public InMemoryAirportsContinents(Map<String, Continent> airportContinent) {
     this.airportContinent = airportContinent;
   }
 
   @Override
-  public Continent continentOf(IATAAirportCode airportCode) {
-    return this.airportContinent.get(airportCode);
+  public Optional<Continent> continentOf(IATAAirportCode airportCode) {
+    return Optional.ofNullable(this.airportContinent.getOrDefault(airportCode.raw(), null));
   }
 }
