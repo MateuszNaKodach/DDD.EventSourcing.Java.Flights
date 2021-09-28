@@ -1,6 +1,7 @@
 package pl.zycienakodach.pragmaticflights.modules.discounts;
 
 import pl.zycienakodach.pragmaticflights.modules.discounts.api.command.CalculateDiscountValue;
+import pl.zycienakodach.pragmaticflights.modules.discounts.application.AppliedDiscountsRegistry;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.Discount;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.RegularPrice;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.DiscountCalculator;
@@ -14,6 +15,8 @@ import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.Ord
 import pl.zycienakodach.pragmaticflights.sdk.Application;
 import pl.zycienakodach.pragmaticflights.sdk.ApplicationModule;
 import pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName;
+import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantGroupId;
+import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantGroups;
 
 import java.util.List;
 
@@ -23,11 +26,21 @@ import static pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName.
 
 public class DiscountsModule implements ApplicationModule {
 
+  private final TenantGroups tenantGroups;
+  private final AppliedDiscountsRegistry appliedDiscountsRegistry;
   private final Orders orders;
   private final AirportsContinents airportsContinents;
   private final CustomersBirthdays customersBirthdays;
 
-  public DiscountsModule(Orders orders, AirportsContinents airportsContinents, CustomersBirthdays customersBirthdays) {
+  public DiscountsModule(
+      TenantGroups tenantGroups,
+      AppliedDiscountsRegistry appliedDiscountsRegistry,
+      Orders orders,
+      AirportsContinents airportsContinents,
+      CustomersBirthdays customersBirthdays
+  ) {
+    this.tenantGroups = tenantGroups;
+    this.appliedDiscountsRegistry = appliedDiscountsRegistry;
     this.orders = orders;
     this.airportsContinents = airportsContinents;
     this.customersBirthdays = customersBirthdays;
@@ -44,15 +57,22 @@ public class DiscountsModule implements ApplicationModule {
     );
     app.onCommand(
         CalculateDiscountValue.class,
-        (c, m) -> new EventStreamName(category(m.tenantId().raw(), "DiscountValue"), streamId(c.orderId())),
-        (c) -> {
+        (c, m) -> new EventStreamName(category(m.tenantId().raw(), "Discount"), streamId(c.orderId())),
+        (c, m) -> {
           var orderId = new OrderId(c.orderId());
           var calculatedDiscount = discountCalculator
               .calculateDiscount(orderId, new RegularPrice(new EuroMoney(c.regularPriceInEuro())));
-          return calculateDiscount(
+          var result = calculateDiscount(
               orderId,
               calculatedDiscount
           );
+
+//          var tenantGroup = tenantGroups.tenantGroupOf(m.tenantId());
+//          if (tenantGroup.equals(new TenantGroupId("A"))) {
+//            appliedDiscountsRegistry.save(orderId, calculatedDiscount.appliedCriteria());
+//          }
+
+          return result;
         }
     );
     return this;

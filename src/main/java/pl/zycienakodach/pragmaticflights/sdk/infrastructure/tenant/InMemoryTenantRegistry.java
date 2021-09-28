@@ -5,11 +5,11 @@ import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantGroups;
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId;
 import java.util.Map;
 
-class InMemoryTenantRegistry implements TenantGroups {
+public class InMemoryTenantRegistry implements TenantGroups {
 
   private final Map<TenantId, TenantGroupId> tenantGroup;
 
-  InMemoryTenantRegistry(Map<TenantId, TenantGroupId> tenantGroup) {
+  public InMemoryTenantRegistry(Map<TenantId, TenantGroupId> tenantGroup) {
     this.tenantGroup = tenantGroup;
   }
 

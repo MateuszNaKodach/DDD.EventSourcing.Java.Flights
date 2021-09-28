@@ -50,6 +50,11 @@ public class Application {
     return this;
   }
 
+  public <C, E> Application onCommand(Class<C> commandType, BiFunction<C, CommandMetadata, EventStreamName> streamName, BiFunction<C, CommandMetadata, DomainLogic<E>> domainLogic) {
+    this.commandBus.registerHandler(commandType, (c, m) -> this.applicationService.execute(streamName.apply(c, m), domainLogic.apply(c, m), m));
+    return this;
+  }
+
   public <C> Application onCommand(Class<C> commandType, CommandHandler<C> handler) {
     this.commandBus.registerHandler(commandType, handler);
     return this;

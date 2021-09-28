@@ -3,6 +3,7 @@ package pl.zycienakodach.pragmaticflights;
 import pl.zycienakodach.pragmaticflights.modules.discounts.DiscountsModule;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flighttoafricaonthursday.Continent;
 import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.airportscontinents.InMemoryAirportsContinents;
+import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.applieddiscountsregistry.InMemoryAppliedDiscountsRegistry;
 import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.customers.CustomerEntity;
 import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.customers.InMemoryCustomerRepository;
 import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders.FlightOrdersReadModelAdapter;
@@ -24,11 +25,14 @@ import pl.zycienakodach.pragmaticflights.readmodels.flightorders.infrastructure.
 import pl.zycienakodach.pragmaticflights.sdk.Application;
 import pl.zycienakodach.pragmaticflights.sdk.application.IdGenerator;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventBus;
+import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantGroupId;
+import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId;
 import pl.zycienakodach.pragmaticflights.sdk.application.time.TimeProvider;
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.EventStoreApplicationService;
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.eventstore.InMemoryEventStore;
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.InMemoryCommandBus;
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.InMemoryEventBus;
+import pl.zycienakodach.pragmaticflights.sdk.infrastructure.tenant.InMemoryTenantRegistry;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -72,12 +76,21 @@ public class ApplicationTestFixtures {
             Map.entry("BCA", Continent.NORTH_AMERICA)
         )
     );
+    var tenantsGroups = new InMemoryTenantRegistry(
+        Map.ofEntries(
+            Map.entry(new TenantId("Tenant1"), new TenantGroupId("A")),
+            Map.entry(new TenantId("Tenant2"), new TenantGroupId("B")),
+            Map.entry(new TenantId("Tenant3"), new TenantGroupId("A")),
+            Map.entry(new TenantId("Tenant4"), new TenantGroupId("B"))
+        )
+    );
+    var appliedDiscountsRegistry = new InMemoryAppliedDiscountsRegistry();
     return app
         .withModules(List.of(
             new FlightsScheduleModule(new FlightIdFactory(new IATAAirlinesCodeFactory((__) -> true)), new IATAAirportCodeFactory((__) -> true)),
             new OrderingModule(new FlightOffersReadModelAdapter(flightOffersRepository), timeProvider),
             new PricingModule(),
-            new DiscountsModule(new FlightOrdersReadModelAdapter(flightOrdersRepository), airportsContinents, customerRepository),
+            new DiscountsModule(tenantsGroups, appliedDiscountsRegistry, new FlightOrdersReadModelAdapter(flightOrdersRepository), airportsContinents, customerRepository),
             new DefaultFlightPriceProcess(30),
             new SellingScheduledFlightsProcess(),
             new CalculatingOrderTotalPriceProcess(),
