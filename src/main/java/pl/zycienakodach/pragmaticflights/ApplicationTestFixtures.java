@@ -11,7 +11,6 @@ import pl.zycienakodach.pragmaticflights.modules.flightsschedule.FlightsSchedule
 import pl.zycienakodach.pragmaticflights.modules.ordering.OrderingModule;
 import pl.zycienakodach.pragmaticflights.modules.ordering.infrastructure.FlightOffersReadModelAdapter;
 import pl.zycienakodach.pragmaticflights.modules.pricing.PricingModule;
-import pl.zycienakodach.pragmaticflights.modules.pricing.application.RegularPrices;
 import pl.zycienakodach.pragmaticflights.modules.pricing.infrastructure.RegularPricesAdapter;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightIdFactory;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirlinesCodeFactory;
@@ -121,7 +120,7 @@ public class ApplicationTestFixtures {
     TimeProvider timeProvider = clock::instant;
 
     var applicationService = new EventStoreApplicationService(eventStore, idGenerator, timeProvider);
-    return new Application(commandBus, eventStore, applicationService, idGenerator);
+    return new Application(commandBus, eventStore, applicationService, idGenerator, timeProvider);
   }
 
 }

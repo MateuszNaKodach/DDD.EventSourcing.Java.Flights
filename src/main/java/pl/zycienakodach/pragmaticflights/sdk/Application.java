@@ -15,6 +15,7 @@ import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventFilt
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventId;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventMetadata;
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId;
+import pl.zycienakodach.pragmaticflights.sdk.application.time.TimeProvider;
 import pl.zycienakodach.pragmaticflights.sdk.domain.DomainLogic;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventHandler;
 import pl.zycienakodach.pragmaticflights.sdk.application.eventstore.EventStore;
@@ -31,12 +32,14 @@ public class Application {
   private final EventStore eventStore;
   private final ApplicationService applicationService;
   private final IdGenerator idGenerator;
+  private final TimeProvider timeProvider;
 
-  public Application(CommandBus commandBus, EventStore eventStore, ApplicationService applicationService, IdGenerator idGenerator) {
+  public Application(CommandBus commandBus, EventStore eventStore, ApplicationService applicationService, IdGenerator idGenerator, TimeProvider timeProvider) {
     this.commandBus = commandBus;
     this.eventStore = eventStore;
     this.applicationService = applicationService;
     this.idGenerator = idGenerator;
+    this.timeProvider = timeProvider;
   }
 
   public <E> Application when(Class<E> eventType, EventHandler<E> handler) {
@@ -107,7 +110,7 @@ public class Application {
   public <E> EventMetadata eventOccurred(EventStreamName eventStream, E event) {
     final EventMetadata metadata = new EventMetadata(
         new EventId(idGenerator.get()),
-        Instant.now(),
+        timeProvider.get(),
         new TenantId(idGenerator.get()),
         new CorrelationId(idGenerator.get())
     );
