@@ -1,3 +1,27 @@
+# Pragmatic Flights
+
+## Domain Exploration
+
+
+## Application Architecture
+
+## Patterns
+
+### Modules
+
+### Processes
+
+### ReadModels
+
+### High-level view
+
+### Trade-offs (simplifications)
+
+
+## Testing strategy
+
+## Out-of-scope features
+
 TenantId - imporant concept, explicit
 
 
@@ -45,4 +69,11 @@ Tracking processes progress.
 
 Everything was based on Events, so fastests for me was to incorporate EventSourcing.
 But of course I can use State-Based persistence.
+Best option would be to enable/disable event handlers based on Tenant group.
+With TenantId in EventMetadata it should be straightforward.
+
+Domain logic is almost pure functional. I've used Exceptions instead of monads like Eithers.
+It's easier to deal with it in ValueObjects instead of processing functional pipeline.
+
+
 ## Discounting

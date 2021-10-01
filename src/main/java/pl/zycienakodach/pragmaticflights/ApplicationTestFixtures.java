@@ -27,6 +27,7 @@ import pl.zycienakodach.pragmaticflights.readmodels.regularprices.FlightRegularP
 import pl.zycienakodach.pragmaticflights.readmodels.regularprices.infrastructure.InMemoryFlightRegularPriceRepository;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
 import pl.zycienakodach.pragmaticflights.sdk.application.IdGenerator;
+import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandBus;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventBus;
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantGroupId;
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId;
@@ -104,8 +105,16 @@ public class ApplicationTestFixtures {
         ));
   }
 
+
+  public static Application inMemoryApplication(CommandBus commandBus) {
+    return inMemoryApplication(new InMemoryEventBus(), commandBus);
+  }
+
   public static Application inMemoryApplication(EventBus eventBus) {
-    var commandBus = new InMemoryCommandBus();
+    return inMemoryApplication(eventBus, new InMemoryCommandBus());
+  }
+
+  public static Application inMemoryApplication(EventBus eventBus, CommandBus commandBus) {
     var eventStore = new InMemoryEventStore(eventBus);
     IdGenerator idGenerator = () -> UUID.randomUUID().toString();
     var clock = Clock.systemUTC();

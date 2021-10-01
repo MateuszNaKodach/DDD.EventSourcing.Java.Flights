@@ -2,17 +2,25 @@ package pl.zycienakodach.pragmaticflights.sdk;
 
 import pl.zycienakodach.pragmaticflights.sdk.application.ApplicationService;
 import pl.zycienakodach.pragmaticflights.sdk.application.IdGenerator;
+import pl.zycienakodach.pragmaticflights.sdk.application.eventstore.ExpectedStreamVersion;
+import pl.zycienakodach.pragmaticflights.sdk.application.message.CausationId;
+import pl.zycienakodach.pragmaticflights.sdk.application.message.CorrelationId;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandBus;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandHandler;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandId;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandMetadata;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandResult;
+import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventEnvelope;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventFilter;
+import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventId;
+import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventMetadata;
+import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId;
 import pl.zycienakodach.pragmaticflights.sdk.domain.DomainLogic;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventHandler;
 import pl.zycienakodach.pragmaticflights.sdk.application.eventstore.EventStore;
 import pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -33,6 +41,18 @@ public class Application {
 
   public <E> Application when(Class<E> eventType, EventHandler<E> handler) {
     this.eventStore.subscribe(eventType, handler);
+    return this;
+  }
+
+  public <E> Application when(Class<E> eventType, Function<E, ?> command) {
+    this.eventStore.subscribe(eventType, (e, m) -> {
+      execute(command.apply(e), new CommandMetadata(
+          new CommandId(this.generateId()),
+          m.tenantId(),
+          m.correlationId(),
+          new CausationId(m.eventId().raw())
+      ));
+    });
     return this;
   }
 
@@ -67,7 +87,6 @@ public class Application {
   }
 
   public <T> CommandResult execute(T command, CommandMetadata metadata) {
-    //var commandId = new CommandId(idGenerator.get());
     return this.commandBus.execute(command, metadata);
   }
 
@@ -83,6 +102,19 @@ public class Application {
 
   public String generateId() {
     return this.idGenerator.get();
+  }
+
+  public <E> EventMetadata eventOccurred(EventStreamName eventStream, E event) {
+    final EventMetadata metadata = new EventMetadata(
+        new EventId(idGenerator.get()),
+        Instant.now(),
+        new TenantId(idGenerator.get()),
+        new CorrelationId(idGenerator.get())
+    );
+    this.eventStore.write(eventStream, List.of(
+        new EventEnvelope(event, metadata)
+    ), new ExpectedStreamVersion.Any());
+    return metadata;
   }
 
 }

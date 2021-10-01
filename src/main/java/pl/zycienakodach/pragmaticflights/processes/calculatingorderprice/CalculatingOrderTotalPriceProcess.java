@@ -14,32 +14,19 @@ public class CalculatingOrderTotalPriceProcess implements ApplicationModule {
 
   @Override
   public ApplicationModule configure(Application app) {
-    app.when(FlightsOrderSubmitted.class, (e, m) ->
-        app.execute(
+    app
+        .when(FlightsOrderSubmitted.class, (e) ->
             new CalculateOrderTotalPrice(
                 e.orderId(),
                 e.flightId(),
                 e.flightDate()
-            ),
-            new CommandMetadata(
-                new CommandId(app.generateId()),
-                m.tenantId(),
-                m.correlationId(),
-                new CausationId(m.eventId().raw())
             )
-        ));
-    app.when(DiscountValueCalculated.class, (e, m) -> app.execute(
-        new ApplyOrderPriceDiscount(
-            e.orderId(),
-            e.discountInEuro()
-        ),
-        new CommandMetadata(
-            new CommandId(app.generateId()),
-            m.tenantId(),
-            m.correlationId(),
-            new CausationId(m.eventId().raw())
-        )
-    ));
+        ).when(DiscountValueCalculated.class, (e) ->
+            new ApplyOrderPriceDiscount(
+                e.orderId(),
+                e.discountInEuro()
+            )
+        );
     return this;
   }
 

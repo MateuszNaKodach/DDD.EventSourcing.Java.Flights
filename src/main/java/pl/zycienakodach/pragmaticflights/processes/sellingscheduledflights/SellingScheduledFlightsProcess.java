@@ -12,23 +12,13 @@ public class SellingScheduledFlightsProcess implements ApplicationModule {
 
   @Override
   public ApplicationModule configure(Application app) {
-    app.when(FlightScheduled.class, (e,m) -> {
-      app.execute(
-          new OfferFlightForSell(
-              e.flightId(),
-              e.origin(),
-              e.destination(),
-              e.departureTime(),
-              e.departureDays()
-          ),
-          new CommandMetadata(
-              new CommandId(app.generateId()),
-              m.tenantId(),
-              m.correlationId(),
-              new CausationId(m.eventId().raw())
-          )
-      );
-    });
+    app.when(FlightScheduled.class, (e) -> new OfferFlightForSell(
+        e.flightId(),
+        e.origin(),
+        e.destination(),
+        e.departureTime(),
+        e.departureDays()
+    ));
     return this;
   }
 }
