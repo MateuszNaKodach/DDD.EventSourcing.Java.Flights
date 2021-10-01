@@ -5,6 +5,7 @@ import pl.zycienakodach.pragmaticflights.sdk.application.message.command.Command
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandMetadata;
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId;
 
+import java.time.Instant;
 import java.util.UUID;
 
 public class CommandTestFixtures {
@@ -13,6 +14,7 @@ public class CommandTestFixtures {
     IdGenerator generateId = () -> UUID.randomUUID().toString();
     return new CommandMetadata(
         new CommandId(generateId.get()),
+        Instant.now(),
         new TenantId("TestTenant")
     );
   }
@@ -21,6 +23,7 @@ public class CommandTestFixtures {
     IdGenerator generateId = () -> UUID.randomUUID().toString();
     return new CommandMetadata(
         new CommandId(generateId.get()),
+        Instant.now(),
         tenantId
     );
   }

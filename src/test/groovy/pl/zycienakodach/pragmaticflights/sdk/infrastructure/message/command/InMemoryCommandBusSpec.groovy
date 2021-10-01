@@ -1,12 +1,10 @@
 package pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command
 
-import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandId
-import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandMetadata
+import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandHandler
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandResult
-import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId
 import spock.lang.Specification
 
-import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandHandler
+import static pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.CommandTestFixtures.aCommandMetadata
 
 class InMemoryCommandBusSpec extends Specification {
 
@@ -52,13 +50,5 @@ class InMemoryCommandBusSpec extends Specification {
         then:
         def thrownException = thrown(RuntimeException)
         thrownException.message == 'Multiple handlers not allowed for SampleCommand'
-    }
-
-    private static CommandMetadata aCommandMetadata() {
-        def generateId = () -> UUID.randomUUID().toString();
-        return new CommandMetadata(
-                new CommandId(generateId()),
-                new TenantId(generateId())
-        )
     }
 }

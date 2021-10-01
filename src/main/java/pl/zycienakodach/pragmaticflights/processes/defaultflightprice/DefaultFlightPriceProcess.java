@@ -27,6 +27,7 @@ public class DefaultFlightPriceProcess implements ApplicationModule {
           ),
           new CommandMetadata(
               new CommandId(app.generateId()),
+              app.currentTime(),
               m.tenantId(),
               m.correlationId(),
               new CausationId(m.eventId().raw())

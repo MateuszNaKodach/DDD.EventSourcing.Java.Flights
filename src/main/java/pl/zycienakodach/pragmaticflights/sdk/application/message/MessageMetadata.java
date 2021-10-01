@@ -2,6 +2,7 @@ package pl.zycienakodach.pragmaticflights.sdk.application.message;
 
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,23 +13,29 @@ public abstract class MessageMetadata implements Map<String, String> {
   private static final String TENANT_ID_METADATA_KEY = "TenantId";
   private static final String CORRELATION_ID_METADATA_KEY = "CorrelationId";
   private static final String CAUSATION_ID_METADATA_KEY = "CausationId";
+  private static final String TIMESTAMP_METADATA_KEY = "Timestamp";
   private final HashMap<String, String> hashMap = new HashMap<>();
 
-  protected MessageMetadata(TenantId tenantId, CorrelationId correlationId, CausationId causationId) {
+  protected MessageMetadata(Instant timestamp, TenantId tenantId, CorrelationId correlationId, CausationId causationId) {
+    this.hashMap.put(TIMESTAMP_METADATA_KEY, timestamp.toString());
     this.hashMap.put(TENANT_ID_METADATA_KEY, tenantId.raw());
     this.hashMap.put(CORRELATION_ID_METADATA_KEY, correlationId.raw());
     this.hashMap.put(CAUSATION_ID_METADATA_KEY, causationId.raw());
   }
 
-  public TenantId tenantId(){
+  public Instant timestamp() {
+    return Instant.parse(this.hashMap.get(TIMESTAMP_METADATA_KEY));
+  }
+
+  public TenantId tenantId() {
     return new TenantId(this.hashMap.get(TENANT_ID_METADATA_KEY));
   }
 
-  public CorrelationId correlationId(){
+  public CorrelationId correlationId() {
     return new CorrelationId(this.hashMap.get(CORRELATION_ID_METADATA_KEY));
   }
 
-  public CausationId causationId(){
+  public CausationId causationId() {
     return new CausationId(this.hashMap.get(CAUSATION_ID_METADATA_KEY));
   }
 

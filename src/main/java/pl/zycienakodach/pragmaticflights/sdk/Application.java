@@ -51,6 +51,7 @@ public class Application {
     this.eventStore.subscribe(eventType, (e, m) -> {
       execute(command.apply(e), new CommandMetadata(
           new CommandId(this.generateId()),
+          timeProvider.get(),
           m.tenantId(),
           m.correlationId(),
           new CausationId(m.eventId().raw())
@@ -85,7 +86,7 @@ public class Application {
 
   public <T> Application execute(T command, ApplicationContext context) {
     var commandId = new CommandId(idGenerator.get());
-    this.commandBus.execute(command, new CommandMetadata(commandId, context.tenantId()));
+    this.commandBus.execute(command, new CommandMetadata(commandId, timeProvider.get(), context.tenantId()));
     return this;
   }
 
@@ -101,6 +102,10 @@ public class Application {
   public Application withModules(List<ApplicationModule> module) {
     module.forEach(m -> m.configure(this));
     return this;
+  }
+
+  public Instant currentTime() {
+    return this.timeProvider.get();
   }
 
   public String generateId() {
