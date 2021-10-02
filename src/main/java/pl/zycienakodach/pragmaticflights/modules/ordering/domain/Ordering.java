@@ -1,14 +1,15 @@
 package pl.zycienakodach.pragmaticflights.modules.ordering.domain;
 
+import pl.zycienakodach.pragmaticflights.modules.ordering.api.events.FlightCourseOfferedForSell;
 import pl.zycienakodach.pragmaticflights.modules.ordering.api.events.FlightsOrderSubmitted;
 import pl.zycienakodach.pragmaticflights.modules.ordering.api.events.OrderingEvents;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.customerid.CustomerId;
+import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightCourseId;
+import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportCode;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderId;
-import pl.zycienakodach.pragmaticflights.readmodels.flightoffers.FlightOffer;
 import pl.zycienakodach.pragmaticflights.sdk.domain.DomainLogic;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -16,49 +17,50 @@ import java.util.function.BiConsumer;
 
 public class Ordering {
 
-  public static DomainLogic<OrderingEvents> submitFlightOrder(
+  public static DomainLogic<OrderingEvents> submitFlightCourseOrder(
       OrderId orderId,
       CustomerId customerId,
-      FlightOffer offer,
-      LocalDate departureDate,
+      FlightCourseId flightCourseId,
       Instant currentTime
   ) {
     return (List<OrderingEvents> pastEvents) -> {
-      var state = rehydrate(pastEvents);
+      var state = rehydrate(flightCourseId, pastEvents);
       if (state.alreadyOrdered) {
         throw new RuntimeException("Order already submitted");
       }
-      var departureOnSelectedDay = offer.departureDays().stream().anyMatch(d -> d.equals(departureDate.getDayOfWeek()));
-      if (!departureOnSelectedDay) {
-        throw new RuntimeException("Cannot order flight ticket for day when the flight does not departures!");
-      }
-      var departureDateTime = LocalDateTime.of(departureDate, offer.departureTime());
-      if (currentTime.isAfter(departureDateTime.toInstant(ZoneOffset.UTC))) {
+      var departureDateTime = flightCourseId.departureAt();
+      if (currentTime.isAfter(departureDateTime)) {
         throw new IllegalStateException("The flight has already departure!");
       }
       return List.of(
           new FlightsOrderSubmitted(
               orderId.raw(),
               customerId.raw(),
-              offer.flightId().raw(),
-              offer.departureTime(),
-              departureDate,
-              offer.origin().raw(),
-              offer.destination().raw()
+              flightCourseId.raw(),
+              state.origin.raw(),
+              state.destination.raw()
           )
       );
     };
   }
 
-  private static OrderState rehydrate(List<OrderingEvents> events) {
-    return events.stream().collect(OrderState::new, (state, event) -> {
-      if (event instanceof FlightsOrderSubmitted) {
-        state.alreadyOrdered = true;
-      }
-    }, EMPTY);
+  private static OrderState rehydrate(FlightCourseId flightCourseId, List<OrderingEvents> events) {
+    return events.stream()
+        .filter(event -> event.flightCourseId().equals(flightCourseId.raw()))
+        .collect(OrderState::new, (state, event) -> {
+          if (event instanceof FlightCourseOfferedForSell flightOfferedForSell) {
+            state.origin = IATAAirportCode.fromRaw(flightOfferedForSell.origin());
+            state.destination = IATAAirportCode.fromRaw(flightOfferedForSell.destination());
+          }
+          if (event instanceof FlightsOrderSubmitted) {
+            state.alreadyOrdered = true;
+          }
+        }, EMPTY);
   }
 
   private static class OrderState {
+    private IATAAirportCode origin;
+    private IATAAirportCode destination;
     private boolean alreadyOrdered;
   }
 

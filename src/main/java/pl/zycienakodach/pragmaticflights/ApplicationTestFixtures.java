@@ -9,21 +9,15 @@ import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.custom
 import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders.FlightOrdersReadModelAdapter;
 import pl.zycienakodach.pragmaticflights.modules.flightsschedule.FlightsScheduleModule;
 import pl.zycienakodach.pragmaticflights.modules.ordering.OrderingModule;
-import pl.zycienakodach.pragmaticflights.modules.ordering.infrastructure.FlightOffersReadModelAdapter;
 import pl.zycienakodach.pragmaticflights.modules.pricing.PricingModule;
-import pl.zycienakodach.pragmaticflights.modules.pricing.infrastructure.RegularPricesAdapter;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightIdFactory;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirlinesCodeFactory;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportCodeFactory;
 import pl.zycienakodach.pragmaticflights.processes.calculatingorderprice.CalculatingOrderTotalPriceProcess;
 import pl.zycienakodach.pragmaticflights.processes.defaultflightprice.DefaultFlightPriceProcess;
 import pl.zycienakodach.pragmaticflights.processes.sellingscheduledflights.SellingScheduledFlightsProcess;
-import pl.zycienakodach.pragmaticflights.readmodels.flightoffers.FlightsOffersReadModel;
-import pl.zycienakodach.pragmaticflights.readmodels.flightoffers.infrastructure.InMemoryFlightOffers;
 import pl.zycienakodach.pragmaticflights.readmodels.flightorders.FlightsOrdersReadModel;
 import pl.zycienakodach.pragmaticflights.readmodels.flightorders.infrastructure.InMemoryFlightOrders;
-import pl.zycienakodach.pragmaticflights.readmodels.regularprices.FlightRegularPricesReadModel;
-import pl.zycienakodach.pragmaticflights.readmodels.regularprices.infrastructure.InMemoryFlightRegularPriceRepository;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
 import pl.zycienakodach.pragmaticflights.sdk.application.IdGenerator;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandBus;
@@ -58,7 +52,6 @@ public class ApplicationTestFixtures {
   public static Application withAllModules(Application app) {
     TimeProvider timeProvider = Instant::now;
 
-    var flightOffersRepository = new InMemoryFlightOffers();
     var flightOrdersRepository = new InMemoryFlightOrders();
     var customerRepository = new InMemoryCustomerRepository(
         Set.of(
@@ -88,19 +81,16 @@ public class ApplicationTestFixtures {
         )
     );
     var appliedDiscountsRegistry = new InMemoryAppliedDiscountsRegistry();
-    var flightRegularPricesRepository = new InMemoryFlightRegularPriceRepository();
     return app
         .withModules(List.of(
             new FlightsScheduleModule(timeProvider, new FlightIdFactory(new IATAAirlinesCodeFactory((__) -> true)), new IATAAirportCodeFactory((__) -> true)),
-            new OrderingModule(new FlightOffersReadModelAdapter(flightOffersRepository), timeProvider),
-            new PricingModule(new RegularPricesAdapter(flightRegularPricesRepository)),
+            new OrderingModule(timeProvider),
+            new PricingModule(),
             new DiscountsModule(tenantsGroups, appliedDiscountsRegistry, new FlightOrdersReadModelAdapter(flightOrdersRepository), airportsContinents, customerRepository),
             new DefaultFlightPriceProcess(30),
             new SellingScheduledFlightsProcess(),
             new CalculatingOrderTotalPriceProcess(),
-            new FlightsOffersReadModel(flightOffersRepository),
-            new FlightsOrdersReadModel(flightOrdersRepository),
-            new FlightRegularPricesReadModel(flightRegularPricesRepository)
+            new FlightsOrdersReadModel(flightOrdersRepository)
         ));
   }
 

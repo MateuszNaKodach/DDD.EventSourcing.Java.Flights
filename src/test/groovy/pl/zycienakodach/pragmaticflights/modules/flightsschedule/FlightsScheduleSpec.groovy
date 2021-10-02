@@ -1,7 +1,7 @@
 package pl.zycienakodach.pragmaticflights.modules.flightsschedule
 
-import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.events.FlightScheduled
-import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.commands.ScheduleFlight
+import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.events.FlightCourseScheduled
+import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.commands.ScheduleFlightCourses
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandResult
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.InMemoryEventBus
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.RecordingEventBus
@@ -11,14 +11,12 @@ import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAi
 import spock.lang.Specification
 
 import java.time.DayOfWeek
-import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.ZoneOffset
 
 import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication
 import static pl.zycienakodach.pragmaticflights.modules.flightsschedule.FlightScheduleTestFixtures.scheduledOnDates
+import static pl.zycienakodach.pragmaticflights.sdk.application.time.TimeProviderFixtures.isUtcMidnightOf
 import static pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.CommandTestFixtures.aCommandMetadata
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.FlightIdTestFixtures.rawFlightId
 
@@ -28,7 +26,7 @@ class FlightsScheduleSpec extends Specification {
     def iataAirlinesCodesFactory = new IATAAirlinesCodeFactory({ true })
     def iataAirportCodesFactory = new IATAAirportCodeFactory({ true })
     def flightIdFactory = new FlightIdFactory(iataAirlinesCodesFactory)
-    def timeProvider = { LocalDateTime.of(2020, 12, 31, 12, 0).toInstant(ZoneOffset.UTC) }
+    def timeProvider = isUtcMidnightOf(2020, 12, 31)
     def app = inMemoryApplication(eventBus)
             .withModule(new FlightsScheduleModule(timeProvider, flightIdFactory, iataAirportCodesFactory))
     def flightId = rawFlightId()
@@ -36,7 +34,7 @@ class FlightsScheduleSpec extends Specification {
 
     def "schedule flights on week days during selected period"() {
         when:
-        def command = new ScheduleFlight(
+        def command = new ScheduleFlightCourses(
                 flightId,
                 "BCA",
                 "NYC",
@@ -65,7 +63,8 @@ class FlightsScheduleSpec extends Specification {
                 "2021-01-31T02:45:00Z"
         ]
         eventBus.eventsCausedBy(metadata.commandId()) == scheduledOnDates(expectedDepartureDates, {
-            new FlightScheduled(
+            new FlightCourseScheduled(
+                    flightId + "_" + it.toString(),
                     flightId,
                     "BCA",
                     "NYC",
@@ -76,7 +75,7 @@ class FlightsScheduleSpec extends Specification {
 
     def "should reject scheduling a flight without departure days"() {
         when:
-        def command = new ScheduleFlight(
+        def command = new ScheduleFlightCourses(
                 flightId,
                 "BCA",
                 "NYC",
@@ -98,7 +97,7 @@ class FlightsScheduleSpec extends Specification {
 
     def "should reject scheduling a flight for the past"() {
         when:
-        def command = new ScheduleFlight(
+        def command = new ScheduleFlightCourses(
                 flightId,
                 "BCA",
                 "NYC",

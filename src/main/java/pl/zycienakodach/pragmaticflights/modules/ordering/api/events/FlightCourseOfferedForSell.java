@@ -1,11 +1,8 @@
 package pl.zycienakodach.pragmaticflights.modules.ordering.api.events;
 
-public record FlightsOrderSubmitted(
-    String orderId,
-    String customerId,
+public record FlightCourseOfferedForSell(
     String flightCourseId,
     String origin,
     String destination
 ) implements OrderingEvents {
-
 }

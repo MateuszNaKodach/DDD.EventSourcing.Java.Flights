@@ -2,7 +2,8 @@ package pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.events;
 
 import java.time.Instant;
 
-public record FlightScheduled(
+public record FlightCourseScheduled(
+    String flightCourseId,
     String flightId,
     String origin,
     String destination,

@@ -35,13 +35,14 @@ public class EventStoreApplicationService implements ApplicationService {
       DomainLogic<EventType> domainLogic,
       CommandMetadata metadata
   ) {
-    var eventStream = eventStore.read(streamName);
+    final EventStreamName tenantStreamName = streamName.withCategoryPrefix(metadata.tenantId().raw());
+    var eventStream = eventStore.read(tenantStreamName);
 
     //noinspection unchecked
     var previousDomainEvents = eventStream.events().stream().map(event -> (EventType) event).toList();
 
     try {
-      return executeDomainLogic(streamName, domainLogic, metadata, eventStream, previousDomainEvents);
+      return executeDomainLogic(tenantStreamName, domainLogic, metadata, eventStream, previousDomainEvents);
     } catch (Exception e) {
       return new CommandResult.Rejected(e.getMessage());
     }

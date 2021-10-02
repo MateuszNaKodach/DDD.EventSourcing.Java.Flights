@@ -1,6 +1,6 @@
 package pl.zycienakodach.pragmaticflights.modules.flightsschedule;
 
-import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.commands.ScheduleFlight;
+import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.commands.ScheduleFlightCourses;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
 import pl.zycienakodach.pragmaticflights.sdk.ApplicationModule;
 import pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName;
@@ -12,7 +12,7 @@ import pl.zycienakodach.pragmaticflights.sdk.domain.LocalDateRange;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
-import static pl.zycienakodach.pragmaticflights.modules.flightsschedule.domain.FlightScheduling.scheduleFlight;
+import static pl.zycienakodach.pragmaticflights.modules.flightsschedule.domain.FlightScheduling.scheduleFlightCourses;
 import static pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName.category;
 import static pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName.streamId;
 
@@ -31,9 +31,9 @@ public class FlightsScheduleModule implements ApplicationModule {
   @Override
   public ApplicationModule configure(Application app) {
     app.onCommand(
-        ScheduleFlight.class,
+        ScheduleFlightCourses.class,
         (c,m) -> new EventStreamName(category(m.tenantId().raw(), "FlightSchedule"), streamId(c.flightId())),
-        (c) -> scheduleFlight(
+        (c) -> scheduleFlightCourses(
             flightIdFactory.flightId(c.flightId()),
             iataAirportCodeFactory.code(c.origin()),
             iataAirportCodeFactory.code(c.destination()),

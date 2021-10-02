@@ -1,13 +1,15 @@
 package pl.zycienakodach.pragmaticflights.modules.flightsschedule.domain;
 
 import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.events.FlightScheduleEvent;
-import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.events.FlightScheduled;
+import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.events.FlightCourseScheduled;
+import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightCourseId;
 import pl.zycienakodach.pragmaticflights.sdk.domain.DomainLogic;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightId;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportCode;
 import pl.zycienakodach.pragmaticflights.sdk.domain.LocalDateRange;
 
 import java.time.DayOfWeek;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -20,7 +22,7 @@ public class FlightScheduling {
   private FlightScheduling() {
   }
 
-  public static DomainLogic<FlightScheduleEvent> scheduleFlight(
+  public static DomainLogic<FlightScheduleEvent> scheduleFlightCourses(
       FlightId flightId,
       IATAAirportCode origin,
       IATAAirportCode destination,
@@ -37,12 +39,16 @@ public class FlightScheduling {
           .datesInRange()
           .stream()
           .filter(date -> departureDays.contains(date.getDayOfWeek()))
-          .map(date -> new FlightScheduled(
-              flightId.raw(),
-              origin.raw(),
-              destination.raw(),
-              ZonedDateTime.of(LocalDateTime.of(date, departureTime), ZoneId.of("UTC")).toInstant()
-          ))
+          .map(date -> {
+            final Instant departureAt = ZonedDateTime.of(LocalDateTime.of(date, departureTime), ZoneId.of("UTC")).toInstant();
+            return new FlightCourseScheduled(
+                FlightCourseId.of(flightId, departureAt).raw(),
+                flightId.raw(),
+                origin.raw(),
+                destination.raw(),
+                departureAt
+            );
+          })
           .map(event -> (FlightScheduleEvent) event)
           .toList();
     };

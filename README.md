@@ -1,5 +1,7 @@
 # Pragmatic Flights
 
+I've introduced FlightCourse - as flight which have departure date.
+
 ## Domain Exploration
 
 ## Application Architecture

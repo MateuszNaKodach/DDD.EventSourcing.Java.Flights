@@ -1,6 +1,6 @@
 package pl.zycienakodach.pragmaticflights.processes.defaultflightprice
 
-import pl.zycienakodach.pragmaticflights.modules.ordering.api.events.FlightOfferedForSell
+import pl.zycienakodach.pragmaticflights.modules.ordering.api.events.FlightCourseOfferedForSell
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.DefineRegularPrice
 import pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.InMemoryCommandBus
@@ -26,7 +26,7 @@ class DefaultFlightPriceSpec extends Specification {
         def flightId = "flightId"
         var eventMetadata = app.eventOccurred(
                 eventStream,
-                new FlightOfferedForSell(
+                new FlightCourseOfferedForSell(
                         flightId,
                         "NYC",
                         "NYC",

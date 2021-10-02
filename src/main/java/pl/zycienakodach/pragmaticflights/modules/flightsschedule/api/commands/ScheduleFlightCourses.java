@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Set;
 
-public record ScheduleFlight(
+public record ScheduleFlightCourses(
     String flightId,
     String origin,
     String destination,

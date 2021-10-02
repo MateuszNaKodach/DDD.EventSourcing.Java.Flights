@@ -3,8 +3,7 @@ package pl.zycienakodach.pragmaticflights.modules.pricing;
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.ApplyOrderPriceDiscount;
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.CalculateOrderTotalPrice;
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.DefineRegularPrice;
-import pl.zycienakodach.pragmaticflights.modules.pricing.application.RegularPrices;
-import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightId;
+import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightCourseId;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.money.EuroMoney;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderId;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
@@ -19,43 +18,42 @@ import static pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName.
 
 public class PricingModule implements ApplicationModule {
 
-  private final RegularPrices regularPrices;
-
-  public PricingModule(RegularPrices regularPrices) {
-    this.regularPrices = regularPrices;
+  public PricingModule configure(Application app) {
+    app
+        .onCommand(
+            DefineRegularPrice.class,
+            (c, m) -> eventStreamNameFor(c.flightCourseId()),
+            (c) -> defineRegularPrice(
+                FlightCourseId.fromRaw(c.flightCourseId()),
+                EuroMoney.of(c.priceInEuro())
+            )
+        ).onCommand(
+            CalculateOrderTotalPrice.class,
+            (c, m) -> eventStreamNameFor(c),
+            (c) -> startCalculatingOrderTotalPrice(OrderId.fromRaw(c.orderId()))
+        ).onCommand(
+            ApplyOrderPriceDiscount.class,
+            (c, m) -> eventStreamNameFor(c),
+            (c) -> completeCalculatingOrderTotalPrice(
+                OrderId.fromRaw(c.orderId()),
+                EuroMoney.of(c.discountInEuro())
+            )
+        );
+    return this;
   }
 
-  public PricingModule configure(Application app) {
-    app.onCommand(
-        DefineRegularPrice.class,
-        (c, m) -> new EventStreamName(category(m.tenantId().raw(), "FlightPrice"), streamId(c.flightId(), c.dayOfWeek().name())),
-        (c) -> defineRegularPrice(
-            FlightId.fromRaw(c.flightId()),
-            c.dayOfWeek(),
-            EuroMoney.of(c.priceInEuro())
-        )
-    );
-    app.onCommand(
-        CalculateOrderTotalPrice.class,
-        (c, m) -> new EventStreamName(category(m.tenantId().raw(), "OrderTotalPrice"), streamId(c.orderId())),
-        (c) -> {
-          var flightId = FlightId.fromRaw(c.flightId());
-          var price = this.regularPrices.findBy(flightId, c.flightDate().getDayOfWeek());
-          return startCalculatingOrderTotalPrice(
-              new OrderId(c.orderId()),
-              price.orElse(null)
-          );
-        }
-    );
-    app.onCommand(
-        ApplyOrderPriceDiscount.class,
-        (c, m) -> new EventStreamName(category(m.tenantId().raw(), "OrderTotalPrice"), streamId(c.orderId())),
-        (c) -> completeCalculatingOrderTotalPrice(
-            new OrderId(c.orderId()),
-            EuroMoney.of(c.discountInEuro())
-        )
-    );
-    return this;
+  private EventStreamName eventStreamNameFor(CalculateOrderTotalPrice c) {
+    final OrderId orderId = OrderId.fromRaw(c.orderId());
+    return eventStreamNameFor(orderId.flightCourseId().raw());
+  }
+
+  private EventStreamName eventStreamNameFor(ApplyOrderPriceDiscount c) {
+    final OrderId orderId = OrderId.fromRaw(c.orderId());
+    return eventStreamNameFor(orderId.flightCourseId().raw());
+  }
+
+  private EventStreamName eventStreamNameFor(String rawFlightCourseId) {
+    return new EventStreamName(category("FlightCourseOrdersPricing"), streamId(rawFlightCourseId));
   }
 
 }

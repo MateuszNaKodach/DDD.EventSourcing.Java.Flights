@@ -1,7 +1,7 @@
 package pl.zycienakodach.pragmaticflights.processes.sellingscheduledflights
 
-import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.events.FlightScheduled
-import pl.zycienakodach.pragmaticflights.modules.ordering.api.commands.OfferFlightForSell
+import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.events.FlightCourseScheduled
+import pl.zycienakodach.pragmaticflights.modules.ordering.api.commands.OfferFlightCourseForSell
 import pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.InMemoryCommandBus
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.RecordingCommandBus
@@ -24,7 +24,7 @@ class SellingScheduledFlightsProcessSpec extends Specification {
         var eventStream = new EventStreamName("category", "id")
         def flightId = "flightId"
 
-        def event = new FlightScheduled(
+        def event = new FlightCourseScheduled(
                 flightId,
                 "NYC",
                 "NYC",
@@ -38,7 +38,7 @@ class SellingScheduledFlightsProcessSpec extends Specification {
 
         then:
         commandBus.lastCommandCausedBy(eventMetadata.eventId())
-                == new OfferFlightForSell(flightId, "NYC", "NYC", event.departureTime(), event.departureDays())
+                == new OfferFlightCourseForSell(flightId, "NYC", "NYC", event.departureTime(), event.departureDays())
     }
 
 }

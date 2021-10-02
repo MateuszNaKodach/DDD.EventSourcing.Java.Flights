@@ -9,13 +9,17 @@ public record EventStreamName(String category, String id) {
     return category + "_" + id;
   }
 
-  public static String category(String... categoryParts){
-    return Stream.of(categoryParts)
-        .reduce("", (p1,p2) -> p1 + "-" + p2);
+  public EventStreamName withCategoryPrefix(String prefix) {
+    return new EventStreamName(prefix + "-" + category, id);
   }
 
-  public static String streamId(String... idParts){
+  public static String category(String... categoryParts) {
+    return Stream.of(categoryParts)
+        .reduce("", (p1, p2) -> p1 + "-" + p2);
+  }
+
+  public static String streamId(String... idParts) {
     return Stream.of(idParts)
-        .reduce("", (p1,p2) -> p1 + "-" + p2);
+        .reduce("", (p1, p2) -> p1 + "-" + p2);
   }
 }
