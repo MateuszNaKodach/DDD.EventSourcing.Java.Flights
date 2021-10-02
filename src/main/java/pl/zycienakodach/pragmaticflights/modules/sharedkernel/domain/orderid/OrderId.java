@@ -18,12 +18,11 @@ public final class OrderId {
     return new OrderId(customerId, flightCourseId);
   }
 
-  //todo: too many ids
   public static OrderId fromRaw(String raw) {
-    var orderIdParts = raw.split("_");
+    var orderIdParts = raw.split(" & ");
     return new OrderId(
         CustomerId.fromRaw(orderIdParts[0]),
-        FlightCourseId.fromRaw(orderIdParts[0])
+        FlightCourseId.fromRaw(orderIdParts[1])
     );
   }
 
@@ -36,7 +35,7 @@ public final class OrderId {
   }
 
   public String raw() {
-    return customerId.raw() + "_" + flightCourseId.raw();
+    return customerId.raw() + " & " + flightCourseId.raw();
   }
 
   @Override

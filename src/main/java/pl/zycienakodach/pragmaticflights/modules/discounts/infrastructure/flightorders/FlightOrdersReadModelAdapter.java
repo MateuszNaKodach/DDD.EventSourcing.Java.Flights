@@ -22,7 +22,7 @@ public class FlightOrdersReadModelAdapter implements Orders {
   public Optional<FlightOrder> findByOrderId(OrderId orderId) {
     return flightOrdersRepository.findBy(orderId.raw())
         .map(o -> new FlightOrder(
-            new OrderId(o.orderId()),
+            OrderId.fromRaw(o.orderId()),
             new CustomerId(o.customerId()),
             o.flightDate(),
             new FlightOrder.Flight(

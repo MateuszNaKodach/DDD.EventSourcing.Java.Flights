@@ -6,7 +6,11 @@ import java.time.ZoneOffset;
 
 public class TimeProviderFixtures {
 
-  public static TimeProvider isUtcMidnightOf(int year, int month, int dayOfMonth){
+  public static TimeProvider anyTime() {
+    return () -> LocalDateTime.now().toInstant(ZoneOffset.UTC);
+  }
+
+  public static TimeProvider isUtcMidnightOf(int year, int month, int dayOfMonth) {
     return () -> utcMidnightOf(year, month, dayOfMonth);
   }
 

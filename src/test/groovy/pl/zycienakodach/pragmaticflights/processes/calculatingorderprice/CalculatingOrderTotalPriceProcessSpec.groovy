@@ -4,15 +4,16 @@ import pl.zycienakodach.pragmaticflights.modules.discounts.api.event.DiscountVal
 import pl.zycienakodach.pragmaticflights.modules.ordering.api.events.FlightsOrderSubmitted
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.ApplyOrderPriceDiscount
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.CalculateOrderTotalPrice
-import pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.InMemoryCommandBus
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.RecordingCommandBus
 import spock.lang.Specification
 
-import java.time.LocalDate
-import java.time.LocalTime
-
 import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication
+import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.customerid.CustomerIdTestFixtures.rawCustomerId
+import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightCourseTestFixtures.rawFlightCourseId
+import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.rawDestinationAirport
+import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.rawOriginAirport
+import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderIdTestFixtures.rawOrderId
 
 class CalculatingOrderTotalPriceProcessSpec extends Specification {
 
@@ -22,24 +23,25 @@ class CalculatingOrderTotalPriceProcessSpec extends Specification {
         def app = inMemoryApplication(commandBus)
                 .withModule(new CalculatingOrderTotalPriceProcess())
 
+        and:
+        def orderId = rawOrderId()
+        def customerId = rawCustomerId()
+        def flightCourseId = rawFlightCourseId()
+        def originAirport = rawOriginAirport()
+        def destinationAirport = rawDestinationAirport()
+
         when:
-        var eventStream = new EventStreamName("category", "id")
         def event = new FlightsOrderSubmitted(
-                "orderId",
-                "customerId",
-                "flightId",
-                LocalTime.of(23, 40),
-                LocalDate.of(2021, 12, 12),
-                "NYC",
-                "NYC"
+                orderId,
+                customerId,
+                flightCourseId,
+                originAirport,
+                destinationAirport
         )
-        var eventMetadata = app.eventOccurred(
-                eventStream,
-                event
-        )
+        var eventMetadata = app.testEventOccurred(event)
 
         then:
-        commandBus.lastCommandCausedBy(eventMetadata.eventId()) == new CalculateOrderTotalPrice("orderId", "flightId", LocalDate.of(2021, 12, 12))
+        commandBus.lastCommandCausedBy(eventMetadata.eventId()) == new CalculateOrderTotalPrice(orderId)
     }
 
     def "when discount value calculated then should apply order price discount"() {
@@ -48,19 +50,18 @@ class CalculatingOrderTotalPriceProcessSpec extends Specification {
         def app = inMemoryApplication(commandBus)
                 .withModule(new CalculatingOrderTotalPriceProcess())
 
+        and:
+        def orderId = rawOrderId()
+
         when:
-        var eventStream = new EventStreamName("category", "id")
         def event = new DiscountValueCalculated(
-                "orderId",
+                orderId,
                 10
         )
-        var eventMetadata = app.eventOccurred(
-                eventStream,
-                event
-        )
+        var eventMetadata = app.testEventOccurred(event)
 
         then:
-        commandBus.lastCommandCausedBy(eventMetadata.eventId()) == new ApplyOrderPriceDiscount("orderId", 10)
+        commandBus.lastCommandCausedBy(eventMetadata.eventId()) == new ApplyOrderPriceDiscount(orderId, 10)
     }
 
 }

@@ -8,6 +8,14 @@ import java.util.Map;
 
 public class IATAAirportsCodeFixtures {
 
+  public static String rawOriginAirport(){
+    return "BKC";
+  }
+
+  public static String rawDestinationAirport(){
+    return "NBO";
+  }
+
   public static IATAAirportCode bucklandAirportAlaskaUnitedStatesNorthAmerica() {
     return IATAAirportCode.fromRaw("BKC");
   }

@@ -62,7 +62,7 @@ public class DiscountsModule implements ApplicationModule {
         CalculateDiscountValue.class,
         (c, m) -> new EventStreamName(category(m.tenantId().raw(), "Discount"), streamId(c.orderId())),
         (c, m) -> {
-          var orderId = new OrderId(c.orderId());
+          var orderId = OrderId.fromRaw(c.orderId());
           var calculatedDiscount = discountCalculator
               .calculateDiscount(orderId, new RegularPrice(new EuroMoney(c.regularPriceInEuro())));
           var result = calculateDiscount(

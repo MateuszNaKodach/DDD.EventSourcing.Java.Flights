@@ -2,15 +2,16 @@ package pl.zycienakodach.pragmaticflights.processes.sellingscheduledflights
 
 import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.events.FlightCourseScheduled
 import pl.zycienakodach.pragmaticflights.modules.ordering.api.commands.OfferFlightCourseForSell
-import pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.InMemoryCommandBus
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.RecordingCommandBus
 import spock.lang.Specification
 
-import java.time.DayOfWeek
-import java.time.LocalTime
-
 import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication
+import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightCourseTestFixtures.rawFlightCourseId
+import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightIdTestFixtures.rawFlightId
+import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.rawDestinationAirport
+import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.rawOriginAirport
+import static pl.zycienakodach.pragmaticflights.sdk.application.time.TimeProviderFixtures.anyTime
 
 class SellingScheduledFlightsProcessSpec extends Specification {
 
@@ -21,24 +22,24 @@ class SellingScheduledFlightsProcessSpec extends Specification {
                 .withModule(new SellingScheduledFlightsProcess())
 
         when:
-        var eventStream = new EventStreamName("category", "id")
-        def flightId = "flightId"
+        def flightId = rawFlightId()
+        def departureAt = anyTime().get()
+        def flightCourseId = rawFlightCourseId(flightId, departureAt)
+        def originAirport = rawOriginAirport()
+        def destinationAirport = rawDestinationAirport()
 
         def event = new FlightCourseScheduled(
+                flightCourseId,
                 flightId,
-                "NYC",
-                "NYC",
-                LocalTime.now(),
-                Set.of(DayOfWeek.MONDAY, DayOfWeek.SUNDAY)
+                originAirport,
+                destinationAirport,
+                departureAt
         )
-        var eventMetadata = app.eventOccurred(
-                eventStream,
-                event
-        )
+        var eventMetadata = app.testEventOccurred(event)
 
         then:
         commandBus.lastCommandCausedBy(eventMetadata.eventId())
-                == new OfferFlightCourseForSell(flightId, "NYC", "NYC", event.departureTime(), event.departureDays())
+                == new OfferFlightCourseForSell(flightCourseId, originAirport, destinationAirport)
     }
 
 }

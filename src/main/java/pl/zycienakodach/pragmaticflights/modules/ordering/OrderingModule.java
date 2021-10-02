@@ -28,14 +28,14 @@ public class OrderingModule implements ApplicationModule {
   public ApplicationModule configure(Application app) {
     app
         .onCommand(OfferFlightCourseForSell.class,
-            (c, m) -> new EventStreamName(category(m.tenantId().raw(), "FlightCourseSells"), streamId(c.flightCourseId())),
+            (c, m) -> new EventStreamName(category("FlightCourseSells"), streamId(c.flightCourseId())),
             (c) -> offerForSell(
                 FlightCourseId.fromRaw(c.flightCourseId()),
                 IATAAirportCode.fromRaw(c.origin()),
                 IATAAirportCode.fromRaw(c.destination())
             ))
         .onCommand(SubmitFlightOrder.class,
-            (c, m) -> new EventStreamName(category(m.tenantId().raw(), "FlightCourseSells"), streamId(c.flightCourseId())),
+            (c, m) -> new EventStreamName(category("FlightCourseSells"), streamId(c.flightCourseId())),
             (c) -> {
               final var customerId = new CustomerId(c.customerId());
               final var flightCourseId = FlightCourseId.fromRaw(c.flightCourseId());

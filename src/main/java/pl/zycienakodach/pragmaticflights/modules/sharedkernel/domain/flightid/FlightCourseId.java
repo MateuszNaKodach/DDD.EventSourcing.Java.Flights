@@ -9,12 +9,12 @@ public record FlightCourseId(FlightId flightId, Instant departureAt) {
   }
 
   public static FlightCourseId fromRaw(String raw) {
-    var flightCourseIdParts = raw.split("_");
+    var flightCourseIdParts = raw.split(" \\+ ");
     return new FlightCourseId(FlightId.fromRaw(flightCourseIdParts[0]), Instant.parse(flightCourseIdParts[1]));
   }
 
   public String raw() {
-    return flightId.raw() + "_" + departureAt.toString();
+    return flightId.raw() + " + " + departureAt.toString();
   }
 
 }

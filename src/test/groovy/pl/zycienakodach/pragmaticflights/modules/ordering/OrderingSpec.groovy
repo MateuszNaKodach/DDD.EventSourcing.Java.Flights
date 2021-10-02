@@ -9,12 +9,16 @@ import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.Record
 import spock.lang.Specification
 
 import java.time.LocalDate
-import java.time.LocalTime
 import java.time.ZoneOffset
 
 import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication
+import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.customerid.CustomerIdTestFixtures.rawCustomerId
+import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightCourseTestFixtures.rawFlightCourseId
+import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.rawDestinationAirport
+import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.rawOriginAirport
+import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderIdTestFixtures.rawOrderId
+import static pl.zycienakodach.pragmaticflights.sdk.application.EventStreamNameTestFixtures.testTenantEventStream
 import static pl.zycienakodach.pragmaticflights.sdk.application.time.TimeProviderFixtures.isUtcMidnightOf
-import static pl.zycienakodach.pragmaticflights.sdk.application.time.TimeProviderFixtures.utc12h00mOf
 import static pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.CommandTestFixtures.aCommandMetadata
 
 class OrderingSpec extends Specification {
@@ -26,55 +30,66 @@ class OrderingSpec extends Specification {
         def app = inMemoryApplication(eventBus)
                 .withModule(new OrderingModule(timeProvider))
 
+        and:
+        final flightCourseId = rawFlightCourseId()
+        final originAirport = rawOriginAirport()
+        final destinationAirport = rawDestinationAirport()
+
         when:
         def offerFlightForSell = new OfferFlightCourseForSell(
-                'ULA 00001 CDA',
-                'FMA',
-                'BVE',
-                utc12h00mOf(2021, 10, 2)
+                flightCourseId,
+                originAirport,
+                destinationAirport
         )
         def commandMetadata = aCommandMetadata()
         app.execute(offerFlightForSell, commandMetadata)
 
         then:
         eventBus.lastEventCausedBy(commandMetadata.commandId()) == new FlightCourseOfferedForSell(
-                'ULA 00001 CDA',
-                'FMA',
-                'BVE',
-                utc12h00mOf(2021, 10, 2)
+                flightCourseId,
+                originAirport,
+                destinationAirport
         )
     }
 
     def "submit flight order"() {
         given:
         def eventBus = new RecordingEventBus(new InMemoryEventBus())
-        def flightId = 'ULA 00001 CDA'
         def timeProvider = { LocalDate.of(2021, 10, 2).atStartOfDay().toInstant(ZoneOffset.UTC) }
         def app = inMemoryApplication(eventBus)
                 .withModule(new OrderingModule(timeProvider))
-        def orderId = 'orderId'
-        def customerId = 'customerId'
-        def flightDate = LocalDate.of(2021, 10, 2)
+
+        and:
+        def customerId = rawCustomerId()
+        def flightCourseId = rawFlightCourseId()
+        final originAirport = rawOriginAirport()
+        final destinationAirport = rawDestinationAirport()
+
+        and:
+        def eventStream = testTenantEventStream("FlightCourseSells", flightCourseId)
+        def flightCourseOfferedForSell = new FlightCourseOfferedForSell(
+                flightCourseId,
+                originAirport,
+                destinationAirport
+        )
+        app.testEventOccurred(eventStream, flightCourseOfferedForSell)
 
         when:
         def offerFlightForSell = new SubmitFlightOrder(
-                orderId,
                 customerId,
-                flightId,
-                flightDate
+                flightCourseId
         )
         def commandMetadata = aCommandMetadata()
         app.execute(offerFlightForSell, commandMetadata)
 
         then:
+        def orderId = rawOrderId(customerId, flightCourseId)
         eventBus.lastEventCausedBy(commandMetadata.commandId()) == new FlightsOrderSubmitted(
                 orderId,
                 customerId,
-                flightId,
-                LocalTime.of(12, 0),
-                flightDate,
-                'FMA',
-                'BVE'
+                flightCourseId,
+                originAirport,
+                destinationAirport
         )
     }
 }

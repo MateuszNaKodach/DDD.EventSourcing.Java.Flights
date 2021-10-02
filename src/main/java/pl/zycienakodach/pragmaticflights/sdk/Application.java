@@ -112,11 +112,17 @@ public class Application {
     return this.idGenerator.get();
   }
 
-  public <E> EventMetadata eventOccurred(EventStreamName eventStream, E event) {
+  // todo: extract test methods
+  public <E> EventMetadata testEventOccurred(E event) {
+    var allEventStream = new EventStreamName("$", "all");
+    return testEventOccurred(allEventStream, event);
+  }
+
+  public <E> EventMetadata testEventOccurred(EventStreamName eventStream, E event) {
     final EventMetadata metadata = new EventMetadata(
         new EventId(idGenerator.get()),
         timeProvider.get(),
-        new TenantId(idGenerator.get()),
+        new TenantId("TestTenant"),
         new CorrelationId(idGenerator.get())
     );
     this.eventStore.write(eventStream, List.of(

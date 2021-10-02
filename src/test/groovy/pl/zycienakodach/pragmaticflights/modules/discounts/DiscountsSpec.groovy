@@ -3,15 +3,12 @@ package pl.zycienakodach.pragmaticflights.modules.discounts
 import pl.zycienakodach.pragmaticflights.modules.discounts.api.command.CalculateDiscountValue
 import pl.zycienakodach.pragmaticflights.modules.discounts.api.event.DiscountValueCalculated
 import pl.zycienakodach.pragmaticflights.modules.discounts.application.AppliedDiscountsRegistry
-import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.DiscountCriteriaName
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.FlightOrder
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.Orders
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flightdepartureoncustomerbirthday.CustomersBirthdays
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flighttoafricaonthursday.AirportsContinents
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flighttoafricaonthursday.Continent
-import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.customerid.CustomerId
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightId
-import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderId
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantGroupId
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantGroups
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId
@@ -24,8 +21,10 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication
+import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.customerid.CustomerIdTestFixtures.aCustomerId
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.jomoKenyattaInternationalAirportNairobiKenyaAfrica
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.londonCityAirportLondonEnglandEurope
+import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderIdTestFixtures.anOrderId
 import static pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.CommandTestFixtures.aCommandMetadata
 
 class DiscountsSpec extends Specification {
@@ -33,7 +32,7 @@ class DiscountsSpec extends Specification {
     @Unroll
     def "when apply at most two discounts for regular price of #regularPrice EURO, then discount should be #expectedDiscount EURO"(double regularPrice, String tenantGroup, double expectedDiscount, boolean shouldSaveAppliedDiscountCriteria) {
         given: 'customer ordered flight'
-        def customerId = new CustomerId("customerId")
+        def customerId = aCustomerId()
 
         and: 'flight departures on Thursday'
         def flightDate = LocalDate.of(2021, 9, 30)
@@ -41,7 +40,7 @@ class DiscountsSpec extends Specification {
         and: 'flight destination airport in in Africa'
         def destination = jomoKenyattaInternationalAirportNairobiKenyaAfrica()
         def airportsContinents = airportIsOnContinent(destination, Continent.AFRICA)
-        def orderId = new OrderId("orderId")
+        def orderId = anOrderId()
         def flightOrder = new FlightOrder(
                 orderId,
                 customerId,

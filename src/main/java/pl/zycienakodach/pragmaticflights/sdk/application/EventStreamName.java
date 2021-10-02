@@ -10,7 +10,7 @@ public record EventStreamName(String category, String id) {
   }
 
   public EventStreamName withCategoryPrefix(String prefix) {
-    return new EventStreamName(prefix + "-" + category, id);
+    return new EventStreamName(category(prefix, category), id);
   }
 
   public static String category(String... categoryParts) {

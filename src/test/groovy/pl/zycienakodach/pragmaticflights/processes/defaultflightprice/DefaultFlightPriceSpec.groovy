@@ -2,19 +2,18 @@ package pl.zycienakodach.pragmaticflights.processes.defaultflightprice
 
 import pl.zycienakodach.pragmaticflights.modules.ordering.api.events.FlightCourseOfferedForSell
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.DefineRegularPrice
-import pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.InMemoryCommandBus
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.RecordingCommandBus
 import spock.lang.Specification
 
-import java.time.DayOfWeek
-import java.time.LocalTime
-
 import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication
+import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightCourseTestFixtures.rawFlightCourseId
+import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.rawDestinationAirport
+import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.rawOriginAirport
 
 class DefaultFlightPriceSpec extends Specification {
 
-    def "when flight offered for sell then should define regular price for each day"() {
+    def "when flight course offered for sell then should define regular price for the flight"() {
         given:
         var defaultPriceInEuro = 30.0
         var commandBus = new RecordingCommandBus(new InMemoryCommandBus());
@@ -22,25 +21,16 @@ class DefaultFlightPriceSpec extends Specification {
                 .withModule(new DefaultFlightPriceProcess(defaultPriceInEuro))
 
         when:
-        var eventStream = new EventStreamName("category", "id")
-        def flightId = "flightId"
-        var eventMetadata = app.eventOccurred(
-                eventStream,
+        def flightCourseId = rawFlightCourseId()
+        var eventMetadata = app.testEventOccurred(
                 new FlightCourseOfferedForSell(
-                        flightId,
-                        "NYC",
-                        "NYC",
-                        LocalTime.now(),
-                        Set.of(DayOfWeek.MONDAY, DayOfWeek.SUNDAY)
+                        flightCourseId,
+                        rawOriginAirport(),
+                        rawDestinationAirport()
                 )
         )
 
         then:
-        commandBus.commandsCausedBy(eventMetadata.eventId())
-                .containsAll([
-                        new DefineRegularPrice(flightId, DayOfWeek.MONDAY, defaultPriceInEuro),
-                        new DefineRegularPrice(flightId, DayOfWeek.SUNDAY, defaultPriceInEuro)
-                ])
-
+        commandBus.lastCommandCausedBy(eventMetadata.eventId()) == new DefineRegularPrice(flightCourseId, defaultPriceInEuro)
     }
 }

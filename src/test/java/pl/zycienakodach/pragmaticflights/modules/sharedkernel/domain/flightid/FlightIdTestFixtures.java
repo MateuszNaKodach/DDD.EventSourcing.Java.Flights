@@ -1,4 +1,4 @@
-package pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain;
+package pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid;
 
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightId;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightNumber;

@@ -18,7 +18,7 @@ import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemory
 import static pl.zycienakodach.pragmaticflights.modules.flightsschedule.FlightScheduleTestFixtures.scheduledOnDates
 import static pl.zycienakodach.pragmaticflights.sdk.application.time.TimeProviderFixtures.isUtcMidnightOf
 import static pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.CommandTestFixtures.aCommandMetadata
-import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.FlightIdTestFixtures.rawFlightId
+import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightIdTestFixtures.rawFlightId
 
 class FlightsScheduleSpec extends Specification {
 
@@ -64,7 +64,7 @@ class FlightsScheduleSpec extends Specification {
         ]
         eventBus.eventsCausedBy(metadata.commandId()) == scheduledOnDates(expectedDepartureDates, {
             new FlightCourseScheduled(
-                    flightId + "_" + it.toString(),
+                    flightId + " + " + it.toString(),
                     flightId,
                     "BCA",
                     "NYC",
