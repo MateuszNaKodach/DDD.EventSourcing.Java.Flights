@@ -8,13 +8,13 @@ import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.money.EuroM
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderId;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
 import pl.zycienakodach.pragmaticflights.sdk.ApplicationModule;
-import pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName;
+import pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName;
 
 import static pl.zycienakodach.pragmaticflights.modules.pricing.domain.Pricing.completeCalculatingOrderTotalPrice;
 import static pl.zycienakodach.pragmaticflights.modules.pricing.domain.Pricing.defineRegularPrice;
 import static pl.zycienakodach.pragmaticflights.modules.pricing.domain.Pricing.startCalculatingOrderTotalPrice;
-import static pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName.category;
-import static pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName.streamId;
+import static pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName.category;
+import static pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName.streamId;
 
 public class PricingModule implements ApplicationModule {
 

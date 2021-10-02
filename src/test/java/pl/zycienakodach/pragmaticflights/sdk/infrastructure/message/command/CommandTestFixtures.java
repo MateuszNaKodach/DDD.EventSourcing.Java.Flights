@@ -1,6 +1,6 @@
 package pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command;
 
-import pl.zycienakodach.pragmaticflights.sdk.application.IdGenerator;
+import pl.zycienakodach.pragmaticflights.sdk.application.idgenerator.IdGenerator;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandId;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandMetadata;
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId;

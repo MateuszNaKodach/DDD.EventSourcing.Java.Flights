@@ -2,7 +2,6 @@ package pl.zycienakodach.pragmaticflights.modules.discounts;
 
 import pl.zycienakodach.pragmaticflights.modules.discounts.api.command.CalculateDiscountValue;
 import pl.zycienakodach.pragmaticflights.modules.discounts.application.AppliedDiscountsRegistry;
-import pl.zycienakodach.pragmaticflights.modules.discounts.domain.Discount;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.RegularPrice;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.DiscountCalculator;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.Orders;
@@ -14,18 +13,16 @@ import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.money.EuroM
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderId;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
 import pl.zycienakodach.pragmaticflights.sdk.ApplicationModule;
-import pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName;
+import pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName;
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantGroupId;
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantGroups;
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId;
 
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static pl.zycienakodach.pragmaticflights.modules.discounts.domain.Discounting.calculateDiscount;
-import static pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName.category;
-import static pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName.streamId;
+import static pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName.category;
+import static pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName.streamId;
 
 public class DiscountsModule implements ApplicationModule {
 

@@ -1,6 +1,6 @@
 package pl.zycienakodach.pragmaticflights.sdk.infrastructure.eventstore
 
-import pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName
+import pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName
 import pl.zycienakodach.pragmaticflights.sdk.application.eventstore.ExpectedStreamVersion
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventBus
 import spock.lang.Specification

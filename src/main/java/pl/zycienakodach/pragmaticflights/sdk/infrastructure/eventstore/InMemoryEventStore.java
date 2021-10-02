@@ -4,8 +4,8 @@ import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventBus;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventEnvelope;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventHandler;
 import pl.zycienakodach.pragmaticflights.sdk.application.eventstore.EventStore;
-import pl.zycienakodach.pragmaticflights.sdk.application.EventStream;
-import pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName;
+import pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStream;
+import pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName;
 import pl.zycienakodach.pragmaticflights.sdk.application.eventstore.ExpectedStreamVersion;
 
 import java.util.List;

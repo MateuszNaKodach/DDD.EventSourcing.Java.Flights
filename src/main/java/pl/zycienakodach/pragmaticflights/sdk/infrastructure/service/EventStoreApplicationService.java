@@ -1,9 +1,9 @@
-package pl.zycienakodach.pragmaticflights.sdk.infrastructure;
+package pl.zycienakodach.pragmaticflights.sdk.infrastructure.service;
 
-import pl.zycienakodach.pragmaticflights.sdk.application.ApplicationService;
-import pl.zycienakodach.pragmaticflights.sdk.application.EventStream;
-import pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName;
-import pl.zycienakodach.pragmaticflights.sdk.application.IdGenerator;
+import pl.zycienakodach.pragmaticflights.sdk.application.service.ApplicationService;
+import pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStream;
+import pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName;
+import pl.zycienakodach.pragmaticflights.sdk.application.idgenerator.IdGenerator;
 import pl.zycienakodach.pragmaticflights.sdk.application.eventstore.ExpectedStreamVersion;
 import pl.zycienakodach.pragmaticflights.sdk.application.eventstore.EventStore;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.CausationId;

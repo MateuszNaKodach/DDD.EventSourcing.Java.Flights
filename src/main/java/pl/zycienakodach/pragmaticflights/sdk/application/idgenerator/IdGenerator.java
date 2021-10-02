@@ -1,4 +1,4 @@
-package pl.zycienakodach.pragmaticflights.sdk.application;
+package pl.zycienakodach.pragmaticflights.sdk.application.idgenerator;
 
 import java.util.function.Supplier;
 

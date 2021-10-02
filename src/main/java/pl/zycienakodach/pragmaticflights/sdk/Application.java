@@ -1,7 +1,7 @@
 package pl.zycienakodach.pragmaticflights.sdk;
 
-import pl.zycienakodach.pragmaticflights.sdk.application.ApplicationService;
-import pl.zycienakodach.pragmaticflights.sdk.application.IdGenerator;
+import pl.zycienakodach.pragmaticflights.sdk.application.service.ApplicationService;
+import pl.zycienakodach.pragmaticflights.sdk.application.idgenerator.IdGenerator;
 import pl.zycienakodach.pragmaticflights.sdk.application.eventstore.ExpectedStreamVersion;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.CausationId;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.CorrelationId;
@@ -19,7 +19,7 @@ import pl.zycienakodach.pragmaticflights.sdk.application.time.TimeProvider;
 import pl.zycienakodach.pragmaticflights.sdk.domain.DomainLogic;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventHandler;
 import pl.zycienakodach.pragmaticflights.sdk.application.eventstore.EventStore;
-import pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName;
+import pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName;
 
 import java.time.Instant;
 import java.util.List;

@@ -1,4 +1,4 @@
-package pl.zycienakodach.pragmaticflights.sdk.application;
+package pl.zycienakodach.pragmaticflights.sdk.application.eventstream;
 
 import java.util.List;
 

@@ -19,13 +19,13 @@ import pl.zycienakodach.pragmaticflights.processes.sellingscheduledflights.Selli
 import pl.zycienakodach.pragmaticflights.readmodels.flightorders.FlightsOrdersReadModel;
 import pl.zycienakodach.pragmaticflights.readmodels.flightorders.infrastructure.InMemoryFlightOrders;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
-import pl.zycienakodach.pragmaticflights.sdk.application.IdGenerator;
+import pl.zycienakodach.pragmaticflights.sdk.application.idgenerator.IdGenerator;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandBus;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventBus;
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantGroupId;
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId;
 import pl.zycienakodach.pragmaticflights.sdk.application.time.TimeProvider;
-import pl.zycienakodach.pragmaticflights.sdk.infrastructure.EventStoreApplicationService;
+import pl.zycienakodach.pragmaticflights.sdk.infrastructure.service.EventStoreApplicationService;
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.eventstore.InMemoryEventStore;
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.InMemoryCommandBus;
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.InMemoryEventBus;

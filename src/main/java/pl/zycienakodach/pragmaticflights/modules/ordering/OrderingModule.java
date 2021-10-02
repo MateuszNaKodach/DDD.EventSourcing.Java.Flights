@@ -8,13 +8,13 @@ import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAi
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderId;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
 import pl.zycienakodach.pragmaticflights.sdk.ApplicationModule;
-import pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName;
+import pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName;
 import pl.zycienakodach.pragmaticflights.sdk.application.time.TimeProvider;
 
 import static pl.zycienakodach.pragmaticflights.modules.ordering.domain.Offering.offerForSell;
 import static pl.zycienakodach.pragmaticflights.modules.ordering.domain.Ordering.submitFlightCourseOrder;
-import static pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName.category;
-import static pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName.streamId;
+import static pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName.category;
+import static pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName.streamId;
 
 public class OrderingModule implements ApplicationModule {
 

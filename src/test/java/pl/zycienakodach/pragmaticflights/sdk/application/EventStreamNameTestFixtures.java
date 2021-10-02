@@ -1,7 +1,9 @@
 package pl.zycienakodach.pragmaticflights.sdk.application;
 
-import static pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName.category;
-import static pl.zycienakodach.pragmaticflights.sdk.application.EventStreamName.streamId;
+import pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName;
+
+import static pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName.category;
+import static pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName.streamId;
 
 public class EventStreamNameTestFixtures {
 
