@@ -91,7 +91,7 @@ public class ApplicationTestFixtures {
     var flightRegularPricesRepository = new InMemoryFlightRegularPriceRepository();
     return app
         .withModules(List.of(
-            new FlightsScheduleModule(new FlightIdFactory(new IATAAirlinesCodeFactory((__) -> true)), new IATAAirportCodeFactory((__) -> true)),
+            new FlightsScheduleModule(timeProvider, new FlightIdFactory(new IATAAirlinesCodeFactory((__) -> true)), new IATAAirportCodeFactory((__) -> true)),
             new OrderingModule(new FlightOffersReadModelAdapter(flightOffersRepository), timeProvider),
             new PricingModule(new RegularPricesAdapter(flightRegularPricesRepository)),
             new DiscountsModule(tenantsGroups, appliedDiscountsRegistry, new FlightOrdersReadModelAdapter(flightOrdersRepository), airportsContinents, customerRepository),

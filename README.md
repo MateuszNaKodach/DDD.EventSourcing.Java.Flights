@@ -2,12 +2,25 @@
 
 ## Domain Exploration
 
-
 ## Application Architecture
 
 ## Patterns
 
 ### Modules
+
+#### Flight Schedule
+I introduced date lik fromDate / toDate - range in which I want to schedule flights.
+
+#### Discounts
+Encapsulated discount calculation. 
+Currently it's just single module and calculating each discount it's in single operation - all discounts or none.
+For better resilence and easier Open-Closed on architecture level I would split it. 
+Every discount (or with more traffic) may be independent. 
+I imagine something like event -> DiscountCalculationStarted from Discount module.
+Then each discount specific service will calculate discount and publish event like 
+SpecificDiscountCalculated(discountName, discountValue), which will be handled by discount module.
+And then if all discounts were caculated or on timeout, discount module will sum up all discount and publish
+DiscountCalculationCompleted.
 
 ### Processes
 
@@ -17,6 +30,9 @@
 
 ### Trade-offs (simplifications)
 
+
+### Dates
+I assumed flight dates, so I use LocalTime and LocalDate. I treat is as UTC dates.
 
 ## Testing strategy
 

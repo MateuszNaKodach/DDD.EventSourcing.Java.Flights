@@ -1,9 +1,7 @@
 package pl.zycienakodach.pragmaticflights.readmodels.flightorders;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Set;
 
 public record FlightOrder(
     String orderId,

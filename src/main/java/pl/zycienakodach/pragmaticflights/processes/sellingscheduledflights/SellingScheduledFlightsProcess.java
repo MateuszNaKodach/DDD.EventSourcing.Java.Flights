@@ -4,9 +4,9 @@ import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.events.Flig
 import pl.zycienakodach.pragmaticflights.modules.ordering.api.commands.OfferFlightForSell;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
 import pl.zycienakodach.pragmaticflights.sdk.ApplicationModule;
-import pl.zycienakodach.pragmaticflights.sdk.application.message.CausationId;
-import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandId;
-import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandMetadata;
+
+import java.time.LocalTime;
+import java.util.Collections;
 
 public class SellingScheduledFlightsProcess implements ApplicationModule {
 
@@ -16,8 +16,8 @@ public class SellingScheduledFlightsProcess implements ApplicationModule {
         e.flightId(),
         e.origin(),
         e.destination(),
-        e.departureTime(),
-        e.departureDays()
+        LocalTime.now(),
+        Collections.emptySet()
     ));
     return this;
   }

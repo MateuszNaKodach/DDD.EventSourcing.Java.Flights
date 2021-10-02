@@ -58,11 +58,15 @@ public class RecordingEventBus implements EventBus {
         .toList();
   }
 
-  public Object lastEventCausedBy(CommandId commandId) {
-    final List<Object> eventsCausedByCommand = this.publishedEvents.stream()
+  public List<Object> eventsCausedBy(CommandId commandId) {
+    return this.publishedEvents.stream()
         .filter(envelope -> envelope.metadata().causationId().equals(new CausationId(commandId.raw())))
         .map(EventEnvelope::event)
         .toList();
+  }
+
+  public Object lastEventCausedBy(CommandId commandId) {
+    final List<Object> eventsCausedByCommand = eventsCausedBy(commandId);
     return eventsCausedByCommand.isEmpty() ? null : eventsCausedByCommand.get(eventsCausedByCommand.size() - 1);
   }
 

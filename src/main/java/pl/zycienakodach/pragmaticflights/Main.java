@@ -1,6 +1,5 @@
 package pl.zycienakodach.pragmaticflights;
 
-
 import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication;
 import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.withAllModules;
 
