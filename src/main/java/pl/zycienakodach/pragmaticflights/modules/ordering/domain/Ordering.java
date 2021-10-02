@@ -33,7 +33,7 @@ public class Ordering {
         throw new RuntimeException("Cannot order flight ticket for day when the flight does not departures!");
       }
       var departureDateTime = LocalDateTime.of(departureDate, offer.departureTime());
-      if (departureDateTime.toInstant(ZoneOffset.UTC).isAfter(currentTime)) {
+      if (currentTime.isAfter(departureDateTime.toInstant(ZoneOffset.UTC))) {
         throw new IllegalStateException("The flight has already departure!");
       }
       return List.of(
