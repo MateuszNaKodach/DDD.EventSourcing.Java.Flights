@@ -21,8 +21,6 @@ import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId;
 import java.util.List;
 
 import static pl.zycienakodach.pragmaticflights.modules.discounts.domain.Discounting.calculateDiscount;
-import static pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName.category;
-import static pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName.streamId;
 
 public class DiscountsModule implements ApplicationModule {
 
@@ -57,7 +55,7 @@ public class DiscountsModule implements ApplicationModule {
     );
     app.onCommand(
         CalculateDiscountValue.class,
-        (c, m) -> new EventStreamName(category(m.tenantId().raw(), "Discount"), streamId(c.orderId())),
+        (c, m) -> EventStreamName.ofCategory("Discount").withId(c.orderId()),
         (c, m) -> {
           var orderId = OrderId.fromRaw(c.orderId());
           var calculatedDiscount = discountCalculator

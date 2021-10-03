@@ -114,7 +114,7 @@ public class Application {
 
   // todo: extract test methods
   public <E> EventMetadata testEventOccurred(E event) {
-    var allEventStream = new EventStreamName("$", "all");
+    var allEventStream = EventStreamName.ofCategory("$").withId("all");
     return testEventOccurred(allEventStream, event);
   }
 

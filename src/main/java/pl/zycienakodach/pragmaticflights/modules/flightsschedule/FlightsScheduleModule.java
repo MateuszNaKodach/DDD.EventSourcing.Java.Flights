@@ -13,8 +13,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 
 import static pl.zycienakodach.pragmaticflights.modules.flightsschedule.domain.FlightScheduling.scheduleFlightCourses;
-import static pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName.category;
-import static pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName.streamId;
 
 public class FlightsScheduleModule implements ApplicationModule {
 
@@ -32,7 +30,7 @@ public class FlightsScheduleModule implements ApplicationModule {
   public ApplicationModule configure(Application app) {
     app.onCommand(
         ScheduleFlightCourses.class,
-        (c,m) -> new EventStreamName(category(m.tenantId().raw(), "FlightSchedule"), streamId(c.flightId())),
+        (c, m) -> EventStreamName.ofCategory("FlightSchedule").withId(c.flightId()),
         (c) -> scheduleFlightCourses(
             flightIdFactory.flightId(c.flightId()),
             iataAirportCodeFactory.code(c.origin()),

@@ -1,15 +1,18 @@
 package pl.zycienakodach.pragmaticflights.sdk.application.eventstream;
 
 import java.util.Objects;
-import java.util.stream.Stream;
 
 public final class EventStreamName {
   private final String category;
   private final String id;
 
-  public EventStreamName(String category, String id) {
+  private EventStreamName(String category, String id) {
     this.category = category;
     this.id = id;
+  }
+
+  public static Builder ofCategory(String category) {
+    return new Builder(category);
   }
 
   @Override
@@ -18,17 +21,7 @@ public final class EventStreamName {
   }
 
   public EventStreamName withCategoryPrefix(String prefix) {
-    return new EventStreamName(category(prefix, category), id);
-  }
-
-  public static String category(String... categoryParts) {
-    return Stream.of(categoryParts)
-        .reduce("", (p1, p2) -> p1 + "-" + p2);
-  }
-
-  public static String streamId(String... idParts) {
-    return Stream.of(idParts)
-        .reduce("", (p1, p2) -> p1 + "-" + p2);
+    return new EventStreamName(prefix + "-" + category, id);
   }
 
   public String category() {
@@ -51,6 +44,19 @@ public final class EventStreamName {
   @Override
   public int hashCode() {
     return Objects.hash(category, id);
+  }
+
+
+  public static class Builder {
+    private final String category;
+
+    private Builder(String category) {
+      this.category = category;
+    }
+
+    public EventStreamName withId(String id) {
+      return new EventStreamName(category, id);
+    }
   }
 
 }

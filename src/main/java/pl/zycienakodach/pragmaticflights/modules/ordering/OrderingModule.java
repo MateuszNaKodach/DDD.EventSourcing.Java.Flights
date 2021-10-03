@@ -13,8 +13,6 @@ import pl.zycienakodach.pragmaticflights.sdk.application.time.TimeProvider;
 
 import static pl.zycienakodach.pragmaticflights.modules.ordering.domain.Offering.offerForSell;
 import static pl.zycienakodach.pragmaticflights.modules.ordering.domain.Ordering.submitFlightCourseOrder;
-import static pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName.category;
-import static pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName.streamId;
 
 public class OrderingModule implements ApplicationModule {
 
@@ -28,14 +26,14 @@ public class OrderingModule implements ApplicationModule {
   public ApplicationModule configure(Application app) {
     app
         .onCommand(OfferFlightCourseForSell.class,
-            (c, m) -> new EventStreamName(category("FlightCourseSells"), streamId(c.flightCourseId())),
+            (c, m) -> EventStreamName.ofCategory("FlightCourseSells").withId(c.flightCourseId()),
             (c) -> offerForSell(
                 FlightCourseId.fromRaw(c.flightCourseId()),
                 IATAAirportCode.fromRaw(c.origin()),
                 IATAAirportCode.fromRaw(c.destination())
             ))
         .onCommand(SubmitFlightOrder.class,
-            (c, m) -> new EventStreamName(category("FlightCourseSells"), streamId(c.flightCourseId())),
+            (c, m) -> EventStreamName.ofCategory("FlightCourseSells").withId(c.flightCourseId()),
             (c) -> {
               final var customerId = new CustomerId(c.customerId());
               final var flightCourseId = FlightCourseId.fromRaw(c.flightCourseId());

@@ -12,8 +12,8 @@ class InMemoryEventStoreSpec extends Specification {
 
     def "writing first event to event store and reading event stream"() {
         given:
-        def eventStore = inMemoryEventStore();
-        def eventStreamName = new EventStreamName("streamCategory", "streamId")
+        def eventStore = inMemoryEventStore()
+        def eventStreamName = EventStreamName.ofCategory("streamCategory").withId("streamId")
         def envelope = envelope(anEvent())
 
         when:
@@ -27,8 +27,8 @@ class InMemoryEventStoreSpec extends Specification {
 
     def "writing many events to event store and reading event stream"() {
         given:
-        def eventStore = inMemoryEventStore();
-        def eventStreamName = new EventStreamName("streamCategory", "streamId")
+        def eventStore = inMemoryEventStore()
+        def eventStreamName = EventStreamName.ofCategory("streamCategory").withId("streamId")
         def envelope1 = envelope(anEvent())
         def envelope2 = envelope(anEvent())
         def envelope3 = envelope(anEvent())
@@ -46,8 +46,8 @@ class InMemoryEventStoreSpec extends Specification {
 
     def "writing events when event stream expected version is different"() {
         given:
-        def eventStore = inMemoryEventStore();
-        def eventStreamName = new EventStreamName("streamCategory", "streamId")
+        def eventStore = inMemoryEventStore()
+        def eventStreamName = EventStreamName.ofCategory("streamCategory").withId("streamId")
         def envelope1 = envelope(anEvent())
         def envelope2 = envelope(anEvent())
         def envelope3 = envelope(anEvent())

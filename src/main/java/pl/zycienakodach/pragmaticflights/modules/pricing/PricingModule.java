@@ -13,8 +13,6 @@ import pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStream
 import static pl.zycienakodach.pragmaticflights.modules.pricing.domain.Pricing.completeCalculatingOrderTotalPrice;
 import static pl.zycienakodach.pragmaticflights.modules.pricing.domain.Pricing.defineRegularPrice;
 import static pl.zycienakodach.pragmaticflights.modules.pricing.domain.Pricing.startCalculatingOrderTotalPrice;
-import static pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName.category;
-import static pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName.streamId;
 
 public class PricingModule implements ApplicationModule {
 
@@ -53,7 +51,7 @@ public class PricingModule implements ApplicationModule {
   }
 
   private EventStreamName eventStreamNameFor(String rawFlightCourseId) {
-    return new EventStreamName(category("FlightCourseOrdersPricing"), streamId(rawFlightCourseId));
+    return EventStreamName.ofCategory("FlightCourseOrdersPricing").withId(rawFlightCourseId);
   }
 
 }
