@@ -6,15 +6,14 @@ import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.customerid.
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightId;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportCode;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderId;
-import pl.zycienakodach.pragmaticflights.readmodels.flightorders.api.FlightOrdersRepository;
 
 import java.util.Optional;
 
-public class FlightOrdersReadModelAdapter implements Orders {
+public class FlightOrdersProjectionAdapter implements Orders {
 
   private final FlightOrdersRepository flightOrdersRepository;
 
-  public FlightOrdersReadModelAdapter(FlightOrdersRepository flightOrdersRepository) {
+  public FlightOrdersProjectionAdapter(FlightOrdersRepository flightOrdersRepository) {
     this.flightOrdersRepository = flightOrdersRepository;
   }
 

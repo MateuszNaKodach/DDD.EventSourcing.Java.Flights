@@ -1,8 +1,7 @@
-package pl.zycienakodach.pragmaticflights.readmodels.flightorders;
+package pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders;
 
 import pl.zycienakodach.pragmaticflights.modules.ordering.api.events.FlightsOrderSubmitted;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightCourseId;
-import pl.zycienakodach.pragmaticflights.readmodels.flightorders.api.FlightOrdersRepository;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
 import pl.zycienakodach.pragmaticflights.sdk.ApplicationModule;
 
@@ -10,11 +9,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 
-public class FlightsOrdersReadModel implements ApplicationModule {
+public class FlightsOrdersProjection implements ApplicationModule {
 
   private final FlightOrdersRepository flightOrdersRepository;
 
-  public FlightsOrdersReadModel(FlightOrdersRepository flightOrdersRepository) {
+  public FlightsOrdersProjection(FlightOrdersRepository flightOrdersRepository) {
     this.flightOrdersRepository = flightOrdersRepository;
   }
 

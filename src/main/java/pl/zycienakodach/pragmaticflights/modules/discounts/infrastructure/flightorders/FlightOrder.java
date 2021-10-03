@@ -1,4 +1,4 @@
-package pl.zycienakodach.pragmaticflights.readmodels.flightorders;
+package pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

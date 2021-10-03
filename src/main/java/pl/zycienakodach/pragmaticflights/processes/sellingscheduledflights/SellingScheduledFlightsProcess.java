@@ -9,11 +9,12 @@ public class SellingScheduledFlightsProcess implements ApplicationModule {
 
   @Override
   public ApplicationModule configure(Application app) {
-    app.when(FlightCourseScheduled.class, (e) -> new OfferFlightCourseForSell(
-        e.flightCourseId(),
-        e.origin(),
-        e.destination()
-    ));
+    app.when(FlightCourseScheduled.class, (e) ->
+        new OfferFlightCourseForSell(
+            e.flightCourseId(),
+            e.origin(),
+            e.destination()
+        ));
     return this;
   }
 }

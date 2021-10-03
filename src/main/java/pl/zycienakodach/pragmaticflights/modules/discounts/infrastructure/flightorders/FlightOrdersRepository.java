@@ -1,6 +1,4 @@
-package pl.zycienakodach.pragmaticflights.readmodels.flightorders.api;
-
-import pl.zycienakodach.pragmaticflights.readmodels.flightorders.FlightOrder;
+package pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders;
 
 import java.util.Optional;
 

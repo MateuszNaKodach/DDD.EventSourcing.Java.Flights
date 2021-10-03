@@ -1,7 +1,4 @@
-package pl.zycienakodach.pragmaticflights.readmodels.flightorders.infrastructure;
-
-import pl.zycienakodach.pragmaticflights.readmodels.flightorders.FlightOrder;
-import pl.zycienakodach.pragmaticflights.readmodels.flightorders.api.FlightOrdersRepository;
+package pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders;
 
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;

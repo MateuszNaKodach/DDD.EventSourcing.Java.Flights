@@ -6,7 +6,7 @@ import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.airpor
 import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.applieddiscountsregistry.InMemoryAppliedDiscountsRegistry;
 import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.customers.CustomerEntity;
 import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.customers.InMemoryCustomerRepository;
-import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders.FlightOrdersReadModelAdapter;
+import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders.FlightOrdersProjectionAdapter;
 import pl.zycienakodach.pragmaticflights.modules.flightsschedule.FlightsScheduleModule;
 import pl.zycienakodach.pragmaticflights.modules.ordering.OrderingModule;
 import pl.zycienakodach.pragmaticflights.modules.pricing.PricingModule;
@@ -16,8 +16,8 @@ import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAi
 import pl.zycienakodach.pragmaticflights.processes.calculatingorderprice.CalculatingOrderTotalPriceProcess;
 import pl.zycienakodach.pragmaticflights.processes.defaultflightprice.DefaultFlightPriceProcess;
 import pl.zycienakodach.pragmaticflights.processes.sellingscheduledflights.SellingScheduledFlightsProcess;
-import pl.zycienakodach.pragmaticflights.readmodels.flightorders.FlightsOrdersReadModel;
-import pl.zycienakodach.pragmaticflights.readmodels.flightorders.infrastructure.InMemoryFlightOrders;
+import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders.FlightsOrdersProjection;
+import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders.InMemoryFlightOrders;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
 import pl.zycienakodach.pragmaticflights.sdk.application.idgenerator.IdGenerator;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandBus;
@@ -86,11 +86,11 @@ public class ApplicationTestFixtures {
             new FlightsScheduleModule(timeProvider, new FlightIdFactory(new IATAAirlinesCodeFactory((__) -> true)), new IATAAirportCodeFactory((__) -> true)),
             new OrderingModule(timeProvider),
             new PricingModule(),
-            new DiscountsModule(tenantsGroups, appliedDiscountsRegistry, new FlightOrdersReadModelAdapter(flightOrdersRepository), airportsContinents, customerRepository),
+            new DiscountsModule(tenantsGroups, appliedDiscountsRegistry, new FlightOrdersProjectionAdapter(flightOrdersRepository), airportsContinents, customerRepository),
             new DefaultFlightPriceProcess(30),
             new SellingScheduledFlightsProcess(),
             new CalculatingOrderTotalPriceProcess(),
-            new FlightsOrdersReadModel(flightOrdersRepository)
+            new FlightsOrdersProjection(flightOrdersRepository) // todo: use just in discounts
         ));
   }
 
