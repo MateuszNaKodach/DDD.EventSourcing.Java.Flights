@@ -6,7 +6,7 @@ import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.DefineRegu
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.CalculateOrderTotalPriceCompleted
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.CalculateOrderTotalPriceStarted
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.RegularPriceDefined
-import pl.zycienakodach.pragmaticflights.sdk.Application
+import pl.zycienakodach.pragmaticflights.sdk.EventDrivenApplication
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.InMemoryEventBus
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.RecordingEventBus
 import spock.lang.Specification
@@ -71,7 +71,7 @@ class PricingSpec extends Specification {
         eventBus.lastEventCausedBy(applyDiscountMetadata.commandId()) == new CalculateOrderTotalPriceCompleted(orderId, regularPrice, 10, 20)
     }
 
-    private static Application pricing(RecordingEventBus eventBus) {
+    private static EventDrivenApplication pricing(RecordingEventBus eventBus) {
         inMemoryApplication(eventBus)
                 .withModule(new PricingModule())
     }

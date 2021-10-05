@@ -19,6 +19,7 @@ import pl.zycienakodach.pragmaticflights.processes.sellingscheduledflights.Selli
 import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders.FlightsOrdersProjection;
 import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders.InMemoryFlightOrders;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
+import pl.zycienakodach.pragmaticflights.sdk.EventDrivenApplication;
 import pl.zycienakodach.pragmaticflights.sdk.application.idgenerator.IdGenerator;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandBus;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventBus;
@@ -110,7 +111,7 @@ public class ApplicationTestFixtures {
     TimeProvider timeProvider = clock::instant;
 
     var applicationService = new EventStoreApplicationService(eventStore, idGenerator, timeProvider);
-    return new Application(commandBus, eventStore, applicationService, idGenerator, timeProvider);
+    return new EventDrivenApplication(commandBus, eventStore, applicationService, idGenerator, timeProvider);
   }
 
 }
