@@ -85,8 +85,8 @@ public class Application {
   }
 
   public <T> Application execute(T command, ApplicationContext context) {
-    var commandId = new CommandId(idGenerator.get());
-    this.commandBus.execute(command, new CommandMetadata(commandId, timeProvider.get(), context.tenantId()));
+    var commandId = new CommandId(generateId());
+    this.commandBus.execute(command, new CommandMetadata(commandId, currentTime(), context.tenantId()));
     return this;
   }
 
@@ -104,11 +104,11 @@ public class Application {
     return this;
   }
 
-  public Instant currentTime() {
+  private Instant currentTime() {
     return this.timeProvider.get();
   }
 
-  public String generateId() {
+  private String generateId() {
     return this.idGenerator.get();
   }
 
@@ -120,10 +120,10 @@ public class Application {
 
   public <E> EventMetadata testEventOccurred(EventStreamName eventStream, E event) {
     final EventMetadata metadata = new EventMetadata(
-        new EventId(idGenerator.get()),
-        timeProvider.get(),
+        new EventId(generateId()),
+        currentTime(),
         new TenantId("TestTenant"),
-        new CorrelationId(idGenerator.get())
+        new CorrelationId(generateId())
     );
     this.eventStore.write(eventStream, List.of(
         new EventEnvelope(event, metadata)
