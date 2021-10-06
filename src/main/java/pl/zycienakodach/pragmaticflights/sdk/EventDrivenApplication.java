@@ -1,8 +1,9 @@
 package pl.zycienakodach.pragmaticflights.sdk;
 
-import pl.zycienakodach.pragmaticflights.sdk.application.service.ApplicationService;
-import pl.zycienakodach.pragmaticflights.sdk.application.idgenerator.IdGenerator;
+import pl.zycienakodach.pragmaticflights.sdk.application.eventstore.EventStore;
 import pl.zycienakodach.pragmaticflights.sdk.application.eventstore.ExpectedStreamVersion;
+import pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName;
+import pl.zycienakodach.pragmaticflights.sdk.application.idgenerator.IdGenerator;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.CausationId;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.CorrelationId;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandBus;
@@ -12,14 +13,13 @@ import pl.zycienakodach.pragmaticflights.sdk.application.message.command.Command
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandResult;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventEnvelope;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventFilter;
+import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventHandler;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventId;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventMetadata;
-import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId;
+import pl.zycienakodach.pragmaticflights.sdk.application.service.ApplicationService;
 import pl.zycienakodach.pragmaticflights.sdk.application.time.TimeProvider;
 import pl.zycienakodach.pragmaticflights.sdk.domain.DomainLogic;
-import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventHandler;
-import pl.zycienakodach.pragmaticflights.sdk.application.eventstore.EventStore;
-import pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName;
+import pl.zycienakodach.pragmaticflights.sdk.events.ApplicationInitialized;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -129,11 +129,16 @@ public class EventDrivenApplication implements Application {
 
   @Override
   public Application init() {
-    modules.forEach(module -> {
-      if (module instanceof OnApplicationInitialized moduleWithInitializer) {
-        moduleWithInitializer.onApplicationInitialized(this);
-      }
-    });
+    var applicationInitialized = ApplicationInitialized.at(this.currentTime());
+    var applicationEvents = EventStreamName.ofCategory("$").withId("application");
+    var eventMetadata = new EventMetadata(
+        new EventId(this.generateId()),
+        timeProvider.get(),
+        null,
+        new CorrelationId(this.generateId()),
+        new CausationId(this.generateId())
+    );
+    this.storeEvent(applicationEvents, applicationInitialized, eventMetadata);
     return this;
   }
 }
