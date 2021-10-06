@@ -21,6 +21,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication
+import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.test
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.customerid.CustomerIdTestFixtures.aCustomerId
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.jomoKenyattaInternationalAirportNairobiKenyaAfrica
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.londonCityAirportLondonEnglandEurope
@@ -72,8 +73,8 @@ class DiscountsSpec extends Specification {
             tenantGroupOf(tenant) >> new TenantGroupId(tenantGroup)
         }
         def appliedDiscountsRegistry = Mock(AppliedDiscountsRegistry)
-        def app = inMemoryApplication(eventBus)
-                .withModule(new DiscountsModule(tenantGroups, appliedDiscountsRegistry, flightsOrders, airportsContinents, customersBirthdays))
+        def app = test(inMemoryApplication(eventBus)
+                .withModule(new DiscountsModule(tenantGroups, appliedDiscountsRegistry, flightsOrders, airportsContinents, customersBirthdays)))
 
         when: 'calculate discount for given order'
         def commandMetadata = aCommandMetadata(tenant)

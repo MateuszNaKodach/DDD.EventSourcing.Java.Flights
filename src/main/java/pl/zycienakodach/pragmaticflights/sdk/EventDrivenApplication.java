@@ -17,6 +17,7 @@ import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventHand
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventId;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventMetadata;
 import pl.zycienakodach.pragmaticflights.sdk.application.service.ApplicationService;
+import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId;
 import pl.zycienakodach.pragmaticflights.sdk.application.time.TimeProvider;
 import pl.zycienakodach.pragmaticflights.sdk.domain.DomainLogic;
 import pl.zycienakodach.pragmaticflights.sdk.events.ApplicationInitialized;
@@ -110,10 +111,7 @@ public class EventDrivenApplication implements Application {
 
   @Override
   public Application withModules(List<ApplicationModule> modules) {
-    modules.forEach(m -> {
-      m.configure(this);
-      this.modules.addAll(modules);
-    });
+    modules.forEach(m -> this.modules.addAll(modules));
     return this;
   }
 
@@ -129,12 +127,13 @@ public class EventDrivenApplication implements Application {
 
   @Override
   public Application init() {
+    this.modules.forEach(m -> m.configure(this));
     var applicationInitialized = ApplicationInitialized.at(this.currentTime());
     var applicationEvents = EventStreamName.ofCategory("$").withId("application");
     var eventMetadata = new EventMetadata(
         new EventId(this.generateId()),
         timeProvider.get(),
-        null,
+        TenantId.undefined(),
         new CorrelationId(this.generateId()),
         new CausationId(this.generateId())
     );

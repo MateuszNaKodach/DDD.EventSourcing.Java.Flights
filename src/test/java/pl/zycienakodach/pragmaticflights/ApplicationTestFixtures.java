@@ -22,7 +22,9 @@ public class ApplicationTestFixtures {
   }
 
   public static TestApplication test(Application application) {
-    return new EventDrivenTestApplication(application);
+    var app = new EventDrivenTestApplication(application);
+    app.init();
+    return app;
   }
 
   public static Application inMemoryApplication() {

@@ -15,6 +15,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication
+import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.test
 import static pl.zycienakodach.pragmaticflights.modules.flightsschedule.FlightScheduleTestFixtures.scheduledOnDates
 import static pl.zycienakodach.pragmaticflights.sdk.application.time.TimeProviderFixtures.isUtcMidnightOf
 import static pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.CommandTestFixtures.aCommandMetadata
@@ -27,8 +28,8 @@ class FlightsScheduleSpec extends Specification {
     def iataAirportCodesFactory = new IATAAirportCodeFactory({ true })
     def flightIdFactory = new FlightIdFactory(iataAirlinesCodesFactory)
     def timeProvider = isUtcMidnightOf(2020, 12, 31)
-    def app = inMemoryApplication(eventBus)
-            .withModule(new FlightsScheduleModule(timeProvider, flightIdFactory, iataAirportCodesFactory))
+    def app = test(inMemoryApplication(eventBus)
+            .withModule(new FlightsScheduleModule(timeProvider, flightIdFactory, iataAirportCodesFactory)))
     def flightId = rawFlightId()
     def departureTime = LocalTime.of(2, 45)
 
@@ -92,7 +93,7 @@ class FlightsScheduleSpec extends Specification {
         result.failureReason().get() == "Flight must have at least one departure day."
 
         and:
-        eventBus.lastPublishedEvent() == null
+        eventBus.lastEventCausedBy(metadata.commandId()) == null
     }
 
     def "should reject scheduling a flight for the past"() {
@@ -114,6 +115,6 @@ class FlightsScheduleSpec extends Specification {
         result.failureReason().get() == "The range must be in the future!"
 
         and:
-        eventBus.lastPublishedEvent() == null
+        eventBus.lastEventCausedBy(metadata.commandId()) == null
     }
 }

@@ -18,7 +18,7 @@ public abstract class MessageMetadata implements Map<String, String> {
 
   protected MessageMetadata(Instant timestamp, TenantId tenantId, CorrelationId correlationId, CausationId causationId) {
     this.hashMap.put(TIMESTAMP_METADATA_KEY, timestamp.toString());
-    this.hashMap.put(TENANT_ID_METADATA_KEY, tenantId.raw());
+    this.hashMap.put(TENANT_ID_METADATA_KEY, tenantId == null ? "UNDEFINED" : tenantId.raw());
     this.hashMap.put(CORRELATION_ID_METADATA_KEY, correlationId.raw());
     this.hashMap.put(CAUSATION_ID_METADATA_KEY, causationId.raw());
   }

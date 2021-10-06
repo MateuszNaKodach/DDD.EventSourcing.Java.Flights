@@ -42,8 +42,8 @@ class Main {
   public static void main(String[] args) {
     var clock = Clock.systemUTC();
     final TimeProvider timeProvider = clock::instant;
-    final var app = inMemoryApplication();
-    withAllModules(app, timeProvider);
+    var app = withAllModules(inMemoryApplication(), timeProvider);
+    app.init();
   }
 
   public static Application inMemoryApplication() {
@@ -58,7 +58,7 @@ class Main {
     return new EventDrivenApplication(commandBus, eventStore, applicationService, idGenerator, timeProvider);
   }
 
-  private static void withAllModules(Application app, TimeProvider timeProvider) {
+  private static Application withAllModules(Application app, TimeProvider timeProvider) {
     var flightOrdersRepository = new InMemoryFlightOrders();
     var customerRepository = new InMemoryCustomerRepository(
         Set.of(
@@ -88,7 +88,7 @@ class Main {
         )
     );
     var appliedDiscountsRegistry = new InMemoryAppliedDiscountsRegistry();
-    app
+    return app
         .withModules(List.of(
             new FlightsScheduleModule(timeProvider, new FlightIdFactory(new IATAAirlinesCodeFactory((__) -> true)), new IATAAirportCodeFactory((__) -> true)),
             new OrderingModule(timeProvider),
