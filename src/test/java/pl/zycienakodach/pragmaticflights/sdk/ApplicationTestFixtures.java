@@ -1,10 +1,5 @@
-package pl.zycienakodach.pragmaticflights;
+package pl.zycienakodach.pragmaticflights.sdk;
 
-import pl.zycienakodach.pragmaticflights.sdk.Application;
-import pl.zycienakodach.pragmaticflights.sdk.ApplicationModule;
-import pl.zycienakodach.pragmaticflights.sdk.EventDrivenApplication;
-import pl.zycienakodach.pragmaticflights.sdk.EventDrivenTestApplication;
-import pl.zycienakodach.pragmaticflights.sdk.TestApplication;
 import pl.zycienakodach.pragmaticflights.sdk.application.idgenerator.IdGenerator;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandBus;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventBus;

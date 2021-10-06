@@ -12,9 +12,9 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
 
-import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryTestApplication
 import static pl.zycienakodach.pragmaticflights.modules.flightsschedule.FlightScheduleTestFixtures.scheduledOnDates
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightIdTestFixtures.rawFlightId
+import static pl.zycienakodach.pragmaticflights.sdk.ApplicationTestFixtures.inMemoryTestApplication
 import static pl.zycienakodach.pragmaticflights.sdk.application.time.TimeProviderFixtures.isUtcMidnightOf
 import static pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.CommandTestFixtures.aCommandMetadata
 

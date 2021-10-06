@@ -10,9 +10,9 @@ import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.RegularPrice
 import pl.zycienakodach.pragmaticflights.sdk.TestApplication
 import spock.lang.Specification
 
-import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryTestApplication
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightCourseTestFixtures.rawFlightCourseId
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderIdTestFixtures.rawOrderId
+import static pl.zycienakodach.pragmaticflights.sdk.ApplicationTestFixtures.inMemoryTestApplication
 import static pl.zycienakodach.pragmaticflights.sdk.application.EventStreamNameTestFixtures.testTenantEventStream
 import static pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.CommandTestFixtures.aCommandMetadata
 

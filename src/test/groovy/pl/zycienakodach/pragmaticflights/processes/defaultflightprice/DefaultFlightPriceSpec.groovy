@@ -4,10 +4,10 @@ import pl.zycienakodach.pragmaticflights.modules.ordering.api.events.FlightCours
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.DefineRegularPrice
 import spock.lang.Specification
 
-import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryTestApplication
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightCourseTestFixtures.rawFlightCourseId
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.rawDestinationAirport
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.rawOriginAirport
+import static pl.zycienakodach.pragmaticflights.sdk.ApplicationTestFixtures.inMemoryTestApplication
 
 class DefaultFlightPriceSpec extends Specification {
 

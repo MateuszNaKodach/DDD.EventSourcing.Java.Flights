@@ -4,11 +4,11 @@ import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.events.Flig
 import pl.zycienakodach.pragmaticflights.modules.ordering.api.commands.OfferFlightCourseForSell
 import spock.lang.Specification
 
-import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryTestApplication
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightCourseTestFixtures.rawFlightCourseId
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightIdTestFixtures.rawFlightId
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.rawDestinationAirport
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.rawOriginAirport
+import static pl.zycienakodach.pragmaticflights.sdk.ApplicationTestFixtures.inMemoryTestApplication
 import static pl.zycienakodach.pragmaticflights.sdk.application.time.TimeProviderFixtures.anyTime
 
 class SellingScheduledFlightsProcessSpec extends Specification {
