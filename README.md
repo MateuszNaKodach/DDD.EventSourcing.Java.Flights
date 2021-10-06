@@ -1,97 +1,42 @@
 # Pragmatic Flights
 
-I've introduced FlightCourse - as flight which have departure date.
+## Summary Notes
 
-## Domain Exploration
+### Assumptions and trade-offs
+ - I've introduced FlightCourse - as flight which have departure date and time. It contains flightId + departureAt.
+ - ScheduleFlightCourses command accepts fromDate and toDate parameters. It's a range in which I want to schedule flights. It's similar to like it really works (you cannot buy ticket in advance for flight in 10 years). This assumption is enabler for FlightCourse concept.
+ - I was focused on business logic and application do not have things like failre recovery / timeouts / retries / inbox and outbox / logging / observability etc. It's not production ready.
+ - Domain logic is almost pure functional. Business Logic is implemented in functions like `(pastEvents, commands) -> newCommands` I've used Exceptions instead of monads like Eithers.
+   It's easier to deal with it in ValueObjects instead of processing functional pipeline. I also used Event Sourcing as persistence mechanism, for faster development witch such functional approach. I don't care about storage entities.
+ - Requirment with no saving applied discount criteria for selected tenant group was very specific. 
+   I think in most cases such differences may take palce in business logic. If then best option would be to enable/disable event handlers based on Tenant group.
+
+### Possible improvements
+
+- Discounts module have many dependencies. 
+  We can split every criteria to own module and "register" possible criteria. 
+  When CalculateDiscountValue is requested, then every discount criteria module may do the calculation on their own. 
+  Currently, it's just single module and calculating each discount it's in single operation - all discounts or none.
+  For better resilience and easier Open-Closed on architecture level I would split it.
 
 ## Application Architecture
 
-## Patterns
+Application architecture is Modular Monolith.
+I've developed simple infrastructure / application logic to support commands and events. 
+It's placed in sdk package.
 
 ### Modules
+Every module is independent of each other. Module API is defined by commands and events.
+Most of the modules' logic is tested on high-level API and do not focus on implementation details.
+It gives possibility to easily refactor in the future.
 
-#### Flight Schedule
-I introduced date lik fromDate / toDate - range in which I want to schedule flights.
-
-#### Discounts
-Encapsulated discount calculation. 
-Currently it's just single module and calculating each discount it's in single operation - all discounts or none.
-For better resilence and easier Open-Closed on architecture level I would split it. 
-Every discount (or with more traffic) may be independent. 
-I imagine something like event -> DiscountCalculationStarted from Discount module.
-Then each discount specific service will calculate discount and publish event like 
-SpecificDiscountCalculated(discountName, discountValue), which will be handled by discount module.
-And then if all discounts were caculated or on timeout, discount module will sum up all discount and publish
-DiscountCalculationCompleted.
+Every module may be extracted as separated Microservice if we replace EventBus / CommandBus with solutions like Kafka / RabbitMQ.
 
 ### Processes
+Processes are managers which coordinate in an orchestration manner how modules interacts with each other.
+It's implementation of more complex business processes which span many modules.
 
-### ReadModels
-
-### High-level view
-
-### Trade-offs (simplifications)
-
-
-### Dates
-I assumed flight dates, so I use LocalTime and LocalDate. I treat is as UTC dates.
-
-## Testing strategy
 
 ## Out-of-scope features
 
-TenantId - imporant concept, explicit
-
-
-More sophisticated solution like PublicEvent / ApplicationEvent instead of DomainEvent.
-Causation and correlationId propagation from Event to Command.
-
-
-Should API of module containt domain value objects? 
-No - it's simplification. Require on client to create them.
-
-Ordering and Pricing are such generic domains.
-It may be possible to use langugage and make them usable in another contexts.
-
-
-### Pricing
-Może być użyty do cen różnych produktów.
-Możnaby z niego wyjąć generyczną część.
-Aktualnie bardziej dostosowany jednak do lotów.
-Lepiej go dostosować / rozszerzyć. 
-Discounts - mogą dotyczyć np. jakie inne loty jeszcze zamawia.
-Wtedy trzeba wprowadzić abstrakcję koszyka.
-
-
-### Out of scope / disclaimers
-I've developed simple framework, which was needed to synchronize different bounded context implementation.
-
-For production ready application some improvements:
-- inbox / outbox for modules
-I assumed that it's part or move complex infrastrucutre / IO which was mocked by InMemory implementations.
-
-Płatność za zamówienie? 
-Jedynie składanie zamówienia.
-
-On top of ordering we can build busket feature.
-
-Modules - business logic modules, totally independent from others.
-Processes - orchestrate business logic and delegate job to different business modules.
-Read Models - views
-
-Domain model is pure functional
-
-Many simplifications, no retries etc. Processing events out of order and duplication, payment integration.
-Communications are by events, so may be extract as microservice with different transport layer. 
-Tracking processes progress.
-
-Everything was based on Events, so fastests for me was to incorporate EventSourcing.
-But of course I can use State-Based persistence.
-Best option would be to enable/disable event handlers based on Tenant group.
-With TenantId in EventMetadata it should be straightforward.
-
-Domain logic is almost pure functional. I've used Exceptions instead of monads like Eithers.
-It's easier to deal with it in ValueObjects instead of processing functional pipeline.
-
-
-## Discounting
+- More sophisticated solution like PublicEvent / ApplicationEvent instead of DomainEvent (without ValueObjects right now). Now same events are used for domain logic / cross-modules communication and for storage.
