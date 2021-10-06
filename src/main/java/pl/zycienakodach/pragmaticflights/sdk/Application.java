@@ -6,8 +6,10 @@ import pl.zycienakodach.pragmaticflights.sdk.application.message.command.Command
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandResult;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventFilter;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventHandler;
+import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventMetadata;
 import pl.zycienakodach.pragmaticflights.sdk.domain.DomainLogic;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -32,4 +34,10 @@ public interface Application {
   Application withModule(ApplicationModule module);
 
   Application withModules(List<ApplicationModule> module);
+
+  <E> void storeEvent(EventStreamName eventStream, E event, EventMetadata metadata);
+
+  String generateId();
+
+  Instant currentTime();
 }

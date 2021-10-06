@@ -9,6 +9,7 @@ import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.Reco
 import spock.lang.Specification
 
 import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication
+import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.test
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.customerid.CustomerIdTestFixtures.rawCustomerId
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightCourseTestFixtures.rawFlightCourseId
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.rawDestinationAirport
@@ -17,13 +18,12 @@ import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orde
 
 class CalculatingOrderTotalPriceProcessSpec extends Specification {
 
+    def commandBus = new RecordingCommandBus(new InMemoryCommandBus())
+    def app = test(inMemoryApplication(commandBus)
+            .withModule(new CalculatingOrderTotalPriceProcess()))
+
     def "when flight order submitted then should calculate order total price"() {
         given:
-        var commandBus = new RecordingCommandBus(new InMemoryCommandBus());
-        def app = inMemoryApplication(commandBus)
-                .withModule(new CalculatingOrderTotalPriceProcess())
-
-        and:
         def orderId = rawOrderId()
         def customerId = rawCustomerId()
         def flightCourseId = rawFlightCourseId()
@@ -46,11 +46,6 @@ class CalculatingOrderTotalPriceProcessSpec extends Specification {
 
     def "when discount value calculated then should apply order price discount"() {
         given:
-        var commandBus = new RecordingCommandBus(new InMemoryCommandBus());
-        def app = inMemoryApplication(commandBus)
-                .withModule(new CalculatingOrderTotalPriceProcess())
-
-        and:
         def orderId = rawOrderId()
 
         when:

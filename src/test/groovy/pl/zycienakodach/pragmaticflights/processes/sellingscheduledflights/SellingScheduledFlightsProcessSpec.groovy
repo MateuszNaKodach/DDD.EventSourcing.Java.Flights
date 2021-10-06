@@ -7,6 +7,7 @@ import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.Reco
 import spock.lang.Specification
 
 import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication
+import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.test
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightCourseTestFixtures.rawFlightCourseId
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightIdTestFixtures.rawFlightId
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.rawDestinationAirport
@@ -18,8 +19,8 @@ class SellingScheduledFlightsProcessSpec extends Specification {
     def "when flight scheduled then should offer flight for sell"() {
         given:
         var commandBus = new RecordingCommandBus(new InMemoryCommandBus());
-        def app = inMemoryApplication(commandBus)
-                .withModule(new SellingScheduledFlightsProcess())
+        def app = test(inMemoryApplication(commandBus)
+                .withModule(new SellingScheduledFlightsProcess()))
 
         when:
         def flightId = rawFlightId()

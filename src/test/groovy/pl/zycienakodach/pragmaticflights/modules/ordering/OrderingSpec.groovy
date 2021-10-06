@@ -12,6 +12,7 @@ import java.time.LocalDate
 import java.time.ZoneOffset
 
 import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication
+import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.test
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.customerid.CustomerIdTestFixtures.rawCustomerId
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightCourseTestFixtures.rawFlightCourseId
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.rawDestinationAirport
@@ -23,14 +24,13 @@ import static pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.comma
 
 class OrderingSpec extends Specification {
 
+    def eventBus = new RecordingEventBus(new InMemoryEventBus())
+    def timeProvider = isUtcMidnightOf(2021, 9, 2)
+    def app = test(inMemoryApplication(eventBus)
+            .withModule(new OrderingModule(timeProvider)))
+
     def "offer flight for sell"() {
         given:
-        def eventBus = new RecordingEventBus(new InMemoryEventBus())
-        def timeProvider = isUtcMidnightOf(2021, 9, 2)
-        def app = inMemoryApplication(eventBus)
-                .withModule(new OrderingModule(timeProvider))
-
-        and:
         final flightCourseId = rawFlightCourseId()
         final originAirport = rawOriginAirport()
         final destinationAirport = rawDestinationAirport()
@@ -54,12 +54,6 @@ class OrderingSpec extends Specification {
 
     def "submit flight order"() {
         given:
-        def eventBus = new RecordingEventBus(new InMemoryEventBus())
-        def timeProvider = { LocalDate.of(2021, 10, 2).atStartOfDay().toInstant(ZoneOffset.UTC) }
-        def app = inMemoryApplication(eventBus)
-                .withModule(new OrderingModule(timeProvider))
-
-        and:
         def customerId = rawCustomerId()
         def flightCourseId = rawFlightCourseId()
         final originAirport = rawOriginAirport()

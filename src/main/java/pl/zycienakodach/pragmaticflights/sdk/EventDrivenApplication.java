@@ -102,6 +102,12 @@ public class EventDrivenApplication implements Application {
     return this.commandBus.execute(command, metadata);
   }
 
+  public <E> void storeEvent(EventStreamName eventStream, E event, EventMetadata metadata) {
+    this.eventStore.write(eventStream, List.of(
+        new EventEnvelope(event, metadata)
+    ), new ExpectedStreamVersion.Any());
+  }
+
   @Override
   public Application withModule(ApplicationModule module) {
     module.configure(this);
@@ -114,31 +120,14 @@ public class EventDrivenApplication implements Application {
     return this;
   }
 
-  private Instant currentTime() {
+  @Override
+  public Instant currentTime() {
     return this.timeProvider.get();
   }
 
-  private String generateId() {
+  @Override
+  public String generateId() {
     return this.idGenerator.get();
-  }
-
-  // todo: extract test methods
-  public <E> EventMetadata testEventOccurred(E event) {
-    var allEventStream = EventStreamName.ofCategory("$").withId("all");
-    return testEventOccurred(allEventStream, event);
-  }
-
-  public <E> EventMetadata testEventOccurred(EventStreamName eventStream, E event) {
-    final EventMetadata metadata = new EventMetadata(
-        new EventId(generateId()),
-        currentTime(),
-        new TenantId("TestTenant"),
-        new CorrelationId(generateId())
-    );
-    this.eventStore.write(eventStream, List.of(
-        new EventEnvelope(event, metadata)
-    ), new ExpectedStreamVersion.Any());
-    return metadata;
   }
 
 }

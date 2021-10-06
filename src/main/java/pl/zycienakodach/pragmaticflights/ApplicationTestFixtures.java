@@ -20,6 +20,8 @@ import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flight
 import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders.InMemoryFlightOrders;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
 import pl.zycienakodach.pragmaticflights.sdk.EventDrivenApplication;
+import pl.zycienakodach.pragmaticflights.sdk.EventDrivenTestApplication;
+import pl.zycienakodach.pragmaticflights.sdk.TestApplication;
 import pl.zycienakodach.pragmaticflights.sdk.application.idgenerator.IdGenerator;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandBus;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventBus;
@@ -43,6 +45,10 @@ import java.util.UUID;
 public class ApplicationTestFixtures {
 
   private ApplicationTestFixtures() {
+  }
+
+  public static TestApplication test(Application application) {
+    return new EventDrivenTestApplication(application);
   }
 
   public static Application inMemoryApplication() {

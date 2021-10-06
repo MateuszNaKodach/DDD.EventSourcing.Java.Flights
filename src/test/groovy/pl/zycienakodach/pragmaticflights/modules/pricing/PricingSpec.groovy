@@ -7,11 +7,13 @@ import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.CalculateOrd
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.CalculateOrderTotalPriceStarted
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.RegularPriceDefined
 import pl.zycienakodach.pragmaticflights.sdk.EventDrivenApplication
+import pl.zycienakodach.pragmaticflights.sdk.TestApplication
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.InMemoryEventBus
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.RecordingEventBus
 import spock.lang.Specification
 
 import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication
+import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.test
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightCourseTestFixtures.rawFlightCourseId
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderIdTestFixtures.rawOrderId
 import static pl.zycienakodach.pragmaticflights.sdk.application.EventStreamNameTestFixtures.testTenantEventStream
@@ -71,8 +73,7 @@ class PricingSpec extends Specification {
         eventBus.lastEventCausedBy(applyDiscountMetadata.commandId()) == new CalculateOrderTotalPriceCompleted(orderId, regularPrice, 10, 20)
     }
 
-    private static EventDrivenApplication pricing(RecordingEventBus eventBus) {
-        inMemoryApplication(eventBus)
-                .withModule(new PricingModule())
+    private static TestApplication pricing(RecordingEventBus eventBus) {
+        test(inMemoryApplication(eventBus).withModule(new PricingModule()))
     }
 }
