@@ -2,12 +2,9 @@ package pl.zycienakodach.pragmaticflights.processes.sellingscheduledflights
 
 import pl.zycienakodach.pragmaticflights.modules.flightsschedule.api.events.FlightCourseScheduled
 import pl.zycienakodach.pragmaticflights.modules.ordering.api.commands.OfferFlightCourseForSell
-import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.InMemoryCommandBus
-import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.RecordingCommandBus
 import spock.lang.Specification
 
-import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication
-import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.test
+import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryTestApplication
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightCourseTestFixtures.rawFlightCourseId
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightIdTestFixtures.rawFlightId
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.rawDestinationAirport
@@ -18,9 +15,7 @@ class SellingScheduledFlightsProcessSpec extends Specification {
 
     def "when flight scheduled then should offer flight for sell"() {
         given:
-        var commandBus = new RecordingCommandBus(new InMemoryCommandBus());
-        def app = test(inMemoryApplication(commandBus)
-                .withModule(new SellingScheduledFlightsProcess()))
+        def app = inMemoryTestApplication(new SellingScheduledFlightsProcess())
 
         when:
         def flightId = rawFlightId()
@@ -39,7 +34,7 @@ class SellingScheduledFlightsProcessSpec extends Specification {
         var eventMetadata = app.eventOccurred(event)
 
         then:
-        commandBus.lastCommandCausedBy(eventMetadata.eventId())
+        app.lastCommandCausedBy(eventMetadata.eventId())
                 == new OfferFlightCourseForSell(flightCourseId, originAirport, destinationAirport)
     }
 

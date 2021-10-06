@@ -11,10 +11,6 @@ public record LocalDateRange(LocalDate fromDate, LocalDate toDate) {
     }
   }
 
-  public static LocalDateRange between(LocalDate fromDate, LocalDate toDate) {
-    return new LocalDateRange(fromDate, toDate);
-  }
-
   public static LocalDateRange future(LocalDate currentDate, LocalDate fromDate, LocalDate toDate) {
     if (fromDate.isBefore(currentDate) || toDate.isBefore(currentDate)) {
       throw new IllegalArgumentException("The range must be in the future!");
