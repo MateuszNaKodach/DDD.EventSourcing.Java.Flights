@@ -1,22 +1,24 @@
 package pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event;
 
-import pl.zycienakodach.pragmaticflights.sdk.application.message.CausationId;
-import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandId;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventBus;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventEnvelope;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventHandler;
-import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventMetadata;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecordingEventBus implements EventBus {
+public class RecordingEventBus implements EventBus, RecordedMessages {
 
   private final EventBus next;
   private final List<EventEnvelope> publishedEvents = new ArrayList<>();
 
   public RecordingEventBus(EventBus next) {
     this.next = next;
+  }
+
+  @Override
+  public List<EventEnvelope> publishedEvents() {
+    return publishedEvents;
   }
 
   @Override
@@ -28,46 +30,6 @@ public class RecordingEventBus implements EventBus {
   @Override
   public <T> void subscribe(Class<T> eventType, EventHandler<T> handler) {
     next.subscribe(eventType, handler);
-  }
-
-  public Object lastPublishedEvent() {
-    if (publishedEvents.size() == 0) {
-      return null;
-    }
-    var envelope = publishedEvents.get(publishedEvents.size() - 1);
-    return envelope.event();
-  }
-
-  public EventMetadata lastPublishedEventMetadata() {
-    EventEnvelope envelope = lastPublishedEventEnvelope();
-    if (envelope == null) return null;
-    return envelope.metadata();
-  }
-
-  private EventEnvelope lastPublishedEventEnvelope() {
-    if (publishedEvents.size() == 0) {
-      return null;
-    }
-    return publishedEvents.get(publishedEvents.size() - 1);
-  }
-
-  public List<Object> eventsCausedBy(CausationId causationId) {
-    return this.publishedEvents.stream()
-        .filter(envelope -> envelope.metadata().causationId().equals(causationId))
-        .map(EventEnvelope::event)
-        .toList();
-  }
-
-  public List<Object> eventsCausedBy(CommandId commandId) {
-    return this.publishedEvents.stream()
-        .filter(envelope -> envelope.metadata().causationId().equals(new CausationId(commandId.raw())))
-        .map(EventEnvelope::event)
-        .toList();
-  }
-
-  public Object lastEventCausedBy(CommandId commandId) {
-    final List<Object> eventsCausedByCommand = eventsCausedBy(commandId);
-    return eventsCausedByCommand.isEmpty() ? null : eventsCausedByCommand.get(eventsCausedByCommand.size() - 1);
   }
 
 }

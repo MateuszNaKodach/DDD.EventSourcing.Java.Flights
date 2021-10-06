@@ -13,6 +13,7 @@
 
 ### Possible improvements
 
+- Use Java Modules
 - Discounts module have many dependencies. 
   We can split every criteria to own module and "register" possible criteria. 
   When CalculateDiscountValue is requested, then every discount criteria module may do the calculation on their own. 
