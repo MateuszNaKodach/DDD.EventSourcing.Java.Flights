@@ -2,6 +2,7 @@ package pl.zycienakodach.pragmaticflights.modules.pricing.domain;
 
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.CalculateOrderTotalPriceCompleted;
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.CalculateOrderTotalPriceStarted;
+import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.DiscountApplied;
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.PricingEvent;
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.RegularPriceDefined;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightCourseId;
@@ -47,6 +48,7 @@ public class Pricing {
     return (List<PricingEvent> pastEvents) -> {
       var price = rehydrate(orderId, pastEvents);
       return List.of(
+          new DiscountApplied(orderId.raw(), discountPrice.toBigDecimal()),
           new CalculateOrderTotalPriceCompleted(
               orderId.raw(),
               price.regular.toBigDecimal(),

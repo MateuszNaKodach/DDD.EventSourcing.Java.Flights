@@ -7,6 +7,7 @@ import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.Fl
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportCode
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderId
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import java.time.LocalDate
 import java.time.LocalTime
@@ -18,6 +19,7 @@ import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orde
 
 class FlightToAfricaOnThursdayDiscountSpec extends Specification {
 
+    @Unroll
     def "when flight is on thursday and destination airport is in Africa then discount should be 5 EURO"(
             boolean onThursday,
             boolean toAfrica,

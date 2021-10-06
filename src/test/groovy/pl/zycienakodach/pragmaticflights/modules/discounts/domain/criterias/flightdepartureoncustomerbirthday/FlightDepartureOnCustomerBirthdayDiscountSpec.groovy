@@ -7,6 +7,7 @@ import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.customerid.
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightId
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderId
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import java.time.LocalDate
 import java.time.LocalTime
@@ -18,6 +19,7 @@ import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orde
 
 class FlightDepartureOnCustomerBirthdayDiscountSpec extends Specification {
 
+    @Unroll
     def "when a customer has birthday on departure date then discount should be 5 EURO"(
             LocalDate customerBirthday,
             LocalDate flightDate,

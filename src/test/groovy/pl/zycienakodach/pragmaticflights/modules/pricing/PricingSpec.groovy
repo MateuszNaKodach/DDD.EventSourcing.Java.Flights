@@ -5,6 +5,7 @@ import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.CalculateO
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.DefineRegularPrice
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.CalculateOrderTotalPriceCompleted
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.CalculateOrderTotalPriceStarted
+import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.DiscountApplied
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.RegularPriceDefined
 import pl.zycienakodach.pragmaticflights.sdk.TestApplication
 import spock.lang.Specification
@@ -64,7 +65,10 @@ class PricingSpec extends Specification {
         app.execute(applyDiscountCommand, applyDiscountMetadata)
 
         then:
-        app.lastEventCausedBy(applyDiscountMetadata.commandId()) == new CalculateOrderTotalPriceCompleted(orderId, regularPrice, 10.0g, 20.0g)
+        app.eventsCausedBy(applyDiscountMetadata.commandId()) == [
+                new DiscountApplied(orderId, 10.0g),
+                new CalculateOrderTotalPriceCompleted(orderId, regularPrice, 10.0g, 20.0g)
+        ]
     }
 
     private static TestApplication pricing() {

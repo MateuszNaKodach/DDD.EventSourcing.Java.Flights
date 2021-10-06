@@ -1,4 +1,6 @@
 package pl.zycienakodach.pragmaticflights.modules.discounts.api.command;
 
-public record CalculateDiscountValue(String orderId, double regularPriceInEuro) {
+import java.math.BigDecimal;
+
+public record CalculateDiscountValue(String orderId, BigDecimal regularPriceInEuro) {
 }
