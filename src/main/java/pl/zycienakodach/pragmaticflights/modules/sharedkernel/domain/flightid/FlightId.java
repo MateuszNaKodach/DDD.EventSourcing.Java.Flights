@@ -6,12 +6,19 @@ public record FlightId(IATAAirlinesCode airlines, FlightNumber number, FlightPos
 
   public static FlightId fromRaw(String raw) {
     var idParts = raw.split(" ");
+    if (idParts.length != 3) {
+      throw new IllegalArgumentException("Invalid flightId " + raw);
+    }
 
-    return new FlightId(
-        IATAAirlinesCode.fromRaw(idParts[0]),
-        FlightNumber.fromRaw(idParts[1]),
-        FlightPostfix.fromRaw(idParts[2])
-    );
+    try {
+      return new FlightId(
+          IATAAirlinesCode.fromRaw(idParts[0]),
+          FlightNumber.fromRaw(idParts[1]),
+          FlightPostfix.fromRaw(idParts[2])
+      );
+    } catch (Exception e) {
+      throw new IllegalArgumentException("Invalid flightId " + raw, e);
+    }
   }
 
   public String raw() {

@@ -98,7 +98,7 @@ class FlightsScheduleSpec extends Specification {
                 "BCA",
                 "NYC",
                 departureTime,
-                Set.of(),
+                Set.of(DayOfWeek.FRIDAY, DayOfWeek.SUNDAY),
                 LocalDate.of(2010, 3, 1),
                 LocalDate.of(2010, 5, 1)
         )
@@ -108,6 +108,28 @@ class FlightsScheduleSpec extends Specification {
         then:
         result instanceof CommandResult.Rejected
         result.failureReason().get() == "The range must be in the future!"
+
+        and:
+        app.lastEventCausedBy(metadata.commandId()) == null
+    }
+
+    def "should reject scheduling a flight with invalid flightId"() {
+        when:
+        def command = new ScheduleFlightCourses(
+                "NOT VALID",
+                "BCA",
+                "NYC",
+                departureTime,
+                Set.of(DayOfWeek.MONDAY),
+                LocalDate.of(2021, 1, 1),
+                LocalDate.of(2021, 1, 31)
+        )
+        def metadata = aCommandMetadata()
+        var result = app.execute(command, metadata)
+
+        then:
+        result instanceof CommandResult.Rejected
+        result.failureReason().get() == "Invalid flightId NOT VALID"
 
         and:
         app.lastEventCausedBy(metadata.commandId()) == null
