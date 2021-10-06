@@ -30,7 +30,12 @@ import static pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.comma
 class DiscountsSpec extends Specification {
 
     @Unroll
-    def "when apply at most two discounts for regular price of #regularPrice EURO, then discount should be #expectedDiscount EURO"(double regularPrice, String tenantGroup, double expectedDiscount, boolean shouldSaveAppliedDiscountCriteria) {
+    def "when apply at most two discounts for regular price of #regularPrice EURO, then discount should be #expectedDiscount EURO"(
+            BigDecimal regularPrice,
+            String tenantGroup,
+            BigDecimal expectedDiscount,
+            boolean shouldSaveAppliedDiscountCriteria
+    ) {
         given: 'customer ordered flight'
         def customerId = aCustomerId()
 
@@ -87,11 +92,11 @@ class DiscountsSpec extends Specification {
 
         where:
         regularPrice | tenantGroup | expectedDiscount | shouldSaveAppliedDiscountCriteria
-        30           | "A"         | 10               | true
-        21           | "A"         | 0                | true
-        25           | "A"         | 5                | true
-        30           | "B"         | 10               | false
-        21           | "B"         | 0                | false
+        30.0g        | "A"         | 10g            | true
+        21.0g        | "A"         | 0g             | true
+        25.0g        | "A"         | 5g             | true
+        30.0g        | "B"         | 10g            | false
+        21.0g        | "B"         | 0g             | false
     }
 
     private AirportsContinents airportIsOnContinent(destination, continent) {
