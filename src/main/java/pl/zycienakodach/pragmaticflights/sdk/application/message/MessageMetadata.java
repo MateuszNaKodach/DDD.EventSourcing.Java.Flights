@@ -14,7 +14,7 @@ public abstract class MessageMetadata implements Map<String, String> {
   private static final String CORRELATION_ID_METADATA_KEY = "CorrelationId";
   private static final String CAUSATION_ID_METADATA_KEY = "CausationId";
   private static final String TIMESTAMP_METADATA_KEY = "Timestamp";
-  private final HashMap<String, String> hashMap = new HashMap<>();
+  protected final HashMap<String, String> hashMap = new HashMap<>();
 
   protected MessageMetadata(Instant timestamp, TenantId tenantId, CorrelationId correlationId, CausationId causationId) {
     this.hashMap.put(TIMESTAMP_METADATA_KEY, timestamp.toString());

@@ -7,7 +7,7 @@ import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flig
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flighttoafricaonthursday.AirportsContinents
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flighttoafricaonthursday.Continent
 import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders.InMemoryFlightOrders
-import pl.zycienakodach.pragmaticflights.modules.ordering.api.events.FlightsOrderSubmitted
+import pl.zycienakodach.pragmaticflights.modules.ordering.api.events.FlightOrderSubmitted
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.customerid.CustomerId
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportCode
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderId
@@ -93,7 +93,7 @@ class DiscountsSpec extends Specification {
         def orderId = rawOrderId(customerId, flightCourseId)
         final originAirport = rawOriginAirport()
         final destinationAirport = destination.raw()
-        def flightsOrderSubmitted = new FlightsOrderSubmitted(
+        def flightsOrderSubmitted = new FlightOrderSubmitted(
                 orderId,
                 customerId,
                 flightCourseId,

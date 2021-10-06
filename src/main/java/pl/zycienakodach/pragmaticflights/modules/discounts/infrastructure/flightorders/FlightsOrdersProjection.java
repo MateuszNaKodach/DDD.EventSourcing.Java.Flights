@@ -1,6 +1,6 @@
 package pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders;
 
-import pl.zycienakodach.pragmaticflights.modules.ordering.api.events.FlightsOrderSubmitted;
+import pl.zycienakodach.pragmaticflights.modules.ordering.api.events.FlightOrderSubmitted;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightCourseId;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
 import pl.zycienakodach.pragmaticflights.sdk.ApplicationModule;
@@ -19,7 +19,7 @@ public class FlightsOrdersProjection implements ApplicationModule {
 
   @Override
   public ApplicationModule configure(Application app) {
-    app.when(FlightsOrderSubmitted.class, (e, __) -> {
+    app.when(FlightOrderSubmitted.class, (e, __) -> {
       var flightCourseId = FlightCourseId.fromRaw(e.flightCourseId());
       flightOrdersRepository.add(
           new FlightOrderEntity(

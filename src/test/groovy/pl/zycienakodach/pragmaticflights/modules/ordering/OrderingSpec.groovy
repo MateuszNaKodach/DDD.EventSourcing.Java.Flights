@@ -3,8 +3,11 @@ package pl.zycienakodach.pragmaticflights.modules.ordering
 import pl.zycienakodach.pragmaticflights.modules.ordering.api.commands.OfferFlightCourseForSell
 import pl.zycienakodach.pragmaticflights.modules.ordering.api.commands.SubmitFlightOrder
 import pl.zycienakodach.pragmaticflights.modules.ordering.api.events.FlightCourseOfferedForSell
-import pl.zycienakodach.pragmaticflights.modules.ordering.api.events.FlightsOrderSubmitted
+import pl.zycienakodach.pragmaticflights.modules.ordering.api.events.FlightOrderSubmitted
 import spock.lang.Specification
+
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.customerid.CustomerIdTestFixtures.rawCustomerId
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightCourseTestFixtures.rawFlightCourseId
@@ -14,6 +17,8 @@ import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orde
 import static pl.zycienakodach.pragmaticflights.sdk.ApplicationTestFixtures.inMemoryTestApplication
 import static pl.zycienakodach.pragmaticflights.sdk.application.EventStreamNameTestFixtures.testTenantEventStream
 import static pl.zycienakodach.pragmaticflights.sdk.application.time.TimeProviderFixtures.isUtcMidnightOf
+import static pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.CommandResultTestFixtures.rejectionReason
+import static pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.CommandResultTestFixtures.wasRejected
 import static pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.CommandTestFixtures.aCommandMetadata
 
 class OrderingSpec extends Specification {
@@ -61,21 +66,96 @@ class OrderingSpec extends Specification {
         app.eventOccurred(eventStream, flightCourseOfferedForSell)
 
         when:
-        def offerFlightForSell = new SubmitFlightOrder(
+        def submitFlightOrder = new SubmitFlightOrder(
                 customerId,
                 flightCourseId
         )
         def commandMetadata = aCommandMetadata()
-        app.execute(offerFlightForSell, commandMetadata)
+        app.execute(submitFlightOrder, commandMetadata)
 
         then:
         def orderId = rawOrderId(customerId, flightCourseId)
-        app.lastEventCausedBy(commandMetadata.commandId()) == new FlightsOrderSubmitted(
+        app.lastEventCausedBy(commandMetadata.commandId()) == new FlightOrderSubmitted(
                 orderId,
                 customerId,
                 flightCourseId,
                 originAirport,
                 destinationAirport
         )
+    }
+
+    def "submit order for past flight should fail"() {
+        given:
+        def customerId = rawCustomerId()
+        def pastDate = twoDaysAgo()
+        def flightCourseId = rawFlightCourseId(pastDate)
+
+        and:
+        flightOfferedForSell(flightCourseId)
+
+        when:
+        def submitFlightOrder = new SubmitFlightOrder(
+                customerId,
+                flightCourseId
+        )
+        def commandMetadata = aCommandMetadata()
+        var result = app.execute(submitFlightOrder, commandMetadata)
+
+        then:
+        wasRejected(result)
+        rejectionReason(result) == "The flight has already departure!"
+
+        and:
+        app.lastEventCausedBy(commandMetadata.commandId()) == null
+    }
+
+    def "submit already submitted order should fail"() {
+        def customerId = rawCustomerId()
+        def flightCourseId = rawFlightCourseId()
+        given:
+        def orderId = rawOrderId(customerId, flightCourseId)
+        final originAirport = rawOriginAirport()
+        final destinationAirport = rawDestinationAirport()
+
+        and:
+        def eventStream = testTenantEventStream("FlightCourseSells", flightCourseId)
+        def flightOrderSubmitted = new FlightOrderSubmitted(
+                orderId,
+                customerId,
+                flightCourseId,
+                originAirport,
+                destinationAirport
+        )
+        app.eventOccurred(eventStream, flightOrderSubmitted)
+
+        when:
+        def submitFlightOrder = new SubmitFlightOrder(
+                customerId,
+                flightCourseId
+        )
+        def commandMetadata = aCommandMetadata()
+        var result = app.execute(submitFlightOrder, commandMetadata)
+
+        then:
+        wasRejected(result)
+        rejectionReason(result) == "Order already submitted"
+
+        and:
+        app.lastEventCausedBy(commandMetadata.commandId()) == null
+    }
+
+    private def flightOfferedForSell(String flightCourseId) {
+        final originAirport = rawOriginAirport()
+        final destinationAirport = rawDestinationAirport()
+        def flightCourseOfferedForSell = new FlightCourseOfferedForSell(
+                flightCourseId,
+                originAirport,
+                destinationAirport
+        )
+        app.eventOccurred(testTenantEventStream("FlightCourseSells", flightCourseId), flightCourseOfferedForSell)
+    }
+
+    private Instant twoDaysAgo() {
+        timeProvider.get().minus(2, ChronoUnit.DAYS)
     }
 }

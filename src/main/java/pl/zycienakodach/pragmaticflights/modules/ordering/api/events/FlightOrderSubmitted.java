@@ -1,6 +1,6 @@
 package pl.zycienakodach.pragmaticflights.modules.ordering.api.events;
 
-public record FlightsOrderSubmitted(
+public record FlightOrderSubmitted(
     String orderId,
     String customerId,
     String flightCourseId,
