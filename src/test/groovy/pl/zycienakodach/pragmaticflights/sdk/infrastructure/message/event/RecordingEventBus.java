@@ -7,7 +7,7 @@ import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventHand
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecordingEventBus implements EventBus, RecordedMessages {
+public class RecordingEventBus implements EventBus, RecordedEvents {
 
   private final EventBus next;
   private final List<EventEnvelope> publishedEvents = new ArrayList<>();

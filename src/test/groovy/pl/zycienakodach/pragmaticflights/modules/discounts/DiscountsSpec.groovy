@@ -12,16 +12,13 @@ import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.Fl
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantGroupId
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantGroups
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId
-import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.InMemoryEventBus
-import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.RecordingEventBus
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.time.LocalDate
 import java.time.LocalTime
 
-import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication
-import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.test
+import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryTestApplication
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.customerid.CustomerIdTestFixtures.aCustomerId
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.jomoKenyattaInternationalAirportNairobiKenyaAfrica
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.londonCityAirportLondonEnglandEurope
@@ -67,26 +64,23 @@ class DiscountsSpec extends Specification {
         def customersBirthdays = customerHaveBirthdayOn(customerId, flightDate)
 
         and: 'discounting is ready'
-        def eventBus = new RecordingEventBus(new InMemoryEventBus())
         def tenant = new TenantId("tenant1")
         def tenantGroups = Stub(TenantGroups) {
             tenantGroupOf(tenant) >> new TenantGroupId(tenantGroup)
         }
         def appliedDiscountsRegistry = Mock(AppliedDiscountsRegistry)
-        def app = test(inMemoryApplication(eventBus)
-                .withModule(new DiscountsModule(tenantGroups, appliedDiscountsRegistry, flightsOrders, airportsContinents, customersBirthdays)))
+        def app = inMemoryTestApplication(new DiscountsModule(tenantGroups, appliedDiscountsRegistry, flightsOrders, airportsContinents, customersBirthdays))
 
         when: 'calculate discount for given order'
         def commandMetadata = aCommandMetadata(tenant)
         app.execute(new CalculateDiscountValue(orderId.raw(), regularPrice), commandMetadata)
 
         then: 'discount should be #expectedDiscount EURO'
-        eventBus.lastEventCausedBy(commandMetadata.commandId()) == new DiscountValueCalculated(orderId.raw(), expectedDiscount)
+        app.lastEventCausedBy(commandMetadata.commandId()) == new DiscountValueCalculated(orderId.raw(), expectedDiscount)
 
         and: 'applied discounts'
         if (shouldSaveAppliedDiscountCriteria) {
             1 * appliedDiscountsRegistry.save(orderId, _)
-            // List.of(new DiscountCriteriaName('FlightDepartureOnCustomerBirthdayDiscount'), new DiscountCriteriaName('FlightToAfricaOnThursdayDiscount'))
         } else {
             0 * appliedDiscountsRegistry.save(_, _)
         }

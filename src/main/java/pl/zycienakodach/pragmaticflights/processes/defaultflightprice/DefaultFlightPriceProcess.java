@@ -5,6 +5,8 @@ import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.DefineRegu
 import pl.zycienakodach.pragmaticflights.sdk.Application;
 import pl.zycienakodach.pragmaticflights.sdk.ApplicationModule;
 
+import java.math.BigDecimal;
+
 /**
  * May be modified to set price by date / day of week etc.
  */
@@ -21,7 +23,7 @@ public class DefaultFlightPriceProcess implements ApplicationModule {
     app.when(FlightCourseOfferedForSell.class, (e) ->
         new DefineRegularPrice(
             e.flightCourseId(),
-            defaultPriceInEuro
+            BigDecimal.valueOf(defaultPriceInEuro)
         )
     );
     return this;

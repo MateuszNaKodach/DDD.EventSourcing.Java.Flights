@@ -7,12 +7,9 @@ import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.CalculateOrd
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.CalculateOrderTotalPriceStarted
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.RegularPriceDefined
 import pl.zycienakodach.pragmaticflights.sdk.TestApplication
-import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.InMemoryEventBus
-import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.RecordingEventBus
 import spock.lang.Specification
 
-import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication
-import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.test
+import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryTestApplication
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightCourseTestFixtures.rawFlightCourseId
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderIdTestFixtures.rawOrderId
 import static pl.zycienakodach.pragmaticflights.sdk.application.EventStreamNameTestFixtures.testTenantEventStream
@@ -22,14 +19,13 @@ class PricingSpec extends Specification {
 
     def "define regular price for flight"() {
         given:
-        def eventBus = new RecordingEventBus(new InMemoryEventBus())
-        def app = pricing(eventBus)
+        def app = pricing()
 
         and:
         def flightCourseId = rawFlightCourseId()
         def command = new DefineRegularPrice(
                 flightCourseId,
-                300
+                300.0g
         )
         def metadata = aCommandMetadata()
 
@@ -37,17 +33,16 @@ class PricingSpec extends Specification {
         app.execute(command, metadata)
 
         then:
-        eventBus.lastPublishedEvent() == new RegularPriceDefined(flightCourseId, 300)
+        app.lastPublishedEvent() == new RegularPriceDefined(flightCourseId, 300.0g)
     }
 
     def "calculating price"() {
         given:
-        def eventBus = new RecordingEventBus(new InMemoryEventBus())
-        def app = pricing(eventBus)
+        def app = pricing()
 
         and:
         def flightCourseId = rawFlightCourseId()
-        def regularPrice = 30
+        def regularPrice = 30.0g
         final regularPriceDefined = new RegularPriceDefined(flightCourseId, regularPrice)
         app.eventOccurred(testTenantEventStream("FlightCourseOrdersPricing", flightCourseId), regularPriceDefined)
 
@@ -58,21 +53,21 @@ class PricingSpec extends Specification {
         app.execute(calculateOrderPriceCommand, calculateOrderPriceMetadata)
 
         then:
-        eventBus.lastEventCausedBy(calculateOrderPriceMetadata.commandId()) == new CalculateOrderTotalPriceStarted(orderId, regularPrice)
+        app.lastEventCausedBy(calculateOrderPriceMetadata.commandId()) == new CalculateOrderTotalPriceStarted(orderId, regularPrice)
 
         when:
         def applyDiscountCommand = new ApplyOrderPriceDiscount(
                 orderId,
-                10
+                10.0g
         )
         def applyDiscountMetadata = aCommandMetadata()
         app.execute(applyDiscountCommand, applyDiscountMetadata)
 
         then:
-        eventBus.lastEventCausedBy(applyDiscountMetadata.commandId()) == new CalculateOrderTotalPriceCompleted(orderId, regularPrice, 10, 20)
+        app.lastEventCausedBy(applyDiscountMetadata.commandId()) == new CalculateOrderTotalPriceCompleted(orderId, regularPrice, 10.0g, 20.0g)
     }
 
-    private static TestApplication pricing(RecordingEventBus eventBus) {
-        test(inMemoryApplication(eventBus).withModule(new PricingModule()))
+    private static TestApplication pricing() {
+        return inMemoryTestApplication(new PricingModule())
     }
 }

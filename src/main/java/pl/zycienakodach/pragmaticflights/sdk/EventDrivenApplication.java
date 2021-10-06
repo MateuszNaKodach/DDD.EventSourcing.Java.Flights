@@ -111,7 +111,7 @@ public class EventDrivenApplication implements Application {
 
   @Override
   public Application withModules(List<ApplicationModule> modules) {
-    modules.forEach(m -> this.modules.addAll(modules));
+    this.modules.addAll(modules);
     return this;
   }
 

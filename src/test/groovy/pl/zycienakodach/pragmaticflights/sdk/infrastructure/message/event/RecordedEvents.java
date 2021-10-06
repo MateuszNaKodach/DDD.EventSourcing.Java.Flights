@@ -7,7 +7,7 @@ import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventMeta
 
 import java.util.List;
 
-public interface RecordedMessages {
+public interface RecordedEvents {
   List<EventEnvelope> publishedEvents();
 
   default EventEnvelope lastPublishedEventEnvelope() {

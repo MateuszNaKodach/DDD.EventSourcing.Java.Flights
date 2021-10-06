@@ -5,12 +5,16 @@ import pl.zycienakodach.pragmaticflights.sdk.application.message.CorrelationId;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandHandler;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandMetadata;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.command.CommandResult;
+import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventEnvelope;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventFilter;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventHandler;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventId;
 import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventMetadata;
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId;
 import pl.zycienakodach.pragmaticflights.sdk.domain.DomainLogic;
+import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.CommandEnvelope;
+import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.RecordingCommandBus;
+import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.RecordingEventBus;
 
 import java.time.Instant;
 import java.util.List;
@@ -20,9 +24,13 @@ import java.util.function.Function;
 public class EventDrivenTestApplication implements TestApplication {
 
   private final Application application;
+  private final RecordingEventBus recordingEventBus;
+  private final RecordingCommandBus recordingCommandBus;
 
-  public EventDrivenTestApplication(Application application) {
+  public EventDrivenTestApplication(Application application, RecordingEventBus recordingEventBus, RecordingCommandBus recordingCommandBus) {
     this.application = application;
+    this.recordingEventBus = recordingEventBus;
+    this.recordingCommandBus = recordingCommandBus;
   }
 
   public <E> Application when(Class<E> eventType, EventHandler<E> handler) {
@@ -97,5 +105,15 @@ public class EventDrivenTestApplication implements TestApplication {
   @Override
   public Application init() {
     return application.init();
+  }
+
+  @Override
+  public List<EventEnvelope> publishedEvents() {
+    return recordingEventBus.publishedEvents();
+  }
+
+  @Override
+  public List<CommandEnvelope> executedCommands() {
+    return recordingCommandBus.executedCommands();
   }
 }

@@ -4,12 +4,9 @@ import pl.zycienakodach.pragmaticflights.modules.discounts.api.event.DiscountVal
 import pl.zycienakodach.pragmaticflights.modules.ordering.api.events.FlightsOrderSubmitted
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.ApplyOrderPriceDiscount
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.CalculateOrderTotalPrice
-import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.InMemoryCommandBus
-import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.RecordingCommandBus
 import spock.lang.Specification
 
-import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication
-import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.test
+import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryTestApplication
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.customerid.CustomerIdTestFixtures.rawCustomerId
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightCourseTestFixtures.rawFlightCourseId
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.rawDestinationAirport
@@ -18,9 +15,7 @@ import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orde
 
 class CalculatingOrderTotalPriceProcessSpec extends Specification {
 
-    def commandBus = new RecordingCommandBus(new InMemoryCommandBus())
-    def app = test(inMemoryApplication(commandBus)
-            .withModule(new CalculatingOrderTotalPriceProcess()))
+    def app = inMemoryTestApplication(new CalculatingOrderTotalPriceProcess())
 
     def "when flight order submitted then should calculate order total price"() {
         given:
@@ -41,7 +36,7 @@ class CalculatingOrderTotalPriceProcessSpec extends Specification {
         var eventMetadata = app.eventOccurred(event)
 
         then:
-        commandBus.lastCommandCausedBy(eventMetadata.eventId()) == new CalculateOrderTotalPrice(orderId)
+        app.lastCommandCausedBy(eventMetadata.eventId()) == new CalculateOrderTotalPrice(orderId)
     }
 
     def "when discount value calculated then should apply order price discount"() {
@@ -56,7 +51,7 @@ class CalculatingOrderTotalPriceProcessSpec extends Specification {
         var eventMetadata = app.eventOccurred(event)
 
         then:
-        commandBus.lastCommandCausedBy(eventMetadata.eventId()) == new ApplyOrderPriceDiscount(orderId, 10)
+        app.lastCommandCausedBy(eventMetadata.eventId()) == new ApplyOrderPriceDiscount(orderId, 10)
     }
 
 }

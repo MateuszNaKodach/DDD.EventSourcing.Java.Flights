@@ -14,11 +14,10 @@
 ### Possible improvements
 
 - Use Java Modules
-- Discounts module have many dependencies. 
-  We can split every criteria to own module and "register" possible criteria. 
-  When CalculateDiscountValue is requested, then every discount criteria module may do the calculation on their own. 
-  Currently, it's just single module and calculating each discount it's in single operation - all discounts or none.
-  For better resilience and easier Open-Closed on architecture level I would split it.
+- Split Application class to increase cohesion.
+- Discounts module have many dependencies. We can split every criteria to own module and "register" possible criteria. When CalculateDiscountValue is requested, then every discount criteria module may
+  do the calculation on their own. Currently, it's just single module and calculating each discount it's in single operation - all discounts or none. For better resilience and easier Open-Closed on
+  architecture level I would split it.
 
 ## Application Architecture
 

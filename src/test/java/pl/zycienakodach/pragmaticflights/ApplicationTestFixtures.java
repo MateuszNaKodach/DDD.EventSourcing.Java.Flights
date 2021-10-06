@@ -1,6 +1,7 @@
 package pl.zycienakodach.pragmaticflights;
 
 import pl.zycienakodach.pragmaticflights.sdk.Application;
+import pl.zycienakodach.pragmaticflights.sdk.ApplicationModule;
 import pl.zycienakodach.pragmaticflights.sdk.EventDrivenApplication;
 import pl.zycienakodach.pragmaticflights.sdk.EventDrivenTestApplication;
 import pl.zycienakodach.pragmaticflights.sdk.TestApplication;
@@ -10,10 +11,13 @@ import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventBus;
 import pl.zycienakodach.pragmaticflights.sdk.application.time.TimeProvider;
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.eventstore.InMemoryEventStore;
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.InMemoryCommandBus;
+import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.RecordingCommandBus;
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.InMemoryEventBus;
+import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.RecordingEventBus;
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.service.EventStoreApplicationService;
 
 import java.time.Clock;
+import java.util.Arrays;
 import java.util.UUID;
 
 public class ApplicationTestFixtures {
@@ -21,8 +25,13 @@ public class ApplicationTestFixtures {
   private ApplicationTestFixtures() {
   }
 
-  public static TestApplication test(Application application) {
-    var app = new EventDrivenTestApplication(application);
+  public static TestApplication inMemoryTestApplication(ApplicationModule... modules) {
+    var commandBus = new RecordingCommandBus(new InMemoryCommandBus());
+    var eventBus = new RecordingEventBus(new InMemoryEventBus());
+    var application = inMemoryApplication(eventBus, commandBus);
+    var app = new EventDrivenTestApplication(application, eventBus, commandBus);
+    final var modulesList = Arrays.stream(modules).toList();
+    app.withModules(modulesList);
     app.init();
     return app;
   }
