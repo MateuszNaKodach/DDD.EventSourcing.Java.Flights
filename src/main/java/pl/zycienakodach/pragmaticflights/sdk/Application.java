@@ -31,11 +31,13 @@ public interface Application {
 
   Application withModule(ApplicationModule module);
 
-  Application withModules(List<ApplicationModule> module);
+  Application withModules(List<ApplicationModule> modules);
 
   <E> void storeEvent(EventStreamName eventStream, E event, EventMetadata metadata);
 
   String generateId();
 
   Instant currentTime();
+
+  Application init();
 }

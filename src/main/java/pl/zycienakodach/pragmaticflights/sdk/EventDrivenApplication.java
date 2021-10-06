@@ -22,6 +22,7 @@ import pl.zycienakodach.pragmaticflights.sdk.application.eventstore.EventStore;
 import pl.zycienakodach.pragmaticflights.sdk.application.eventstream.EventStreamName;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -33,6 +34,7 @@ public class EventDrivenApplication implements Application {
   private final ApplicationService applicationService;
   private final IdGenerator idGenerator;
   private final TimeProvider timeProvider;
+  private final List<ApplicationModule> modules = new ArrayList<>();
 
   public EventDrivenApplication(CommandBus commandBus, EventStore eventStore, ApplicationService applicationService, IdGenerator idGenerator, TimeProvider timeProvider) {
     this.commandBus = commandBus;
@@ -103,13 +105,15 @@ public class EventDrivenApplication implements Application {
 
   @Override
   public Application withModule(ApplicationModule module) {
-    module.configure(this);
-    return this;
+    return withModules(List.of(module));
   }
 
   @Override
-  public Application withModules(List<ApplicationModule> module) {
-    module.forEach(m -> m.configure(this));
+  public Application withModules(List<ApplicationModule> modules) {
+    modules.forEach(m -> {
+      m.configure(this);
+      this.modules.addAll(modules);
+    });
     return this;
   }
 
@@ -123,4 +127,13 @@ public class EventDrivenApplication implements Application {
     return this.idGenerator.get();
   }
 
+  @Override
+  public Application init() {
+    modules.forEach(module -> {
+      if (module instanceof OnApplicationInitialized moduleWithInitializer) {
+        moduleWithInitializer.onApplicationInitialized(this);
+      }
+    });
+    return this;
+  }
 }

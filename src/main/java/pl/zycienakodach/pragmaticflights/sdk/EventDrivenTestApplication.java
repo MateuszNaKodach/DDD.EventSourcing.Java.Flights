@@ -57,8 +57,8 @@ public class EventDrivenTestApplication implements TestApplication {
     return application.withModule(module);
   }
 
-  public Application withModules(List<ApplicationModule> module) {
-    return application.withModules(module);
+  public Application withModules(List<ApplicationModule> modules) {
+    return application.withModules(modules);
   }
 
   @Override
@@ -92,5 +92,10 @@ public class EventDrivenTestApplication implements TestApplication {
   @Override
   public Instant currentTime() {
     return application.currentTime();
+  }
+
+  @Override
+  public Application init() {
+    return application.init();
   }
 }
