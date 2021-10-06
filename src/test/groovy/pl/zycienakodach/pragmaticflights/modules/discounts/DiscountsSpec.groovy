@@ -24,6 +24,7 @@ import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderIdTestFixtures.anOrderId
 import static pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.command.CommandTestFixtures.aCommandMetadata
 
+// todo: make this test more generic
 class DiscountsSpec extends Specification {
 
     @Unroll

@@ -49,12 +49,37 @@ class FlightToAfricaOnThursdayDiscountSpec extends Specification {
         false      | true     || 0                | []
         true       | false    || 0                | []
         false      | false    || 0                | []
+    }
 
+    def "when continent for airport is not known, then do not apply discount"() {
+        given:
+        def orderId = anOrderId()
+        def destination = aDestinationAirport()
+
+        and:
+        def airportsContinents = unknownAirportContinent(destination)
+        def orders = orderedFlight(orderId, destination, flightOnThursday())
+
+        when:
+        def criteria = new FlightToAfricaOnThursdayDiscount(orders, airportsContinents)
+        def discount = criteria.calculateDiscount(orderId)
+
+        then:
+        discount.euro().toBigDecimal() == BigDecimal.ZERO
+
+        and:
+        discount.appliedCriteria().isEmpty()
     }
 
     private AirportsContinents airportIsOnContinent(IATAAirportCode airport, Continent continent) {
         Stub(AirportsContinents) {
             continentOf(airport) >> Optional.of(continent)
+        }
+    }
+
+    private AirportsContinents unknownAirportContinent(IATAAirportCode airport) {
+        Stub(AirportsContinents) {
+            continentOf(airport) >> Optional.empty()
         }
     }
 
