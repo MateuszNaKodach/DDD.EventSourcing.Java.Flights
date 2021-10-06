@@ -6,10 +6,11 @@
  - I've introduced FlightCourse - as flight which have departure date and time. It contains flightId + departureAt.
  - ScheduleFlightCourses command accepts fromDate and toDate parameters. It's a range in which I want to schedule flights. It's similar to like it really works (you cannot buy ticket in advance for flight in 10 years). This assumption is enabler for FlightCourse concept.
  - I was focused on business logic and application do not have things like failre recovery / timeouts / retries / inbox and outbox / logging / observability etc. It's not production ready.
- - Domain logic is almost pure functional. Business Logic is implemented in functions like `(pastEvents, commands) -> newCommands` I've used Exceptions instead of monads like Eithers.
-   It's easier to deal with it in ValueObjects instead of processing functional pipeline. I also used Event Sourcing as persistence mechanism, for faster development witch such functional approach. I don't care about storage entities.
- - Requirment with no saving applied discount criteria for selected tenant group was very specific. 
-   I think in most cases such differences may take palce in business logic. If then best option would be to enable/disable event handlers based on Tenant group.
+ - Domain logic is almost pure functional. Business Logic is implemented in functions like `(pastEvents, command) -> newEvents` I've used Exceptions instead of monads like Eithers. It's easier to deal
+   with it in ValueObjects instead of processing functional pipeline. I also used Event Sourcing as persistence mechanism, for faster development witch such functional approach. I don't care about
+   storage entities.
+ - Requirment with no saving applied discount criteria for selected tenant group was very specific. I think in most cases such differences may take palce in business logic. If then best option would
+   be to enable/disable event handlers based on Tenant group.
 
 ### Possible improvements
 
