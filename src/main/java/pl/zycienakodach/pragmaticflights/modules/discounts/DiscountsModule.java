@@ -47,7 +47,7 @@ public class DiscountsModule implements ApplicationModule {
   @Override
   public ApplicationModule configure(Application app) {
     var discountCalculator = new DiscountCalculator(
-        new EuroMoney(20),
+        EuroMoney.of(20),
         List.of(
             new FlightDepartureOnCustomerBirthdayDiscount(orders, customersBirthdays),
             new FlightToAfricaOnThursdayDiscount(orders, airportsContinents)
@@ -59,7 +59,7 @@ public class DiscountsModule implements ApplicationModule {
         (c, m) -> {
           var orderId = OrderId.fromRaw(c.orderId());
           var calculatedDiscount = discountCalculator
-              .calculateDiscount(orderId, new RegularPrice(new EuroMoney(c.regularPriceInEuro())));
+              .calculateDiscount(orderId, new RegularPrice(EuroMoney.of(c.regularPriceInEuro())));
           var result = calculateDiscount(
               orderId,
               calculatedDiscount

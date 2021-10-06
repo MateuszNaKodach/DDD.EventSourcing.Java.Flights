@@ -1,13 +1,10 @@
 package pl.zycienakodach.pragmaticflights.modules.discounts.domain;
 
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.DiscountCriteriaName;
-import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.OrderDiscountCriteria;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.money.EuroMoney;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public record Discount(List<DiscountCriteriaName> appliedCriteria, EuroMoney euro) {
@@ -22,6 +19,6 @@ public record Discount(List<DiscountCriteriaName> appliedCriteria, EuroMoney eur
 
   public Discount plus(Discount discount) {
     List<DiscountCriteriaName> appliedCriteria = Stream.concat(this.appliedCriteria.stream(), discount.appliedCriteria.stream()).toList();
-    return new Discount(appliedCriteria, this.euro.plus(discount.euro));
+    return new Discount(appliedCriteria, this.euro.add(discount.euro));
   }
 }

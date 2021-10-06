@@ -1,4 +1,6 @@
 package pl.zycienakodach.pragmaticflights.modules.pricing.api.events;
 
-public record RegularPriceDefined(String flightCourseId, double priceInEuro) implements PricingEvent {
+import java.math.BigDecimal;
+
+public record RegularPriceDefined(String flightCourseId, BigDecimal priceInEuro) implements PricingEvent {
 }

@@ -32,7 +32,7 @@ public class DiscountCalculator implements OrderDiscountCriteria {
   }
 
   private boolean willKeepMinimalPrice(RegularPrice regularPrice, Discount discount){
-    return regularPrice.euro().minus(discount.euro())
+    return regularPrice.euro().subtract(discount.euro())
         .greaterOrEqual(minimalFlightPriceWithDiscount);
   }
 }

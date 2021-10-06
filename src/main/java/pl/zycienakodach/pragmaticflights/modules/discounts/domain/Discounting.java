@@ -16,7 +16,7 @@ public class Discounting {
     return (List<DiscountsEvent> pastEvents) -> {
       var discountValueCalculated = new DiscountValueCalculated(
           orderId.raw(),
-          discount.euro().value()
+          discount.euro().toBigDecimal()
       );
       return List.of(discountValueCalculated);
     };

@@ -21,7 +21,7 @@ public class Pricing {
     return (List<PricingEvent> pastEvents) -> List.of(
         new RegularPriceDefined(
             flightCourseId.raw(),
-            regularPrice.value()
+            regularPrice.toBigDecimal()
         )
     );
   }
@@ -34,7 +34,7 @@ public class Pricing {
       return List.of(
           new CalculateOrderTotalPriceStarted(
               orderId.raw(),
-              price.regular.value()
+              price.regular.toBigDecimal()
           )
       );
     };
@@ -49,9 +49,9 @@ public class Pricing {
       return List.of(
           new CalculateOrderTotalPriceCompleted(
               orderId.raw(),
-              price.regular.value(),
-              discountPrice.value(),
-              price.regular.minus(discountPrice).value()
+              price.regular.toBigDecimal(),
+              discountPrice.toBigDecimal(),
+              price.regular.subtract(discountPrice).toBigDecimal()
           )
       );
     };
