@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public final class EuroMoney {
+  private static final EuroMoney ZERO = new EuroMoney(BigDecimal.ZERO);
+
   private final BigDecimal value;
 
   private EuroMoney(BigDecimal value) {
@@ -27,7 +29,7 @@ public final class EuroMoney {
   }
 
   public static EuroMoney zero() {
-    return new EuroMoney(BigDecimal.ZERO);
+    return ZERO;
   }
 
   public EuroMoney add(EuroMoney euroMoney) {

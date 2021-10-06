@@ -8,7 +8,7 @@ import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.Ord
 import java.util.List;
 import java.util.function.BiFunction;
 
-public class DiscountCalculator implements OrderDiscountCriteria {
+public class DiscountCalculator {
 
   private final EuroMoney minimalFlightPriceWithDiscount;
   private final List<OrderDiscountCriteria> criteria;
@@ -18,7 +18,6 @@ public class DiscountCalculator implements OrderDiscountCriteria {
     this.criteria = criteria;
   }
 
-  @Override
   public Discount calculateDiscount(OrderId orderId, RegularPrice regularPrice) {
     return criteria.stream()
         .reduce(Discount.none(), applyDiscountIfKeepMinimalPrice(orderId, regularPrice), Discount::plus);
@@ -26,7 +25,7 @@ public class DiscountCalculator implements OrderDiscountCriteria {
 
   private BiFunction<Discount, OrderDiscountCriteria, Discount> applyDiscountIfKeepMinimalPrice(OrderId orderId, RegularPrice regularPrice) {
     return (currentDiscount, c) -> {
-      var resultDiscount = currentDiscount.plus(c.calculateDiscount(orderId, regularPrice));
+      var resultDiscount = currentDiscount.plus(c.calculateDiscount(orderId));
       return willKeepMinimalPrice(regularPrice, resultDiscount) ? resultDiscount : currentDiscount;
     };
   }

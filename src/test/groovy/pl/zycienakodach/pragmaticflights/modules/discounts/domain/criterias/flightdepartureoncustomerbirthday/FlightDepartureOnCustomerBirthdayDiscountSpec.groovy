@@ -1,10 +1,10 @@
-package pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flighttoafricaonthursday
+package pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flightdepartureoncustomerbirthday
 
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.DiscountCriteriaName
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.FlightOrder
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.Orders
+import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.customerid.CustomerId
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightId
-import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportCode
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderId
 import spock.lang.Specification
 
@@ -16,25 +16,24 @@ import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.iata.IATAAirportsCodeFixtures.anOriginAirport
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderIdTestFixtures.anOrderId
 
-class FlightToAfricaOnThursdayDiscountSpec extends Specification {
+class FlightDepartureOnCustomerBirthdayDiscountSpec extends Specification {
 
-    def "when flight is on thursday and destination airport is in Africa then discount should be 5 EURO"(
-            boolean onThursday,
-            boolean toAfrica,
+    def "when a customer has birthday on departure date then discount should be 5 EURO"(
+            LocalDate customerBirthday,
+            LocalDate flightDate,
             BigDecimal expectedDiscount,
             List<DiscountCriteriaName> expectedAppliedCriteria
     ) {
         given:
         def orderId = anOrderId()
-        def destination = aDestinationAirport()
-        def flightDate = onThursday ? flightOnThursday() : flightNotOnThursday()
+        def customerId = aCustomerId()
 
         and:
-        def airportsContinents = airportIsOnContinent(destination, toAfrica ? Continent.AFRICA : Continent.EUROPE)
-        def orders = orderedFlight(orderId, destination, flightDate)
+        def orders = orderedFlight(orderId, customerId, flightDate)
+        def birthdays = customerHaveBirthdayOn(customerId, customerBirthday)
 
         when:
-        def criteria = new FlightToAfricaOnThursdayDiscount(orders, airportsContinents)
+        def criteria = new FlightDepartureOnCustomerBirthdayDiscount(orders, birthdays)
         def discount = criteria.calculateDiscount(orderId)
 
         then:
@@ -44,22 +43,14 @@ class FlightToAfricaOnThursdayDiscountSpec extends Specification {
         discount.appliedCriteria() == expectedAppliedCriteria
 
         where:
-        onThursday | toAfrica || expectedDiscount | expectedAppliedCriteria
-        true       | true     || 5                | [DiscountCriteriaName.of("FlightToAfricaOnThursdayDiscount")]
-        false      | true     || 0                | []
-        true       | false    || 0                | []
-        false      | false    || 0                | []
-
+        customerBirthday           | flightDate                 || expectedDiscount | expectedAppliedCriteria
+        LocalDate.of(1996, 8, 23)  | LocalDate.of(2021, 8, 23)  || 5                | [DiscountCriteriaName.of("FlightDepartureOnCustomerBirthdayDiscount")]
+        LocalDate.of(2010, 8, 23)  | LocalDate.of(2021, 8, 23)  || 5                | [DiscountCriteriaName.of("FlightDepartureOnCustomerBirthdayDiscount")]
+        LocalDate.of(1920, 10, 10) | LocalDate.of(2021, 10, 10) || 5                | [DiscountCriteriaName.of("FlightDepartureOnCustomerBirthdayDiscount")]
+        LocalDate.of(2020, 12, 12) | LocalDate.of(2021, 1, 2)   || 0                | []
     }
 
-    private AirportsContinents airportIsOnContinent(IATAAirportCode airport, Continent continent) {
-        Stub(AirportsContinents) {
-            continentOf(airport) >> Optional.of(continent)
-        }
-    }
-
-    private Orders orderedFlight(OrderId orderId, IATAAirportCode destination, LocalDate flightDate) {
-        def customerId = aCustomerId()
+    private Orders orderedFlight(OrderId orderId, CustomerId customerId, LocalDate flightDate) {
         def flightOrder = new FlightOrder(
                 orderId,
                 customerId,
@@ -67,7 +58,7 @@ class FlightToAfricaOnThursdayDiscountSpec extends Specification {
                 new FlightOrder.Flight(
                         FlightId.fromRaw("UAL 22333 NBO"),
                         anOriginAirport(),
-                        destination,
+                        aDestinationAirport(),
                         LocalTime.of(19, 45)
                 )
         )
@@ -76,11 +67,10 @@ class FlightToAfricaOnThursdayDiscountSpec extends Specification {
         }
     }
 
-    private static LocalDate flightOnThursday() {
-        return LocalDate.of(2021, 9, 30)
+    private CustomersBirthdays customerHaveBirthdayOn(CustomerId customerId, LocalDate birthday) {
+        Stub(CustomersBirthdays) {
+            forCustomer(customerId) >> Optional.of(birthday)
+        }
     }
 
-    private static LocalDate flightNotOnThursday() {
-        return LocalDate.of(2021, 9, 29)
-    }
 }

@@ -3,6 +3,7 @@ package pl.zycienakodach.pragmaticflights.sdk.infrastructure.tenant;
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantGroupId;
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantGroups;
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId;
+
 import java.util.Map;
 
 public class InMemoryTenantRegistry implements TenantGroups {
@@ -15,6 +16,6 @@ public class InMemoryTenantRegistry implements TenantGroups {
 
   @Override
   public TenantGroupId tenantGroupOf(TenantId tenantId) {
-    return this.tenantGroup.get(tenantId);
+    return this.tenantGroup.getOrDefault(tenantId, TenantGroupId.undefined());
   }
 }

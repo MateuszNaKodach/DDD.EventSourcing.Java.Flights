@@ -3,7 +3,7 @@ package pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.fligh
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public record FlightOrder(
+public record FlightOrderEntity(
     String orderId,
     String customerId,
     LocalDate flightDate,

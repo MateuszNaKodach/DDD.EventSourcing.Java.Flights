@@ -1,7 +1,6 @@
 package pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flighttoafricaonthursday;
 
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.Discount;
-import pl.zycienakodach.pragmaticflights.modules.discounts.domain.RegularPrice;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.DiscountCriteriaName;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.OrderDiscountCriteria;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.Orders;
@@ -21,7 +20,7 @@ public class FlightToAfricaOnThursdayDiscount implements OrderDiscountCriteria {
   }
 
   @Override
-  public Discount calculateDiscount(OrderId orderId, RegularPrice regularPrice) {
+  public Discount calculateDiscount(OrderId orderId) {
     var order = orders.findByOrderId(orderId).orElseThrow();
 
     var destinationContinent = airportsContinents.continentOf(order.flight().destination());

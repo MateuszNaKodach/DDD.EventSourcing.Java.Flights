@@ -3,12 +3,11 @@ package pl.zycienakodach.pragmaticflights.modules.discounts
 import pl.zycienakodach.pragmaticflights.modules.discounts.api.command.CalculateDiscountValue
 import pl.zycienakodach.pragmaticflights.modules.discounts.api.event.DiscountValueCalculated
 import pl.zycienakodach.pragmaticflights.modules.discounts.application.AppliedDiscountsRegistry
-import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.FlightOrder
-import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.Orders
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flightdepartureoncustomerbirthday.CustomersBirthdays
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flighttoafricaonthursday.AirportsContinents
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flighttoafricaonthursday.Continent
-import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.flightid.FlightId
+import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders.FlightOrderEntity
+import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders.FlightOrdersRepository
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantGroupId
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantGroups
 import pl.zycienakodach.pragmaticflights.sdk.application.tenant.TenantId
@@ -44,20 +43,20 @@ class DiscountsSpec extends Specification {
         def destination = jomoKenyattaInternationalAirportNairobiKenyaAfrica()
         def airportsContinents = airportIsOnContinent(destination, Continent.AFRICA)
         def orderId = anOrderId()
-        def flightOrder = new FlightOrder(
-                orderId,
-                customerId,
+        def flightOrder = new FlightOrderEntity(
+                orderId.raw(),
+                customerId.raw(),
                 flightDate,
-                new FlightOrder.Flight(
-                        FlightId.fromRaw("UAL 22333 NBO"),
-                        londonCityAirportLondonEnglandEurope(),
-                        destination,
+                new FlightOrderEntity.Flight(
+                        "UAL 22333 NBO",
+                        londonCityAirportLondonEnglandEurope().raw(),
+                        destination.raw(),
                         LocalTime.of(19, 45)
                 )
         )
 
-        def flightsOrders = Stub(Orders) {
-            findByOrderId(orderId) >> Optional.of(flightOrder)
+        FlightOrdersRepository flightsOrders = Stub(FlightOrdersRepository) {
+            findBy(orderId.raw()) >> Optional.of(flightOrder)
         }
 
         and: 'customer has birthday on flight date'

@@ -22,11 +22,11 @@ public class FlightsOrdersProjection implements ApplicationModule {
     app.when(FlightsOrderSubmitted.class, (e, __) -> {
       var flightCourseId = FlightCourseId.fromRaw(e.flightCourseId());
       flightOrdersRepository.add(
-          new FlightOrder(
+          new FlightOrderEntity(
               e.orderId(),
               e.customerId(),
               LocalDate.ofInstant(flightCourseId.departureAt(), ZoneId.of("UTC")),
-              new FlightOrder.Flight(
+              new FlightOrderEntity.Flight(
                   flightCourseId.flightId().raw(),
                   e.origin(),
                   e.destination(),

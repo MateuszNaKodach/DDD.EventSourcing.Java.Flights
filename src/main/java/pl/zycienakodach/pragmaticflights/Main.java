@@ -6,7 +6,6 @@ import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.airpor
 import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.applieddiscountsregistry.InMemoryAppliedDiscountsRegistry;
 import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.customers.CustomerEntity;
 import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.customers.InMemoryCustomerRepository;
-import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders.FlightOrdersProjectionAdapter;
 import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders.FlightsOrdersProjection;
 import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders.InMemoryFlightOrders;
 import pl.zycienakodach.pragmaticflights.modules.flightsschedule.FlightsScheduleModule;
@@ -93,7 +92,7 @@ class Main {
             new FlightsScheduleModule(timeProvider, new FlightIdFactory(new IATAAirlinesCodeFactory((__) -> true)), new IATAAirportCodeFactory((__) -> true)),
             new OrderingModule(timeProvider),
             new PricingModule(),
-            new DiscountsModule(tenantsGroups, appliedDiscountsRegistry, new FlightOrdersProjectionAdapter(flightOrdersRepository), airportsContinents, customerRepository),
+            new DiscountsModule(tenantsGroups, appliedDiscountsRegistry, flightOrdersRepository, airportsContinents, customerRepository),
             new DefaultFlightPriceProcess(30),
             new SellingScheduledFlightsProcess(),
             new CalculatingOrderTotalPriceProcess(),

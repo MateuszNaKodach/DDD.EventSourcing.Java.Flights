@@ -5,15 +5,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class InMemoryFlightOrders implements FlightOrdersRepository {
 
-  private final ConcurrentHashMap<String, FlightOrder> entities = new ConcurrentHashMap<>();
+  private final ConcurrentHashMap<String, FlightOrderEntity> entities = new ConcurrentHashMap<>();
 
   @Override
-  public void add(FlightOrder flightOrder) {
+  public void add(FlightOrderEntity flightOrder) {
     entities.put(flightOrder.orderId(), flightOrder);
   }
 
   @Override
-  public Optional<FlightOrder> findBy(String orderId) {
+  public Optional<FlightOrderEntity> findBy(String orderId) {
     if (!entities.containsKey(orderId)) {
       return Optional.empty();
     }

@@ -4,11 +4,13 @@ import pl.zycienakodach.pragmaticflights.modules.discounts.api.command.Calculate
 import pl.zycienakodach.pragmaticflights.modules.discounts.application.AppliedDiscountsRegistry;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.RegularPrice;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.DiscountCalculator;
-import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.Orders;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flightdepartureoncustomerbirthday.CustomersBirthdays;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flightdepartureoncustomerbirthday.FlightDepartureOnCustomerBirthdayDiscount;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flighttoafricaonthursday.AirportsContinents;
 import pl.zycienakodach.pragmaticflights.modules.discounts.domain.criterias.flighttoafricaonthursday.FlightToAfricaOnThursdayDiscount;
+import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders.FlightOrdersProjectionAdapter;
+import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders.FlightOrdersRepository;
+import pl.zycienakodach.pragmaticflights.modules.discounts.infrastructure.flightorders.FlightsOrdersProjection;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.money.EuroMoney;
 import pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.orderid.OrderId;
 import pl.zycienakodach.pragmaticflights.sdk.Application;
@@ -26,26 +28,29 @@ public class DiscountsModule implements ApplicationModule {
 
   private final TenantGroups tenantGroups;
   private final AppliedDiscountsRegistry appliedDiscountsRegistry;
-  private final Orders orders;
+  private final FlightOrdersRepository flightOrdersRepository;
   private final AirportsContinents airportsContinents;
   private final CustomersBirthdays customersBirthdays;
 
   public DiscountsModule(
       TenantGroups tenantGroups,
       AppliedDiscountsRegistry appliedDiscountsRegistry,
-      Orders orders,
+      FlightOrdersRepository flightOrdersRepository,
       AirportsContinents airportsContinents,
       CustomersBirthdays customersBirthdays
   ) {
     this.tenantGroups = tenantGroups;
     this.appliedDiscountsRegistry = appliedDiscountsRegistry;
-    this.orders = orders;
+    this.flightOrdersRepository = flightOrdersRepository;
     this.airportsContinents = airportsContinents;
     this.customersBirthdays = customersBirthdays;
   }
 
   @Override
   public ApplicationModule configure(Application app) {
+    var orders = new FlightOrdersProjectionAdapter(flightOrdersRepository);
+    configureOrdersProjection(app);
+
     var discountCalculator = new DiscountCalculator(
         EuroMoney.of(20),
         List.of(
@@ -75,6 +80,11 @@ public class DiscountsModule implements ApplicationModule {
         }
     );
     return this;
+  }
+
+  private void configureOrdersProjection(Application app) {
+    var projection = new FlightsOrdersProjection(flightOrdersRepository);
+    projection.configure(app);
   }
 
   private void runForTenantGroup(TenantId tenantId, TenantGroupId tenantGroupId, Runnable function) {

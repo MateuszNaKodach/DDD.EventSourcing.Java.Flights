@@ -4,8 +4,8 @@ import java.util.Optional;
 
 public interface FlightOrdersRepository {
 
-  void add(FlightOrder flightOrder);
+  void add(FlightOrderEntity flightOrder);
 
-  Optional<FlightOrder> findBy(String orderId);
+  Optional<FlightOrderEntity> findBy(String orderId);
 
 }

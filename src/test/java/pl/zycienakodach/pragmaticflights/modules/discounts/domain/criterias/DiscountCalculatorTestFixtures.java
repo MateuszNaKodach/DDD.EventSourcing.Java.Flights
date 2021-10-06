@@ -12,7 +12,7 @@ public class DiscountCalculatorTestFixtures {
   public static List<OrderDiscountCriteria> discountsCriteriaWith(Map<String, BigDecimal> amounts){
     return amounts.entrySet()
         .stream()
-        .map(c -> (OrderDiscountCriteria) (orderId, regularPrice) -> Discount.just(new DiscountCriteriaName(c.getKey()), EuroMoney.of(c.getValue())))
+        .map(c -> (OrderDiscountCriteria) (orderId) -> Discount.just(new DiscountCriteriaName(c.getKey()), EuroMoney.of(c.getValue())))
         .toList();
   }
 
