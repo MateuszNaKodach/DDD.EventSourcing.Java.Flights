@@ -14,7 +14,7 @@
 
 ### Possible improvements
 
-- Use Java Modules
+- Use Java Modules. Currently, there are some public classes / methods which should be accessible just in certain modules / packages. Require review, but lack of time.
 - Split Application class to increase cohesion.
 - Discounts module have many dependencies. We can split every criteria to own module and "register" possible criteria. When CalculateDiscountValue is requested, then every discount criteria module may
   do the calculation on their own. Currently, it's just single module and calculating each discount it's in single operation - all discounts or none. For better resilience and easier Open-Closed on
