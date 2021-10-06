@@ -38,7 +38,7 @@ class CalculatingOrderTotalPriceProcessSpec extends Specification {
                 originAirport,
                 destinationAirport
         )
-        var eventMetadata = app.testEventOccurred(event)
+        var eventMetadata = app.eventOccurred(event)
 
         then:
         commandBus.lastCommandCausedBy(eventMetadata.eventId()) == new CalculateOrderTotalPrice(orderId)
@@ -53,7 +53,7 @@ class CalculatingOrderTotalPriceProcessSpec extends Specification {
                 orderId,
                 10
         )
-        var eventMetadata = app.testEventOccurred(event)
+        var eventMetadata = app.eventOccurred(event)
 
         then:
         commandBus.lastCommandCausedBy(eventMetadata.eventId()) == new ApplyOrderPriceDiscount(orderId, 10)

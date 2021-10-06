@@ -5,7 +5,7 @@ import pl.zycienakodach.pragmaticflights.sdk.application.message.event.EventMeta
 
 public interface TestApplication extends Application {
 
-  <E> EventMetadata testEventOccurred(E event);
+  <E> EventMetadata eventOccurred(E event);
 
-  <E> EventMetadata testEventOccurred(EventStreamName eventStream, E event);
+  <E> EventMetadata eventOccurred(EventStreamName eventStream, E event);
 }

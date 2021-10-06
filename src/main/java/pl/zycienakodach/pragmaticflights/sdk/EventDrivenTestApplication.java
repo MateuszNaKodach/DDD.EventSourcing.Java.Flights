@@ -49,10 +49,6 @@ public class EventDrivenTestApplication implements TestApplication {
     return application.onCommand(commandType, handler);
   }
 
-  public <T> Application execute(T command, ApplicationContext context) {
-    return application.execute(command, context);
-  }
-
   public <T> CommandResult execute(T command, CommandMetadata metadata) {
     return application.execute(command, metadata);
   }
@@ -66,13 +62,13 @@ public class EventDrivenTestApplication implements TestApplication {
   }
 
   @Override
-  public <E> EventMetadata testEventOccurred(E event) {
+  public <E> EventMetadata eventOccurred(E event) {
     var allEventStream = EventStreamName.ofCategory("$").withId("all");
-    return testEventOccurred(allEventStream, event);
+    return eventOccurred(allEventStream, event);
   }
 
   @Override
-  public <E> EventMetadata testEventOccurred(EventStreamName eventStream, E event) {
+  public <E> EventMetadata eventOccurred(EventStreamName eventStream, E event) {
     final EventMetadata metadata = new EventMetadata(
         new EventId(application.generateId()),
         application.currentTime(),

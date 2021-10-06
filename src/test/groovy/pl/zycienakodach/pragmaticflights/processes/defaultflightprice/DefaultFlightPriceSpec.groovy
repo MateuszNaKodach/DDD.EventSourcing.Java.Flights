@@ -22,7 +22,7 @@ class DefaultFlightPriceSpec extends Specification {
     def "when flight course offered for sell then should define regular price for the flight"() {
         when:
         def flightCourseId = rawFlightCourseId()
-        var eventMetadata = app.testEventOccurred(
+        var eventMetadata = app.eventOccurred(
                 new FlightCourseOfferedForSell(
                         flightCourseId,
                         rawOriginAirport(),

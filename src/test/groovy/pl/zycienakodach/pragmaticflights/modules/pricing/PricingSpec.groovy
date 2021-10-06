@@ -6,7 +6,6 @@ import pl.zycienakodach.pragmaticflights.modules.pricing.api.commands.DefineRegu
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.CalculateOrderTotalPriceCompleted
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.CalculateOrderTotalPriceStarted
 import pl.zycienakodach.pragmaticflights.modules.pricing.api.events.RegularPriceDefined
-import pl.zycienakodach.pragmaticflights.sdk.EventDrivenApplication
 import pl.zycienakodach.pragmaticflights.sdk.TestApplication
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.InMemoryEventBus
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.RecordingEventBus
@@ -50,7 +49,7 @@ class PricingSpec extends Specification {
         def flightCourseId = rawFlightCourseId()
         def regularPrice = 30
         final regularPriceDefined = new RegularPriceDefined(flightCourseId, regularPrice)
-        app.testEventOccurred(testTenantEventStream("FlightCourseOrdersPricing", flightCourseId), regularPriceDefined)
+        app.eventOccurred(testTenantEventStream("FlightCourseOrdersPricing", flightCourseId), regularPriceDefined)
 
         when:
         var orderId = rawOrderId(flightCourseId)

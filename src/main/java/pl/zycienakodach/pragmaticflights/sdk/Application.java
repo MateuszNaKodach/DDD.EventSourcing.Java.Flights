@@ -27,8 +27,6 @@ public interface Application {
 
   <C> Application onCommand(Class<C> commandType, CommandHandler<C> handler);
 
-  <T> Application execute(T command, ApplicationContext context);
-
   <T> CommandResult execute(T command, CommandMetadata metadata);
 
   Application withModule(ApplicationModule module);

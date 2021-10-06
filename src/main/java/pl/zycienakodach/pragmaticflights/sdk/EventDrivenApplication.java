@@ -91,13 +91,6 @@ public class EventDrivenApplication implements Application {
   }
 
   @Override
-  public <T> Application execute(T command, ApplicationContext context) {
-    var commandId = new CommandId(generateId());
-    this.commandBus.execute(command, new CommandMetadata(commandId, currentTime(), context.tenantId()));
-    return this;
-  }
-
-  @Override
   public <T> CommandResult execute(T command, CommandMetadata metadata) {
     return this.commandBus.execute(command, metadata);
   }

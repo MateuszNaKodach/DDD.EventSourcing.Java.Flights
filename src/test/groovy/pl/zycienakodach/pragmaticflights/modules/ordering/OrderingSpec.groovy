@@ -8,9 +8,6 @@ import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.InMemo
 import pl.zycienakodach.pragmaticflights.sdk.infrastructure.message.event.RecordingEventBus
 import spock.lang.Specification
 
-import java.time.LocalDate
-import java.time.ZoneOffset
-
 import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.inMemoryApplication
 import static pl.zycienakodach.pragmaticflights.ApplicationTestFixtures.test
 import static pl.zycienakodach.pragmaticflights.modules.sharedkernel.domain.customerid.CustomerIdTestFixtures.rawCustomerId
@@ -66,7 +63,7 @@ class OrderingSpec extends Specification {
                 originAirport,
                 destinationAirport
         )
-        app.testEventOccurred(eventStream, flightCourseOfferedForSell)
+        app.eventOccurred(eventStream, flightCourseOfferedForSell)
 
         when:
         def offerFlightForSell = new SubmitFlightOrder(

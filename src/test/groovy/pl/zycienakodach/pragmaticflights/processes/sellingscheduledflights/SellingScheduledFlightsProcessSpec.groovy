@@ -36,7 +36,7 @@ class SellingScheduledFlightsProcessSpec extends Specification {
                 destinationAirport,
                 departureAt
         )
-        var eventMetadata = app.testEventOccurred(event)
+        var eventMetadata = app.eventOccurred(event)
 
         then:
         commandBus.lastCommandCausedBy(eventMetadata.eventId())
