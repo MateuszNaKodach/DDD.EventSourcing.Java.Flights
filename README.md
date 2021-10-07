@@ -9,6 +9,8 @@
  - Domain logic is almost pure functional. Business Logic is implemented in functions like `(pastEvents, command) -> newEvents` I've used Exceptions instead of monads like Eithers. It's easier to deal
    with it in ValueObjects instead of processing functional pipeline. I also used Event Sourcing as persistence mechanism, for faster development witch such functional approach. I don't care about
    storage entities.
+ - More sophisticated solution like PublicEvent / ApplicationEvent instead of DomainEvent (without ValueObjects right now) may be introduced. Now same events are used for domain logic / cross-modules
+   communication and for storage.
  - Requirment with no saving applied discount criteria for selected tenant group was very specific. I think in most cases such differences may take palce in business logic. If then best option would
    be to enable/disable event handlers based on Tenant group.
 
@@ -34,10 +36,5 @@ It gives possibility to easily refactor in the future.
 Every module may be extracted as separated Microservice if we replace EventBus / CommandBus with solutions like Kafka / RabbitMQ.
 
 ### Processes
-Processes are managers which coordinate in an orchestration manner how modules interacts with each other.
-It's implementation of more complex business processes which span many modules.
 
-
-## Out-of-scope features
-
-- More sophisticated solution like PublicEvent / ApplicationEvent instead of DomainEvent (without ValueObjects right now). Now same events are used for domain logic / cross-modules communication and for storage.
+Processes are managers, which coordinate (in an orchestration manner) how modules interacts with each other. They are implementing more complex business processes which span many modules.
