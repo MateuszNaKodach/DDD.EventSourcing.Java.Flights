@@ -1,4 +1,4 @@
-# Pragmatic Flights
+# EventSourcing.Java.Flights
 
 ## Summary Notes
 
